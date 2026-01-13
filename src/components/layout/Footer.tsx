@@ -12,7 +12,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-linear-to-b from-[#1129B1] to-[#08155F] text-white py-10 md:pt-16 md:pb-8 font-['Prompt']">
+    <footer className="bg-[#003C71] text-white py-10 md:pt-16 md:pb-8 font-['Prompt']">
       
       <div className="max-w-360 mx-auto px-4 sm:px-6 lg:px-8">
         
@@ -21,7 +21,7 @@ export default function Footer() {
           
           {/* คอลัมน์ 1: เกี่ยวกับเรา */}
           <div>
-            <h3 className="text-xl md:text-2xl font-light mb-4 md:mb-6 text-[#ACDDE8]">
+            <h3 className="text-xl md:text-2xl font-light mb-4 md:mb-6 text-white">
               เกี่ยวกับเรา
             </h3>
             <div className="space-y-4 text-sm text-white/80 font-light leading-relaxed mx-auto md:mx-0 max-w-xs md:max-w-none">
@@ -35,7 +35,7 @@ export default function Footer() {
 
           {/* คอลัมน์ 2: ลิงก์ด่วน */}
           <div>
-            <h3 className="text-xl md:text-2xl font-light mb-4 md:mb-6 text-[#ACDDE8]">
+            <h3 className="text-xl md:text-2xl font-light mb-4 md:mb-6 text-white">
               ลิงก์ด่วน
             </h3>
             <ul className="space-y-3 md:space-y-4 text-sm text-white/80 font-light">
@@ -64,7 +64,7 @@ export default function Footer() {
 
           {/* คอลัมน์ 3: ติดต่อเรา */}
           <div>
-            <h3 className="text-xl md:text-2xl font-light mb-4 md:mb-6 text-[#ACDDE8]">
+            <h3 className="text-xl md:text-2xl font-light mb-4 md:mb-6 text-white">
               ติดต่อเรา
             </h3>
             <ul className="space-y-3 md:space-y-4 text-sm text-white/80 font-light">

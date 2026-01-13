@@ -1,4 +1,4 @@
-// src/components/home/HeroSection.tsx
+// src/components/home/BannerSection.tsx
 'use client';
 
 export default function HeroSection() {
