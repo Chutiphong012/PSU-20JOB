@@ -1,17 +1,20 @@
 import {
-  HeroSection,
+  BannerSection,
   AnnouncementSection,
   NewsSection,
   JobsSection,
 } from '@/components/home';
 
+
+
 export default function HomePage() {
   return (
     <>
-      <HeroSection />
+      <BannerSection />
       <AnnouncementSection />
       <NewsSection />
       <JobsSection />
+
     </>
   );
 }

@@ -1,11 +1,10 @@
 // src/app/layout.tsx
 import type { Metadata } from 'next';
 import ThemeRegistry from '@/theme/ThemeRegistry';
-import { Footer } from '@/components/layout';
+import FooterWrapper from '@/components/layout/FooterWrapper';
 // 1. นำเข้า AuthProvider
 import { AuthProvider } from '@/context/AuthContext'; 
 import HeaderWrapper from '@/components/layout/HeaderWrapper'; 
-
 import '@/styles/global.css';
 import { Inter, Prompt } from "next/font/google";
 
@@ -45,7 +44,7 @@ export default function RootLayout({
             
             <main style={{ minHeight: 'calc(100vh - 200px)' }}>{children}</main>
             
-            <Footer />
+            <FooterWrapper />
             
           </AuthProvider>
 

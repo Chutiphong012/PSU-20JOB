@@ -1,3 +1,4 @@
+// src/context/AuthContext.tsx
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
@@ -5,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  user: any; // หรือระบุ Type ให้ชัดเจน
+  user: any;
   login: (name: string) => void;
   logout: () => void;
   isLoading: boolean;
@@ -37,8 +38,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoggedIn(true);
     setUser({ name: name, role: "บัณฑิต" });
     
-    // ใช้ router.push แทน window.location เพื่อความเร็ว
-    router.push('/'); 
+    // ✅ แก้ไขตรงนี้: สั่งให้ไปหน้า /graduate ทันทีที่ล็อกอินเสร็จ
+    router.push('/graduate'); 
   };
 
   const logout = () => {
@@ -46,6 +47,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("userName");
     setIsLoggedIn(false);
     setUser(null);
+    
+    // Logout แล้วกลับหน้าแรก
     router.push('/');
   };
 

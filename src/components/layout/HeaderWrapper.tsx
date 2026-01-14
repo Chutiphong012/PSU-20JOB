@@ -1,7 +1,7 @@
 // src/components/layout/HeaderWrapper.tsx
 'use client';
 
-import { useAuth } from '@/context/AuthContext'; // เรียกใช้ Hook
+import { useAuth } from '@/context/AuthContext';
 import Header from './Header';
 import HeaderLoggedIn from './HeaderLoggedIn';
 

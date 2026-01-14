@@ -2,8 +2,11 @@
 
 import Link from 'next/link';
 import { ChevronLeft, Calendar, Facebook, MessageCircle, Copy, Share2 } from 'lucide-react';
+import { mockReportData } from '@/data/reportDetailData'; // 1. นำเข้าข้อมูล
 
 export default function ReportDetailPage() {
+  const report = mockReportData; // ดึงข้อมูลมาใช้
+
   return (
     <div className="font-['Prompt'] bg-[#F2F4F6] min-h-screen flex flex-col">
       {/* Header/Footer อยู่ใน layout.tsx แล้ว */}
@@ -30,58 +33,71 @@ export default function ReportDetailPage() {
                 {/* วันที่ */}
                 <div className="flex items-center gap-2 text-gray-500 text-xs md:text-sm mb-4 font-medium">
                     <Calendar size={16} />
-                    <span>15 ธันวาคม 2567</span>
+                    <span>{report.date}</span>
                 </div>
 
                 {/* หัวข้อใหญ่ */}
                 <h1 className="text-[#18305D] text-2xl md:text-3xl font-bold leading-snug mb-8">
-                    ข้อปฏิบัติการรายงานตัวเพื่อเข้ารับพระราชทานปริญญาบัตร ผ่าน Web ของนักศึกษาที่สำเร็จการศึกษา ปีการศึกษา 2567
+                    {report.title}
                 </h1>
 
                 {/* กล่องข้อความ Intro */}
                 <div className="bg-[#EBF3FA] border-l-[6px] border-[#2C62C7] py-6 px-6 rounded-r-xl mb-8 shadow-sm">
                     <p className="text-[#556B8B] text-sm md:text-base font-light leading-relaxed">
-                        ก่อนที่บัณฑิตจะยืนยันเพื่อรายงานตัวเข้ารับพระราชทานปริญญาบัตร ทางมหาวิทยาลัยขอความร่วมมือบัณฑิตทุกท่าน กรอกแบบสอบถามภาวะการมีงานทำของบัณฑิต ให้สมบูรณ์ถูกต้องตามความเป็นจริง
+                        {report.introText}
                     </p>
                 </div>
 
-                {/* เนื้อหาหลัก */}
+                {/* วนลูปแสดงเนื้อหา (Dynamic Sections) */}
                 <div className="space-y-6 text-[#333] font-light text-sm md:text-base leading-relaxed">
-                    <p>
-                        เพื่อประโยชน์สำหรับท่าน และมหาวิทยาลัย โดยขอความร่วมมือจากบัณฑิตทุกท่าน กรอกแบบสอบถามภาวะการมีงานทำของบัณฑิตผ่าน Website ของมหาวิทยาลัยสงขลานครินทร์ ที่ <span className="text-[#00AA00] font-medium">http://www.job.psu.ac.th</span> โดยมีข้อมูลพอสังเขป ดังต่อไปนี้
-                    </p>
+                    
+                    {report.sections.map((section, idx) => (
+                        <div key={idx}>
+                             {/* แบบ HTML ธรรมดา */}
+                             {section.type === 'html' && typeof section.content === 'string' && (
+                                <div dangerouslySetInnerHTML={{ __html: section.content }} />
+                             )}
 
-                    <div className="space-y-4 bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                        <p className="font-medium text-[#18305D]">
-                            1. ให้บัณฑิตเข้าไปที่เว็บไซต์ http://www.job.psu.ac.th แล้วเข้าสู่ระบบโดยระบุ
-                        </p>
-                        <ul className="list-disc list-inside pl-4 space-y-2 text-gray-600">
-                            <li>รหัสผู้ใช้ (Login) ด้วยรหัสนักศึกษา 10 หลัก</li>
-                            <li>
-                                รหัสผ่าน (Password) ด้วย วัน-เดือน-ปีเกิด รูปแบบ ddmmyyyy (เช่น เกิดวันที่ 1 มกราคม 2539 ให้กรอกเป็น 01012539 กรอกเฉพาะตัวเลขเท่านั้นห้ามเว้นวรรคหรือมีช่องว่าง)
-                            </li>
-                        </ul>
-                        <p className="text-gray-600 pl-4 border-l-4 border-red-200 ml-2">
-                            แล้วเลือกเมนู เข้าสู่ระบบ เพื่อทำการกรอกข้อมูลให้ครบถ้วนสมบูรณ์ <span className="text-red-500 font-medium">ก่อนวันรายงานตัวตามที่มหาวิทยาลัยกำหนด</span>
-                        </p>
-                    </div>
+                             {/* แบบกล่องสีเทา มีลิสต์รายการ (ข้อ 1) */}
+                             {section.type === 'box_with_list' && typeof section.content === 'object' && 'listItems' in section.content && (
+                                <div className="space-y-4 bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                                    <p className="font-medium text-[#18305D]">
+                                        {section.content.listTitle}
+                                    </p>
+                                    <ul className="list-disc list-inside pl-4 space-y-2 text-gray-600">
+                                        {(section.content.listItems as string[]).map((item, i) => (
+                                            <li key={i}>{item}</li>
+                                        ))}
+                                    </ul>
+                                    {section.content.footer && (
+                                        <p className="text-gray-600 pl-4 border-l-4 border-red-200 ml-2" dangerouslySetInnerHTML={{ __html: section.content.footer }} />
+                                    )}
+                                </div>
+                             )}
 
-                    <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                        <p className="font-medium text-[#18305D]">
-                            2. ให้พิมพ์เอกสารการรายงานตัวเพื่อเข้ารับพระราชทานปริญญาบัตร (ใบ QR Code)
-                        </p>
-                        <p className="text-gray-600 mt-2">
-                            แล้วนำเอกสารใบนั้นมายื่นในวันซ้อมย่อยและวันซ้อมใหญ่ ซึ่งเป็นเอกสารประกอบการรับใบปริญญาบัตร (ในกรณีที่ไม่ได้มากรอกรายงานตัว จะไม่สามารถรับใบปริญญาบัตรได้)
-                        </p>
-                    </div>
+                             {/* แบบกล่องสีเทา ไม่มีลิสต์ (ข้อ 2) */}
+                             {section.type === 'box_simple' && typeof section.content === 'object' && 'listItems' in section.content && (
+                                <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                                    <p className="font-medium text-[#18305D]">
+                                        {section.content.listTitle}
+                                    </p>
+                                    <p className="text-gray-600 mt-2">
+                                        {(section.content.listItems as string[])[0]}
+                                    </p>
+                                </div>
+                             )}
+                        </div>
+                    ))}
                 </div>
 
                 {/* กล่องข้อความเตือน (สีแดงอ่อน) */}
-                <div className="bg-[#FFEAEA] border border-red-100 rounded-xl p-6 mt-10 mb-8 text-center md:text-left">
-                    <p className="text-[#D32F2F] font-medium text-sm md:text-base leading-relaxed">
-                        ดังนั้น เพื่อให้การปฏิบัติเป็นไปตามระเบียบ สะดวกและไม่ล่าช้าในการรายงานตัว ขอให้บัณฑิตที่สำเร็จการศึกษา ประจำปี 2567 ทุกท่านกรอกแบบสอบถามล่วงหน้า ก่อนวันรายงานตัวเข้ารับพระราชทานปริญญาบัตร
-                    </p>
-                </div>
+                {report.warningText && (
+                    <div className="bg-[#FFEAEA] border border-red-100 rounded-xl p-6 mt-10 mb-8 text-center md:text-left">
+                        <p className="text-[#D32F2F] font-medium text-sm md:text-base leading-relaxed">
+                            {report.warningText}
+                        </p>
+                    </div>
+                )}
 
                 {/* คำลงท้าย */}
                 <div className="text-right mt-8 text-gray-500 text-sm font-light space-y-1">
@@ -91,10 +107,8 @@ export default function ReportDetailPage() {
 
             </div>
 
-            {/* 3. Footer Action Bar */}
+            {/* 3. Footer Action Bar (คงเดิม) */}
             <div className="mt-4 mx-6 md:mx-12 pt-6 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
-                
-                {/* ปุ่มย้อนกลับ (ลิ้งก์กลับไปที่หน้ารวมข่าว หมวดรายงาน) */}
                 <Link 
                     href="/news?category=รายงาน" 
                     className="flex items-center gap-2 text-gray-500 hover:text-[#93278F] text-[12px] font-medium border border-gray-200 px-5 py-2.5 rounded-full hover:border-[#93278F] hover:bg-purple-50 transition-all self-start md:self-auto shadow-sm"
@@ -108,18 +122,9 @@ export default function ReportDetailPage() {
                     <span className="text-gray-400 text-[11px] font-light mr-1 flex items-center gap-1">
                         <Share2 size={12} /> แชร์ข่าวนี้:
                     </span>
-                    
-                    <button className="w-8 h-8 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-md">
-                        <Facebook size={16} fill="white" />
-                    </button>
-                    
-                    <button className="w-8 h-8 rounded-full bg-[#06C755] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-md">
-                        <MessageCircle size={16} fill="white" />
-                    </button>
-
-                    <button className="w-8 h-8 rounded-full bg-[#2AB6C9] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-md">
-                        <Copy size={16} />
-                    </button>
+                    <button className="w-8 h-8 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-md"><Facebook size={16} fill="white" /></button>
+                    <button className="w-8 h-8 rounded-full bg-[#06C755] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-md"><MessageCircle size={16} fill="white" /></button>
+                    <button className="w-8 h-8 rounded-full bg-[#2AB6C9] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-md"><Copy size={16} /></button>
                 </div>
             </div>
 
