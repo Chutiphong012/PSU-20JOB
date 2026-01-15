@@ -2,13 +2,24 @@
 'use client';
 
 import { useAuth } from '@/context/AuthContext';
+import { usePathname } from 'next/navigation'; 
 import Header from './Header';
 import HeaderLoggedIn from './HeaderLoggedIn';
 
 export default function HeaderWrapper() {
-  const { isLoggedIn, isLoading } = useAuth(); // ดึงค่าจาก Context กลาง
+  const { isLoggedIn, isLoading } = useAuth();
+  const pathname = usePathname(); 
 
-  // แสดง Header ธรรมดาไปก่อนระหว่างโหลด (กันกระพริบ)
+  // กำหนดหน้าเว็บที่ *ไม่ต้องการ* ให้แสดง Header
+  const hiddenPaths = [
+    '/graduate/questionnaire','/graduate/instructions'
+
+  ];
+
+  if (hiddenPaths.includes(pathname)) {
+    return null;
+  }
+
   if (isLoading) {
     return <Header />; 
   }

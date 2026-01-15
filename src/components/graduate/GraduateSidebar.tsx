@@ -34,7 +34,7 @@ export default function GraduateSidebar({ user, logout, activeTab, onTabChange }
 
   return (
     <>
-      <aside className="w-full lg:w-80 shrink-0 bg-white rounded-3xl p-6 h-fit shadow-sm border border-gray-100">
+      <aside className="w-full lg:w-80 shrink-0  p-6 h-fit ">
         
         {/* 1. Profile Section */}
         <div className="flex items-center gap-4 mb-6">
