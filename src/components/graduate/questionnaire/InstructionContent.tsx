@@ -14,7 +14,7 @@ export function InstructionContent() {
     <div className="w-full bg-white shadow-sm border border-gray-100 overflow-hidden font-['Prompt'] flex flex-col min-h-screen md:min-h-0 md:rounded-3xl relative">
       
       {/* 1. Header Blue Banner - ปรับสี Gradient และระยะห่าง */}
-      <div className="bg-gradient-to-r from-[#4285F4] to-[#124DC1] px-6 py-8 md:px-10 md:py-10 flex flex-col md:flex-row items-center justify-center gap-4 text-center relative z-0">
+      <div className="bg-linear-to-r from-[#4285F4] to-[#124DC1] px-6 py-8 md:px-10 md:py-10 flex flex-col md:flex-row items-center justify-center gap-4 text-center relative z-0">
         {/* Decorative elements could go here */}
         
         <GraduationCap className="text-white w-12 h-12 md:w-14 md:h-14 shrink-0" strokeWidth={1.5} />
@@ -64,12 +64,12 @@ export function InstructionContent() {
 
         {/* --- Divider --- */}
         <div className="flex items-center gap-4 my-2">
-            <div className="h-[2px] bg-[#1890FF] grow opacity-30 rounded-full"></div>
+            <div className="h-0.5 bg-[#1890FF] grow opacity-30 rounded-full"></div>
             <div className="text-center">
                 <div className="text-[#1890FF] font-bold text-lg md:text-xl">แบบสอบถามนี้มี 2 ส่วน</div>
                 <div className="text-gray-400 text-sm">“ ต้องตอบให้ครบทุกส่วน ”</div>
             </div>
-            <div className="h-[2px] bg-[#1890FF] grow opacity-30 rounded-full"></div>
+            <div className="h-0.5 bg-[#1890FF] grow opacity-30 rounded-full"></div>
         </div>
 
         {/* --- Section: Structure Columns --- */}
@@ -77,7 +77,7 @@ export function InstructionContent() {
             
             {/* Column 1: ส่วนที่ 1 (Purple/Blue) */}
             <div className="border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
-                <div className="bg-gradient-to-r from-[#722ED1] to-[#9254DE] p-4 px-5 flex justify-between items-center text-white h-[80px]">
+                <div className="bg-linear-to-r from-[#722ED1] to-[#9254DE] p-4 px-5 flex justify-between items-center text-white h-20">
                     <div>
                         <div className="text-xs md:text-sm opacity-90 font-light mb-0.5">ส่วนที่ 1</div>
                         <div className="font-bold text-base md:text-lg">ภาวะการมีงานทำของบัณฑิต</div>
@@ -128,7 +128,7 @@ export function InstructionContent() {
 
             {/* Column 2: ส่วนที่ 2 (Teal) */}
             <div className="border border-gray-200 rounded-2xl overflow-hidden shadow-sm h-full hover:shadow-md transition-shadow duration-300">
-                <div className="bg-gradient-to-r from-[#006D75] to-[#13C2C2] p-4 px-5 flex justify-between items-center text-white h-[80px]">
+                <div className="bg-linear-to-r from-[#006D75] to-[#13C2C2] p-4 px-5 flex justify-between items-center text-white h-20">
                     <div>
                         <div className="text-xs md:text-sm opacity-90 font-light mb-0.5">ส่วนที่ 2</div>
                         <div className="font-bold text-base md:text-lg">การประเมินตนเองของบัณฑิต</div>

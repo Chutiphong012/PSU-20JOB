@@ -1,37 +1,54 @@
 // src/app/(graduate)/graduate/questionnaire/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react'; 
 import { QuestionnaireSidebar, QuestionnaireForm } from '@/components/graduate';
 
 export default function QuestionnairePage() {
-  const [progressPart1, setProgressPart1] = useState(0);
+  // เก็บ Progress แยกแต่ละ Part { 1: 50, 2: 100, 3: 0 }
+  const [partsProgress, setPartsProgress] = useState<Record<number, number>>({});
   const [completedParts, setCompletedParts] = useState<number[]>([]);
 
-  // สมมติว่ามีทั้งหมด 5 ตอน ให้ตอนที่ 1 มีน้ำหนัก 20% ของคะแนนรวม
-  // สูตร: (Progress ตอน 1 * 0.2) + (Progress ตอน 2 * 0.2) + ...
-  const overallProgress = Math.round(progressPart1 * 0.2); 
+  // กำหนดจำนวน Part ทั้งหมด (เพื่อเอาไปหารหาค่าเฉลี่ยรวม)
+  const TOTAL_PARTS = 5;
 
-  const handleProgressUpdate = (percent: number) => {
-    setProgressPart1(percent);
-  };
+  // คำนวณ Overall Progress (เฉลี่ยจากทุก Part)
+  const overallProgress = Math.round(
+    Object.values(partsProgress).reduce((a, b) => a + b, 0) / TOTAL_PARTS
+  );
 
-  const handlePartComplete = (partId: number) => {
-    if (!completedParts.includes(partId)) {
-        setCompletedParts(prev => [...prev, partId]);
-    }
-  };
+  // ✅ แก้ไข: ใช้ useCallback และเช็คค่าซ้ำเพื่อหยุด Infinite Loop
+  const handleProgressUpdate = useCallback((partId: number, percent: number) => {
+    setPartsProgress((prev) => {
+      // 🔥 ถ้าค่าเดิมเท่ากับค่าใหม่เป๊ะๆ ให้ return prev (ไม่ trigger render ใหม่) -> หยุด Loop
+      if (prev[partId] === percent) {
+        return prev;
+      }
+      // ถ้าค่าเปลี่ยน ค่อยอัปเดต
+      return {
+        ...prev,
+        [partId]: percent,
+      };
+    });
+  }, []);
+
+  const handlePartComplete = useCallback((partId: number) => {
+    setCompletedParts((prev) => {
+        if (prev.includes(partId)) return prev;
+        return [...prev, partId];
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] py-8 font-['Prompt']">
-      <div className="container mx-auto px-4 max-w-7xl">
-        
+      <div className="container mx-auto px-4 max-w-screen-2xl">
         <div className="flex flex-col lg:flex-row gap-6 items-start">
             
             <QuestionnaireSidebar 
-               part1Progress={progressPart1}      // วงกลมเล็ก: แสดง 100% (เฉพาะตอน 1)
+               // ส่งค่า Part 1 ไปโชว์ที่วงกลมเล็ก (ถ้ายังไม่มีค่าให้เป็น 0)
+               part1Progress={partsProgress[1] || 0}
                completedSections={completedParts} 
-               overallProgress={overallProgress}  // Profile Card: แสดง 20% (ภาพรวม)
+               overallProgress={overallProgress} 
             />
             
             <QuestionnaireForm 
@@ -40,7 +57,6 @@ export default function QuestionnairePage() {
             />
 
         </div>
-
       </div>
     </div>
   );

@@ -12,7 +12,7 @@
                 <h1 className="text-white text-xl md:text-2xl font-bold">สถานะการตอบแบบสอบถาม</h1>
             </div>
             
-            <div className="bg-white px-8 py-8 rounded-[20px] shadow-sm h-full border border-gray-100 min-h-[500px]">
+            <div className="bg-white px-8 py-8 rounded-[20px] shadow-sm h-full border border-gray-100 min-h-125">
                 
                 {/* Banner */}
                 <div className="bg-[#A50000] rounded-full p-2 pl-3 pr-2 flex flex-col md:flex-row items-center justify-between gap-4 mb-8 shadow-sm">

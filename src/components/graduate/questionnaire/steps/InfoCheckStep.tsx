@@ -1,3 +1,5 @@
+//src/components/graduate/questionnaire/steps/InfoCheckStep.tsx
+
 "use client";
 
 import { AlertTriangle } from "lucide-react";

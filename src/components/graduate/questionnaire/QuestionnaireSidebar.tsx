@@ -38,9 +38,9 @@ export function QuestionnaireSidebar({
   };
 
   return (
-    <aside className="w-full lg:w-[320px] shrink-0 flex flex-col gap-4 font-['Prompt']">
+    <aside className="w-full  lg:w-[320px] shrink-0 flex flex-col gap-2 font-['Prompt'] ">
       {/* 1. Profile Card */}
-      <div className="bg-[#002D55] rounded-3xl p-6 text-white relative overflow-hidden shadow-lg">
+      <div className="bg-[#003870] rounded-2xl p-6 text-white relative overflow-hidden shadow-lg">
         <div className="flex items-start gap-3 mb-6 relative z-10">
           <Menu size={24} className="mt-1 shrink-0 text-white/90" />
           <div className="text-sm font-light leading-snug text-white/90">
@@ -79,7 +79,7 @@ export function QuestionnaireSidebar({
         {/* Header */}
         <div
           onClick={() => toggleSection(1)}
-          className={`p-5 flex items-center justify-between cursor-pointer transition-colors duration-300 ${
+          className={`p-5 flex  items-center justify-between cursor-pointer transition-colors duration-300 ${
             activeSection === 1
               ? "bg-[#2B76E5] text-white"
               : "bg-white text-[#002D55]"
