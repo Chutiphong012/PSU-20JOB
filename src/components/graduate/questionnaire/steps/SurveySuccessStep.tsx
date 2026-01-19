@@ -3,14 +3,13 @@
 
 import Link from "next/link";
 import { Check, Download, AlertTriangle, Home } from "lucide-react";
-import { studentInfoMock } from "@/data/questionnaireMock"; 
+import { studentInfoMock } from "@/data/questionnaireMock";
 
 export function SurveySuccessStep() {
   return (
     /* ✅ ใช้ fixed inset-0 z-[100] เพื่อให้พื้นหลังเขียวเต็มหน้าจอ ไม่เห็นขอบขาวจาก Container เดิม */
     <div className="fixed inset-0 z-100 bg-[#E6F7F0] overflow-y-auto font-['Prompt'] animate-in fade-in duration-500">
       <div className="flex flex-col items-center py-12 px-4 min-h-screen">
-        
         {/* ส่วนหัว: ไอคอนถูก และหัวข้อ */}
         <div className="flex flex-col items-center mb-10">
           <div className="w-20 h-20 bg-[#27AE60] rounded-full flex items-center justify-center mb-6 shadow-lg">
@@ -27,7 +26,6 @@ export function SurveySuccessStep() {
         {/* กล่องขาว (Card) แสดงข้อมูลและ QR Code */}
         <div className="bg-white rounded-[2.5rem] p-10 md:p-16 shadow-sm w-full max-w-5xl mb-10">
           <div className="flex flex-col md:flex-row justify-between gap-12">
-            
             {/* ฝั่งซ้าย: ข้อมูลผู้ตอบแบบสอบถาม */}
             <div className="flex-1">
               <h2 className="text-xl font-bold text-gray-800 mb-8 border-l-4 border-gray-800 pl-4">
@@ -35,7 +33,10 @@ export function SurveySuccessStep() {
               </h2>
               <div className="space-y-6">
                 <InfoRow label="ชื่อ-สกุล" value={studentInfoMock.nameTH} />
-                <InfoRow label="เลขประจำตัวนักศึกษา" value={studentInfoMock.studentID} />
+                <InfoRow
+                  label="เลขประจำตัวนักศึกษา"
+                  value={studentInfoMock.studentID}
+                />
                 <InfoRow label="คณะ" value={studentInfoMock.faculty} />
                 <InfoRow label="สาขา" value={studentInfoMock.department} />
                 <InfoRow label="หลักสูตร" value={studentInfoMock.curriculum} />
@@ -49,15 +50,21 @@ export function SurveySuccessStep() {
                 {/* จำลอง QR Code ตามรูป */}
                 <div className="grid grid-cols-4 gap-2 opacity-80">
                   {[...Array(16)].map((_, i) => (
-                    <div 
-                      key={i} 
-                      className={`w-10 h-10 rounded-sm ${[0, 2, 5, 7, 8, 10, 13, 15].includes(i) ? 'bg-gray-800' : 'bg-gray-100'}`}
+                    <div
+                      key={i}
+                      className={`w-10 h-10 rounded-sm ${
+                        [0, 2, 5, 7, 8, 10, 13, 15].includes(i)
+                          ? "bg-gray-800"
+                          : "bg-gray-100"
+                      }`}
                     ></div>
                   ))}
                 </div>
               </div>
               <span className="text-[11px] text-gray-400 text-center leading-relaxed">
-                เอกสารประกอบการรายงานตัว<br/>เข้ารับพระราชทานปริญญาบัตร
+                เอกสารประกอบการรายงานตัว
+                <br />
+                เข้ารับพระราชทานปริญญาบัตร
               </span>
             </div>
           </div>
@@ -66,8 +73,8 @@ export function SurveySuccessStep() {
           <div className="h-px bg-gray-100 w-full my-12"></div>
 
           <div className="flex flex-col md:flex-row gap-4 justify-center max-w-2xl mx-auto">
-            <Link 
-              href="/graduate" 
+            <Link
+              href="/graduate"
               className="flex-1 py-4 px-8 rounded-xl border border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-all text-center flex items-center justify-center gap-2"
             >
               <Home size={18} />
@@ -83,28 +90,43 @@ export function SurveySuccessStep() {
         {/* หมายเหตุ ด้านล่างกล่องขาว */}
         <div className="max-w-5xl w-full px-4">
           <div className="bg-[#FFF9E6] border-l-4 border-[#FAAD14] p-6 rounded-r-xl flex gap-4 items-start">
-            <AlertTriangle className="text-[#FAAD14] shrink-0 mt-0.5" size={24} />
+            <AlertTriangle
+              className="text-[#FAAD14] shrink-0 mt-0.5"
+              size={24}
+            />
             <div>
-              <h3 className="text-[#856404] font-bold text-base mb-1">หมายเหตุ</h3>
+              <h3 className="text-[#856404] font-bold text-base mb-1">
+                หมายเหตุ
+              </h3>
               <ul className="list-disc list-inside space-y-1 text-sm text-[#856404] opacity-90">
-                <li>กรุณาเก็บรักษา QR Code นี้ไว้เพื่อใช้เป็นหลักฐานในการรายงานตัวเข้ารับพระราชทานปริญญาบัตร</li>
-                <li>คุณสามารถกลับมาพิมพ์ใบรับรองได้ในภายหลัง โดยไปที่หัวข้อ <strong className="underline">พิมพ์ใบรายงาน</strong> โดยไม่ต้องบันทึกข้อมูลใหม่</li>
+                <li>
+                  กรุณาเก็บรักษา QR Code
+                  นี้ไว้เพื่อใช้เป็นหลักฐานในการรายงานตัวเข้ารับพระราชทานปริญญาบัตร
+                </li>
+                <li>
+                  คุณสามารถกลับมาพิมพ์ใบรับรองได้ในภายหลัง โดยไปที่หัวข้อ{" "}
+                  <strong className="underline">พิมพ์ใบรายงาน</strong>{" "}
+                  โดยไม่ต้องบันทึกข้อมูลใหม่
+                </li>
               </ul>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
 }
 
 // Component ย่อยสำหรับจัดแถวข้อมูล
-function InfoRow({ label, value }: { label: string, value: string }) {
+function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="grid grid-cols-[180px_1fr] items-baseline gap-4">
-      <span className="text-gray-500 font-medium text-sm md:text-base">{label}</span>
-      <span className="text-[#18305D] font-bold text-base md:text-lg">{value}</span>
+      <span className="text-gray-500 font-medium text-sm md:text-base">
+        {label}
+      </span>
+      <span className="text-[#18305D] font-bold text-base md:text-lg">
+        {value}
+      </span>
     </div>
   );
 }

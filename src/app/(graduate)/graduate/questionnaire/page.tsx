@@ -7,14 +7,10 @@ import { useSearchParams } from "next/navigation";
 
 function QuestionnaireContent() {
   const searchParams = useSearchParams();
-  const mode = searchParams.get("mode"); // รับค่า ?mode=success จาก URL
+  const mode = searchParams.get("mode");
 
-  const [partsProgress, setPartsProgress] = useState<Record<number, number>>(
-    {}
-  );
+  const [partsProgress, setPartsProgress] = useState<Record<number, number>>({});
   const [completedParts, setCompletedParts] = useState<number[]>([]);
-
-  // ตั้งค่าเริ่มต้นของ Sidebar: ถ้า mode เป็น success ให้ซ่อนทันที
   const [showSidebar, setShowSidebar] = useState(mode !== "success");
 
   const TOTAL_PARTS = 5;
@@ -22,15 +18,12 @@ function QuestionnaireContent() {
     Object.values(partsProgress).reduce((a, b) => a + b, 0) / TOTAL_PARTS
   );
 
-  const handleProgressUpdate = useCallback(
-    (partId: number, percent: number) => {
-      setPartsProgress((prev) => {
-        if (prev[partId] === percent) return prev;
-        return { ...prev, [partId]: percent };
-      });
-    },
-    []
-  );
+  const handleProgressUpdate = useCallback((partId: number, percent: number) => {
+    setPartsProgress((prev) => {
+      if (prev[partId] === percent) return prev;
+      return { ...prev, [partId]: percent };
+    });
+  }, []);
 
   const handlePartComplete = useCallback((partId: number) => {
     setCompletedParts((prev) => {
@@ -40,8 +33,8 @@ function QuestionnaireContent() {
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 items-start">
-      {/* แสดง Sidebar เฉพาะเมื่อไม่ได้อยู่ในโหมดสำเร็จ */}
+    // ✅ ใช้ gap-0 ในมือถือ และ md:gap-6 ใน PC
+    <div className="flex flex-col lg:flex-row gap-0 md:gap-6 items-start w-full">
       {showSidebar && (
         <div className="hidden lg:block w-75 shrink-0 transition-all duration-500">
           <QuestionnaireSidebar
@@ -52,17 +45,12 @@ function QuestionnaireContent() {
         </div>
       )}
 
-      {/* ปรับ Main ให้เต็มจอเมื่อซ่อน Sidebar */}
-      <main
-        className={`flex-1 transition-all duration-500 ${
-          !showSidebar ? "w-full flex justify-center" : ""
-        }`}
-      >
+      <main className="flex-1 w-full transition-all duration-500">
         <QuestionnaireForm
           onProgressUpdate={handleProgressUpdate}
           onPartComplete={handlePartComplete}
-          onComplete={() => setShowSidebar(false)} // สั่งซ่อน Sidebar เมื่อกรอกเสร็จ
-          initialStep={mode === "success" ? "success" : "check"} // กำหนดหน้าเริ่มต้นตาม URL
+          onComplete={() => setShowSidebar(false)}
+          initialStep={mode === "success" ? "success" : "check"}
         />
       </main>
     </div>
@@ -71,8 +59,9 @@ function QuestionnaireContent() {
 
 export default function QuestionnairePage() {
   return (
-    <div className="min-h-screen bg-[#F8F9FA] py-8 font-['Prompt']">
-      <div className="container mx-auto px-4 max-w-screen-2xl">
+    // ✅ เอา Container ออกในมือถือ (px-0) เพื่อให้กล่องขาวชนขอบเครื่อง
+    <div className="min-h-screen bg-[#F8F9FA] py-0 md:py-8 font-['Prompt']">
+      <div className="w-full max-w-screen-2xl mx-auto px-0 md:px-4">
         <Suspense fallback={<div>Loading...</div>}>
           <QuestionnaireContent />
         </Suspense>
