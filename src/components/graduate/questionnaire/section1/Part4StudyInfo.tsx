@@ -1,13 +1,13 @@
-// src/components/graduate/questionnaire/parts/Part3SearchJob.tsx
+// src/components/graduate/questionnaire/parts/Part4StudyInfo.tsx
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
-import { questionPart3 } from "@/data/questionnaireMock";
+import { questionPart4 } from "@/data/questionnaireMock";
 import GraduationCapGif from "@/assets/GraduationCap.gif";
 
-interface Part3Props {
+interface Part4Props {
   answers: Record<string, any>;
   onAnswer: (id: number, value: any) => void;
   onNextPart: (nextPart: number) => void;
@@ -15,73 +15,37 @@ interface Part3Props {
   onProgressChange?: (percent: number) => void;
 }
 
-export function Part3SearchJob({
+export function Part4StudyInfo({
   answers,
   onAnswer,
   onNextPart,
   onBackPart,
   onProgressChange,
-}: Part3Props) {
+}: Part4Props) {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
   const uniquePages = useMemo(
     () =>
-      Array.from(new Set(questionPart3.map((q) => q.page))).sort(
+      Array.from(new Set(questionPart4.map((q) => q.page))).sort(
         (a, b) => a - b
       ),
     []
   );
   const currentPageNumber = uniquePages[currentPageIndex];
   const currentQuestions = useMemo(
-    () => questionPart3.filter((q) => q.page === currentPageNumber),
+    () => questionPart4.filter((q) => q.page === currentPageNumber),
     [currentPageNumber]
   );
   const isLastPage = currentPageIndex === uniquePages.length - 1;
 
-  const isQuestionDisabled = useCallback(
-    (question: any) => {
-      if (!question.disabledCondition) return false;
-      const { questionId, value } = question.disabledCondition;
-      return answers[questionId] === value;
-    },
+  const isQuestionAnswered = useCallback(
+    (q: any) => answers[q.id] !== undefined && answers[q.id] !== "",
     [answers]
   );
 
-  const isQuestionAnswered = useCallback(
-    (q: any) => {
-      if (isQuestionDisabled(q)) return true;
-
-      // ตรวจสอบประเภทกลุ่มที่อยู่ หรือ subFields (เช่น ข้อ 27)
-      if (
-        q.type === "address_group" ||
-        (q.subFields && q.subFields.length > 0)
-      ) {
-        const groupData = answers[q.id];
-        if (groupData && typeof groupData === "object") {
-          // ถ้าเป็นกลุ่ม ให้เช็คว่ามีอย่างน้อย 1 field ที่มีข้อมูล
-          return Object.values(groupData).some(
-            (val: any) =>
-              val !== undefined && val !== null && val.toString().trim() !== ""
-          );
-        }
-        return false;
-      }
-      return answers[q.id] !== undefined && answers[q.id] !== "";
-    },
-    [answers, isQuestionDisabled]
-  );
-
-  useEffect(() => {
-    currentQuestions.forEach((q) => {
-      if (isQuestionDisabled(q) && answers[q.id]) {
-        onAnswer(q.id, "");
-      }
-    });
-  }, [answers, currentQuestions, onAnswer, isQuestionDisabled]);
-
   const currentProgress = useMemo(() => {
-    const total = questionPart3.length;
-    const answered = questionPart3.filter((q) => isQuestionAnswered(q)).length;
+    const total = questionPart4.length;
+    const answered = questionPart4.filter((q) => isQuestionAnswered(q)).length;
     return total === 0 ? 0 : Math.round((answered / total) * 100);
   }, [answers, isQuestionAnswered]);
 
@@ -90,7 +54,7 @@ export function Part3SearchJob({
   }, [currentProgress, onProgressChange]);
 
   const isPartComplete = useMemo(
-    () => questionPart3.every((q) => isQuestionAnswered(q)),
+    () => questionPart4.every((q) => isQuestionAnswered(q)),
     [answers, isQuestionAnswered]
   );
   const isCurrentPageComplete = useMemo(
@@ -101,19 +65,22 @@ export function Part3SearchJob({
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
-  // ✅ แก้ไข Logic handleNext ให้ดึงค่าจาก mock data โดยตรง
+  // ✅ แก้ไขให้เป็น Dynamic: ดึงข้อมูล skipToPart จากคำตอบข้อสุดท้าย
   const handleNext = () => {
     if (currentPageIndex < uniquePages.length - 1) {
       setCurrentPageIndex((prev) => prev + 1);
       scrollToTop();
     } else {
-      // ค้นหาคำตอบข้อที่ 29
-      const answer29 = answers[29];
-      const question29 = questionPart3.find((q) => q.id === 29);
+      // ค้นหาคำตอบของข้อสุดท้ายในหน้านั้น (เช่น ข้อ 34)
+      const lastQuestion = currentQuestions[currentQuestions.length - 1];
+      const answerValue = answers[lastQuestion.id];
 
-      if (question29 && answer29) {
-        const selectedOption = (question29.options as any[]).find((opt: any) =>
-          typeof opt === "string" ? opt === answer29 : opt.value === answer29
+      if (lastQuestion.options && answerValue) {
+        const selectedOption = (lastQuestion.options as any[]).find(
+          (opt: any) =>
+            typeof opt === "string"
+              ? opt === answerValue
+              : opt.value === answerValue
         );
 
         if (selectedOption && selectedOption.skipToPart) {
@@ -121,8 +88,7 @@ export function Part3SearchJob({
           return;
         }
       }
-      // ถ้าหาไม่เจอ ให้ไป Part 4 เป็นพื้นฐาน
-      onNextPart(4);
+      onNextPart(5); // Fallback กรณีหาค่าไม่เจอ
     }
   };
 
@@ -144,14 +110,14 @@ export function Part3SearchJob({
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-300">
-      {/* Header */}
+      {/* Header พร้อมสีวิ่ง LTR */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative">
         <div>
           <span className="text-[#1890FF] text-sm font-medium">
             ส่วนที่ 1 ภาวะการมีงานทำของบัณฑิต
           </span>
           <h1 className="text-[#1890FF] text-3xl font-bold mt-1">
-            ตอนที่ 3 การหางาน
+            ตอนที่ 4 การศึกษาต่อ
           </h1>
         </div>
 
@@ -161,7 +127,7 @@ export function Part3SearchJob({
               <div
                 className={`absolute inset-0 bg-linear-to-r ${completeGradient} animate-shimmer-ltr`}
               />
-              <span className="relative z-10 text-sm text-white pt-0.5">
+              <span className="relative z-10 text-sm font-bold text-white pt-0.5">
                 Complete
               </span>
             </div>
@@ -194,6 +160,7 @@ export function Part3SearchJob({
         </div>
       </div>
 
+      {/* Progress Bar */}
       <div className="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden mb-4">
         <div
           className="bg-[#1890FF] h-full rounded-full transition-all duration-500 ease-out"
@@ -201,68 +168,47 @@ export function Part3SearchJob({
         ></div>
       </div>
 
-      {/* Render Questions */}
+      {/* คำถาม */}
       <div className="flex flex-col gap-8">
         {currentQuestions.map((question) => {
-          const isDisabled = isQuestionDisabled(question);
-          const answered = isQuestionAnswered(question) && !isDisabled;
-
+          const answered = isQuestionAnswered(question);
           return (
             <div
               key={question.id}
               className={`relative rounded-3xl p-0.5 transition-all duration-300 ${
-                isDisabled
-                  ? "grayscale opacity-60 pointer-events-none"
-                  : answered
+                answered
                   ? "bg-transparent"
                   : "bg-gray-100 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
               }`}
             >
               <div
                 className={`relative rounded-[calc(1.5rem-2px)] p-6 md:p-8 h-full transition-colors duration-300 ${
-                  isDisabled
-                    ? "bg-gray-50"
-                    : answered
-                    ? questionBoxAnsweredBg
-                    : "bg-white"
+                  answered ? questionBoxAnsweredBg : "bg-white"
                 }`}
               >
                 <div className="mb-6">
-                  <span
-                    className={`text-sm font-bold block mb-1 ${
-                      isDisabled ? "text-gray-400" : "text-[#1890FF]"
-                    }`}
-                  >
+                  <span className="text-[#1890FF] text-sm font-bold block mb-1">
                     ข้อที่ {question.id}
                   </span>
-                  <h3
-                    className={`font-medium text-lg md:text-xl ${
-                      isDisabled ? "text-gray-500" : "text-[#18305D]"
-                    }`}
-                  >
+                  <h3 className="text-[#18305D] font-medium text-lg md:text-xl">
                     {question.label}
                   </h3>
                 </div>
 
-                {/* Question Types (Dropdown/Radio/SubFields) - ใช้ Hover แยกอิสระตามที่คุณต้องการ */}
+                {/* Render Dropdown / Radio พร้อมระบบ Hover แยกอิสระ */}
                 {question.type === "dropdown" && (
                   <div className="relative max-w-full md:max-w-2xl">
                     <div
                       className={`rounded-xl p-px transition-all duration-200 ${
-                        isDisabled
-                          ? "bg-gray-200"
-                          : answers[question.id]
+                        answers[question.id]
                           ? "bg-transparent"
                           : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
                       }`}
                     >
                       <div className="relative rounded-[calc(0.75rem-1px)] bg-white overflow-hidden">
                         <select
-                          disabled={isDisabled}
                           className={`w-full px-4 py-3 border-none outline-none appearance-none cursor-pointer ${
-                            isDisabled
-                              ? "bg-gray-100"
-                              : answers[question.id]
+                            answers[question.id]
                               ? `${activeSolidBlue} text-white`
                               : "text-gray-700"
                           }`}
@@ -276,19 +222,17 @@ export function Part3SearchJob({
                           </option>
                           {question.options?.map((opt: any) => (
                             <option
-                              key={typeof opt === "string" ? opt : opt.value}
-                              value={typeof opt === "string" ? opt : opt.value}
+                              key={opt}
+                              value={opt}
                               className="text-gray-700 bg-white"
                             >
-                              {typeof opt === "string" ? opt : opt.label}
+                              {opt}
                             </option>
                           ))}
                         </select>
                         <ChevronDown
                           className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none ${
-                            isDisabled
-                              ? "text-gray-300"
-                              : answers[question.id]
+                            answers[question.id]
                               ? "text-white"
                               : "text-gray-400"
                           }`}
@@ -302,9 +246,9 @@ export function Part3SearchJob({
                 {question.type === "radio" && (
                   <div
                     className={`grid gap-4 ${
-                      question.options && question.options.length > 3
-                        ? "grid-cols-1"
-                        : "grid-cols-1 md:grid-cols-2"
+                      question.id === 32
+                        ? "grid-cols-1 md:grid-cols-3"
+                        : "grid-cols-1"
                     }`}
                   >
                     {question.options?.map((opt: any, idx: number) => {
@@ -315,24 +259,18 @@ export function Part3SearchJob({
                         <div
                           key={idx}
                           className={`rounded-xl p-px transition-all duration-200 ${
-                            isDisabled
-                              ? "bg-gray-200"
-                              : isSelected
+                            isSelected
                               ? "bg-transparent"
                               : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
                           }`}
                         >
                           <label
                             className={`flex items-start md:items-center gap-4 p-4 cursor-pointer transition-all rounded-[calc(0.75rem-1px)] h-full ${
-                              isDisabled
-                                ? "bg-gray-100"
-                                : isSelected
+                              isSelected
                                 ? `${activeSolidBlue} text-white shadow-md`
                                 : "bg-white text-gray-700 hover:bg-gray-50"
                             }`}
-                            onClick={() =>
-                              !isDisabled && onAnswer(question.id, val)
-                            }
+                            onClick={() => onAnswer(question.id, val)}
                           >
                             <div
                               className={`mt-1 md:mt-0 w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
@@ -352,75 +290,17 @@ export function Part3SearchJob({
                     })}
                   </div>
                 )}
-
-                {/* จัดการ SubFields เช่น ข้อ 27 (ความต้องการทักษะ) */}
-                {(question.type === "address_group" ||
-                  (question.subFields && question.subFields.length > 0)) && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
-                    {question.subFields?.map((field: any, idx: number) => {
-                      const groupData = answers[question.id] || {};
-                      const val = groupData[field.name] || "";
-                      const isFilled = val.toString().trim() !== "";
-                      return (
-                        <div
-                          key={idx}
-                          className={
-                            field.size === "full"
-                              ? "col-span-full"
-                              : "col-span-1"
-                          }
-                        >
-                          {field.label && (
-                            <label className="block text-sm font-medium mb-2 text-[#18305D]">
-                              {field.label}
-                            </label>
-                          )}
-                          <div
-                            className={`rounded-xl p-px transition-all duration-200 ${
-                              isDisabled
-                                ? "bg-gray-200"
-                                : isFilled
-                                ? "bg-transparent"
-                                : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
-                            }`}
-                          >
-                            <div className="relative rounded-[calc(0.75rem-1px)] bg-white overflow-hidden">
-                              <input
-                                type="text"
-                                disabled={isDisabled}
-                                className={`w-full px-4 py-3 border-none outline-none transition-all ${
-                                  isDisabled
-                                    ? "bg-gray-100"
-                                    : isFilled
-                                    ? `${activeSolidBlue} text-white placeholder:text-white/60`
-                                    : "bg-white text-gray-700 placeholder:text-gray-300"
-                                }`}
-                                placeholder={field.placeholder}
-                                value={val}
-                                onChange={(e) =>
-                                  onAnswer(question.id, {
-                                    ...groupData,
-                                    [field.name]: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
               </div>
             </div>
           );
         })}
       </div>
 
+      {/* Footer */}
       <div className="flex gap-4 justify-end mt-8 pt-6 border-t border-gray-100">
         <button
           onClick={handleBack}
-          className="px-8 py-3 rounded-xl border border-gray-300 text-gray-600 font-medium hover:bg-gray-50 min-w-30"
+          className="px-8 py-3 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 min-w-30"
         >
           ย้อนกลับ
         </button>

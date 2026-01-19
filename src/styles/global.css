@@ -9,16 +9,19 @@
   }
 }
 
+
 @layer utilities {
-  /* เพิ่ม Animation หมุนโยกซ้ายขวา */
-  @keyframes rock {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-15deg); }
-    75% { transform: rotate(15deg); }
+  @keyframes shimmer-ltr {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
   }
 
-  .animate-rock {
-    animation: rock 2s ease-in-out infinite;
-    transform-origin: center bottom; /* จุดหมุนอยู่ตรงกลางด้านล่างของไอคอน */
+  .animate-shimmer-ltr {
+    background-size: 200% 100% !important;
+    animation: shimmer-ltr 3s linear infinite;
   }
 }

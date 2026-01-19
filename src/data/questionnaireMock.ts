@@ -1,36 +1,33 @@
 // src/data/questionnaireMock.ts
 
-// --------------------------------------------------------
-// 1. Interfaces (ประกาศ Types ทั้งหมดที่ต้องใช้)
-// --------------------------------------------------------
 
 export interface QuestionOption {
     label: string;
     value: string;
     skipToPart?: number;
-    header?: string;      // หัวข้อคั่นกลุ่ม
-    headerStyle?: string; // สีหัวข้อ
+    header?: string;     
+    headerStyle?: string; 
+    icon?: string;
 }
 
 export interface Condition {
     questionId: number;
-    value: any; // ค่าที่ "ถ้าตรงกัน" แล้วจะให้ Disable ข้อนี้
+    value: any; 
 }
 
 export interface Question {
     id: number;
     label: string;
-    type: 'dropdown' | 'radio' | 'address_group';
-    page: number; // ✅ ระบุว่าข้อนี้อยู่หน้าไหน (1, 2, 3...)
-    disabledCondition?: Condition; // ✅ เงื่อนไขการปิดใช้งาน
+    // เพิ่ม 'rating' | 'checkbox' | 'textarea'
+    type: 'dropdown' | 'radio' | 'address_group' | 'rating' | 'checkbox' | 'textarea'; 
+    page: number; 
+    disabledCondition?: Condition; 
     placeholder?: string;
     options?: string[] | QuestionOption[];
     subFields?: any[];
 }
 
-// --------------------------------------------------------
-// 2. Student Info Data (ข้อมูลส่วนตัวนักศึกษา - ต้องมีส่วนนี้!)
-// --------------------------------------------------------
+
 export const studentInfoMock = {
     institute: "มหาวิทยาลัยสงขลานครินทร์ วิทยาเขตหาดใหญ่",
     faculty: "วิทยาศาสตร์",
@@ -44,9 +41,7 @@ export const studentInfoMock = {
     nationalID: "1 9098 00xxx xx x"
 };
 
-// --------------------------------------------------------
-// 3. Question Data Part 1 (ข้อมูลคำถามพร้อม Logic หน้าและเงื่อนไข)
-// --------------------------------------------------------
+
 export const questionPart1: Question[] = [
   {
     id: 4,
@@ -112,7 +107,6 @@ export const questionPart1: Question[] = [
     page: 3,
     label: "ลักษณะการออกปฏิบัติประสบการณ์ระหว่างเรียน",
     type: "radio",
-    // ✅ Logic: ถ้าข้อ 8 (questionId) ตอบ "no_experience" (value) -> ให้ Disable ข้อนี้
     disabledCondition: {
         questionId: 8,
         value: "no_experience"
@@ -186,13 +180,7 @@ export const questionPart1: Question[] = [
   }
 ];
 
-// src/data/questionnaireMock.ts
 
-// ... (Code เดิมส่วน Interface และ Part 1) ...
-
-// --------------------------------------------------------
-// 4. Question Data Part 2 (การทำงาน)
-// --------------------------------------------------------
 export const questionPart2: Question[] = [
     // --- หน้า 1: สถานที่ทำงาน (ข้อ 16 ในรูป) ---
     {
@@ -312,13 +300,6 @@ export const questionPart2: Question[] = [
 ];
 
 
-// src/data/questionnaireMock.ts
-
-// ... (Code เดิม Part 1, Part 2) ...
-
-// --------------------------------------------------------
-// 5. Question Data Part 3 (การหางาน)
-// --------------------------------------------------------
 export const questionPart3: Question[] = [
     // --- หน้า 1: สาเหตุที่ยังไม่ได้ทำงาน (ข้อ 22, 23) ---
     {
@@ -408,5 +389,123 @@ export const questionPart3: Question[] = [
             // ✅ Logic 2: ไม่ต้องการ -> ไปตอนที่ 5
             { label: "ไม่ต้องการศึกษาต่อ", value: "no_study", skipToPart: 5 }
         ]
+    }
+];
+
+
+// src/data/questionnaireMock.ts (เพิ่มต่อจาก Part 3)
+
+export const questionPart4: Question[] = [
+    // --- หน้า 1: รายละเอียดการศึกษา (ข้อ 30, 31, 32) ---
+    {
+        id: 30,
+        page: 1,
+        label: "ระดับการศึกษาที่ท่านต้องการศึกษาต่อ/กำลังศึกษาต่อ",
+        type: "dropdown",
+        placeholder: "เลือกระดับการศึกษา",
+        options: ["ประกาศนียบัตรบัณฑิต", "ปริญญาโท", "ประกาศนียบัตรบัณฑิตชั้นสูง", "ปริญญาเอก"]
+    },
+    {
+        id: 31,
+        page: 1,
+        label: "สาขาวิชาที่ท่านต้องการศึกษา/กำลังศึกษา",
+        type: "radio",
+        options: [
+            { label: "สาขาวิชาเดิม", value: "same_major" },
+            { label: "สาขาวิชาอื่นที่ไม่ใช่สาขาวิชาเดิม", value: "other_major" }
+        ]
+    },
+    {
+        id: 32,
+        page: 1,
+        label: "ประเภทของสถาบันการศึกษา/มหาวิทยาลัยที่ท่านต้องการศึกษาต่อ/กำลังศึกษาต่อ",
+        type: "radio",
+        options: ["รัฐบาล", "เอกชน", "ต่างประเทศ"]
+    },
+
+    // --- หน้า 2: เหตุผลและปัญหา (ข้อ 33, 34) ---
+    {
+        id: 33,
+        page: 2,
+        label: "เหตุผลที่ทำให้ท่านตัดสินใจศึกษาต่อ",
+        type: "radio",
+        options: [
+            "เป็นความต้องการของบิดา/มารดา หรือผู้ปกครอง",
+            "งานที่ต้องการใช้ภูมิสูงกว่าปริญญาตรี",
+            "ได้รับทุนการศึกษาต่อ",
+            "เป็นความต้องการของตนเอง",
+            "อื่น ๆ"
+        ]
+    },
+    {
+        id: 34,
+        page: 2,
+        label: "ท่านมีปัญหาในการศึกษาต่อหรือไม่",
+        type: "radio",
+        options: [
+            { label: "ไม่มีปัญหา", value: "no_problem", skipToPart: 5 },
+            { label: "มีปัญหา", value: "have_problem", skipToPart: 5 }
+        ]
+    }
+];
+
+// 2. เพิ่มข้อมูล Part 5 ต่อท้าย
+export const questionPart5: Question[] = [
+    // --- หน้า 1: ความพึงพอใจ ---
+    {
+        id: 35,
+        page: 1,
+        label: "ความพึงพอใจที่มีต่อหลักสูตรที่สำเร็จการศึกษา",
+        type: "rating",
+        // options คือ label ด้านล่างของแต่ละคะแนน (1-5)
+        options: ["น้อยที่สุด", "น้อย", "ปานกลาง", "มาก", "มากที่สุด"]
+    },
+    {
+        id: 36,
+        page: 1,
+        label: "ความพึงพอใจที่มีต่อความเป็นอยู่ในมหาวิทยาลัยเชิงกายภาพ เช่น บรรยากาศ สภาพแวดล้อม",
+        type: "rating",
+        options: ["น้อยที่สุด", "น้อย", "ปานกลาง", "มาก", "มากที่สุด"]
+    },
+
+    // --- หน้า 2: ข้อเสนอแนะ ---
+    {
+        id: 37,
+        page: 2,
+        label: "ท่านคิดว่าในหลักสูตรของสถาบัน ควรเพิ่มรายวิชาหรือความรู้ในเรื่องใดที่จะเอื้อประโยชน์ต่อการประกอบอาชีพของท่านได้มากขึ้น (ตอบได้มากกว่า 1 ข้อ)",
+        type: "checkbox",
+        // ✅ เปลี่ยนจาก String Array เป็น Object Array เพื่อผูก Icon
+        options: [
+            { label: "ภาษาอังกฤษ", value: "english", icon: "languages" },
+            { label: "ภาษาจีน", value: "chinese", icon: "message-circle" }, // ใช้ icon ใกล้เคียง
+            { label: "ภาษาในอาเซียน", value: "asean", icon: "globe" },
+            { label: "บัญชี", value: "accounting", icon: "calculator" },
+            { label: "คอมพิวเตอร์", value: "computer", icon: "laptop" },
+            { label: "การใช้งานอินเตอร์เน็ต", value: "internet", icon: "wifi" },
+            { label: "การฝึกปฏิบัติจริง", value: "practice", icon: "wrench" },
+            { label: "เทคนิคการวิจัย", value: "research", icon: "file-search" },
+            { label: "อื่น ๆ", value: "other", icon: "more-horizontal" }
+        ]
+    },
+    {
+        id: 38,
+        page: 2,
+        label: "ข้อเสนอแนะเกี่ยวกับหลักสูตรและสาขาวิชาที่เรียน",
+        type: "textarea", // ประเภทใหม่: พิมพ์ยาว
+        placeholder: "กรอกคำตอบของคุณ..."
+    },
+    {
+        id: 39,
+        page: 2,
+        label: "ข้อเสนอแนะเกี่ยวกับการบริการของมหาวิทยาลัย",
+        type: "textarea",
+        placeholder: "กรอกคำตอบของคุณ..."
+    },
+    {
+        id: 40,
+        page: 2,
+        label: "ข้อเสนอแนะอื่นๆ",
+        type: "textarea",
+        placeholder: "กรอกคำตอบของคุณ..."
     }
 ];

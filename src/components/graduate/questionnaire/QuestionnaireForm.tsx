@@ -1,115 +1,154 @@
 // src/components/graduate/questionnaire/QuestionnaireForm.tsx
 "use client";
 
-import { useState, useCallback } from "react"; 
+import { useState, useCallback } from "react";
 import { InfoCheckStep } from "@/components/graduate/questionnaire/steps/InfoCheckStep";
-import { Part1GeneralInfo } from "@/components/graduate/questionnaire/parts/Part1GeneralInfo";
-import { Part2WorkInfo } from "@/components/graduate/questionnaire/parts/Part2WorkInfo";
-import { Part3SearchJob } from "@/components/graduate/questionnaire/parts/Part3SearchJob"; 
+import { SurveySuccessStep } from "@/components/graduate/questionnaire/steps/SurveySuccessStep";
+
+import { Part1GeneralInfo } from "@/components/graduate/questionnaire/section1/Part1GeneralInfo";
+import { Part2WorkInfo } from "@/components/graduate/questionnaire/section1/Part2WorkInfo";
+import { Part3SearchJob } from "@/components/graduate/questionnaire/section1/Part3SearchJob";
+import { Part4StudyInfo } from "@/components/graduate/questionnaire/section1/Part4StudyInfo";
+import { Part5Suggestions } from "@/components/graduate/questionnaire/section1/Part5Suggestions";
+import { Section2Assessment } from "@/components/graduate/questionnaire/section2/Section2Assessment";
 
 interface FormProps {
   onProgressUpdate?: (partId: number, percent: number) => void;
   onPartComplete?: (partId: number) => void;
+  onComplete?: () => void;
+  initialStep?: "check" | "form" | "success"; // รับค่าหน้าเริ่มต้น
 }
 
 export function QuestionnaireForm({
   onProgressUpdate,
   onPartComplete,
+  onComplete,
+  initialStep = "check",
 }: FormProps) {
-  const [step, setStep] = useState<"check" | "form">("check");
+  // กำหนด Step ตามค่าที่ไฟล์แม่ส่งมา
+  const [step, setStep] = useState<"check" | "form" | "success">(initialStep);
   const [currentPart, setCurrentPart] = useState(1);
   const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [partHistory, setPartHistory] = useState<number[]>([]);
 
-  const handleAnswerChange = (questionId: number, value: any) => {
-    setAnswers((prev) => ({
-      ...prev,
-      [questionId]: value,
-    }));
+  const handleAnswerChange = (questionId: number | string, value: any) => {
+    setAnswers((prev) => ({ ...prev, [questionId]: value }));
   };
 
-  const handlePartComplete = (nextPartIndex: number) => {
-    console.log("Moving to part:", nextPartIndex);
-    if (onPartComplete) {
-      onPartComplete(currentPart);
-    }
+  const handleNextPart = (nextPartIndex: number) => {
+    setPartHistory((prev) => [...prev, currentPart]);
+    if (onPartComplete) onPartComplete(currentPart);
     setCurrentPart(nextPartIndex);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Wrapper Functions ที่เสถียร (Stable Handlers)
-  const handlePart1Progress = useCallback((percent: number) => {
-      onProgressUpdate?.(1, percent);
-  }, [onProgressUpdate]);
+  const handleBackPart = () => {
+    if (partHistory.length > 0) {
+      const newHistory = [...partHistory];
+      const prevPart = newHistory.pop();
+      setPartHistory(newHistory);
+      if (prevPart) {
+        setCurrentPart(prevPart);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    } else {
+      if (currentPart > 1) setCurrentPart(currentPart - 1);
+    }
+  };
 
-  const handlePart2Progress = useCallback((percent: number) => {
-      onProgressUpdate?.(2, percent);
-  }, [onProgressUpdate]);
+  const handleFinalSubmit = () => {
+    setStep("success");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (onComplete) {
+      onComplete(); // บอกไฟล์แม่ให้ซ่อน Sidebar
+    }
+  };
 
-  const handlePart3Progress = useCallback((percent: number) => {
-      onProgressUpdate?.(3, percent);
-  }, [onProgressUpdate]);
+  const handlePart1Progress = useCallback(
+    (p: number) => onProgressUpdate?.(1, p),
+    [onProgressUpdate]
+  );
+  const handlePart2Progress = useCallback(
+    (p: number) => onProgressUpdate?.(2, p),
+    [onProgressUpdate]
+  );
+  const handlePart3Progress = useCallback(
+    (p: number) => onProgressUpdate?.(3, p),
+    [onProgressUpdate]
+  );
+  const handlePart4Progress = useCallback(
+    (p: number) => onProgressUpdate?.(4, p),
+    [onProgressUpdate]
+  );
+  const handlePart5Progress = useCallback(
+    (p: number) => onProgressUpdate?.(5, p),
+    [onProgressUpdate]
+  );
 
   return (
     <div className="w-full grow bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8 h-fit min-h-150 font-['Prompt']">
-      {step === "check" ? (
-        <InfoCheckStep onNext={() => setStep("form")} />
-      ) : (
+      {step === "check" && <InfoCheckStep onNext={() => setStep("form")} />}
+
+      {step === "form" && (
         <>
-          {/* --- Part 1 --- */}
           {currentPart === 1 && (
             <Part1GeneralInfo
               answers={answers}
               onAnswer={handleAnswerChange}
-              progress={0} 
-              onNextPart={handlePartComplete}
-              // ✅✅✅ ใส่ Props ตรงนี้ครับ (ของเดิมหายไป)
-              onProgressChange={handlePart1Progress} 
+              progress={0}
+              onNextPart={handleNextPart}
+              onProgressChange={handlePart1Progress}
             />
           )}
-
-          {/* --- Part 2 --- */}
           {currentPart === 2 && (
             <Part2WorkInfo
               answers={answers}
               onAnswer={handleAnswerChange}
-              onNextPart={handlePartComplete}
-              onBackPart={() => setCurrentPart(1)}
-              // ✅✅✅ ใส่ Props ตรงนี้
+              onNextPart={handleNextPart}
+              onBackPart={handleBackPart}
               onProgressChange={handlePart2Progress}
             />
           )}
-
-          {/* --- Part 3 --- */}
           {currentPart === 3 && (
             <Part3SearchJob
               answers={answers}
               onAnswer={handleAnswerChange}
-              onNextPart={handlePartComplete}
-              onBackPart={() => setCurrentPart(2)} 
-              // ✅✅✅ ใส่ Props ตรงนี้
+              onNextPart={handleNextPart}
+              onBackPart={handleBackPart}
               onProgressChange={handlePart3Progress}
             />
           )}
-
-          {/* --- Part 4 --- */}
           {currentPart === 4 && (
-            <div className="text-center py-20">
-              <h2 className="text-2xl font-bold text-[#1890FF]">ส่วนที่ 4: การศึกษาต่อ</h2>
-              <p className="text-gray-500 mt-2">(สำหรับผู้ที่ต้องการศึกษาต่อ)</p>
-              <button onClick={() => setCurrentPart(3)} className="mt-4 px-4 py-2 border rounded bg-gray-100 hover:bg-gray-200">ย้อนกลับ</button>
-            </div>
+            <Part4StudyInfo
+              answers={answers}
+              onAnswer={handleAnswerChange}
+              onNextPart={handleNextPart}
+              onBackPart={handleBackPart}
+              onProgressChange={handlePart4Progress}
+            />
           )}
-
-          {/* --- Part 5 --- */}
           {currentPart === 5 && (
-            <div className="text-center py-20">
-              <h2 className="text-2xl font-bold text-[#1890FF]">ส่วนที่ 5: ข้อเสนอแนะ</h2>
-              <p className="text-gray-500 mt-2">(สิ้นสุดแบบสอบถาม)</p>
-              <button onClick={() => setCurrentPart(3)} className="mt-4 px-4 py-2 border rounded bg-gray-100 hover:bg-gray-200">ย้อนกลับ</button>
-            </div>
+            <Part5Suggestions
+              answers={answers}
+              onAnswer={handleAnswerChange}
+              onNextPart={handleNextPart}
+              onBackPart={handleBackPart}
+              onProgressChange={handlePart5Progress}
+            />
+          )}
+          {currentPart === 6 && (
+            <Section2Assessment
+              answers={answers}
+              onAnswer={handleAnswerChange}
+              onBackToSection1={handleBackPart}
+              onSubmit={handleFinalSubmit}
+              onProgressChange={(percent) => onProgressUpdate?.(6, percent)}
+            />
           )}
         </>
       )}
+
+      {step === "success" && <SurveySuccessStep />}
     </div>
   );
 }
