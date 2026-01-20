@@ -2,45 +2,37 @@
 "use client";
 
 import { useState, useCallback, Suspense } from "react";
-import { QuestionnaireSidebar, QuestionnaireForm } from "@/components/graduate";
+import {
+  QuestionnaireSidebar,
+  ProgressData,
+} from "@/components/graduate/questionnaire/QuestionnaireSidebar";
+import { QuestionnaireForm } from "@/components/graduate/questionnaire/QuestionnaireForm";
 import { useSearchParams } from "next/navigation";
 
 function QuestionnaireContent() {
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
-
-  const [partsProgress, setPartsProgress] = useState<Record<number, number>>({});
-  const [completedParts, setCompletedParts] = useState<number[]>([]);
   const [showSidebar, setShowSidebar] = useState(mode !== "success");
 
-  const TOTAL_PARTS = 5;
-  const overallProgress = Math.round(
-    Object.values(partsProgress).reduce((a, b) => a + b, 0) / TOTAL_PARTS
-  );
+  const [progressData, setProgressData] = useState<ProgressData>({});
 
-  const handleProgressUpdate = useCallback((partId: number, percent: number) => {
-    setPartsProgress((prev) => {
-      if (prev[partId] === percent) return prev;
-      return { ...prev, [partId]: percent };
-    });
-  }, []);
+  // ✅ State สำหรับควบคุมการเปิด Sidebar
+  const [forceOpenSection, setForceOpenSection] = useState<number | null>(1);
 
-  const handlePartComplete = useCallback((partId: number) => {
-    setCompletedParts((prev) => {
-      if (prev.includes(partId)) return prev;
-      return [...prev, partId];
+  const handleProgressUpdate = useCallback((key: string, percent: number) => {
+    setProgressData((prev) => {
+      if (prev[key] === percent) return prev;
+      return { ...prev, [key]: percent };
     });
   }, []);
 
   return (
-    // ✅ ใช้ gap-0 ในมือถือ และ md:gap-6 ใน PC
     <div className="flex flex-col lg:flex-row gap-0 md:gap-6 items-start w-full">
       {showSidebar && (
-        <div className="hidden lg:block w-75 shrink-0 transition-all duration-500">
+        <div className="hidden lg:block w-fit shrink-0 transition-all duration-500">
           <QuestionnaireSidebar
-            part1Progress={partsProgress[1] || 0}
-            completedSections={completedParts}
-            overallProgress={overallProgress}
+            progressData={progressData}
+            forceOpenSection={forceOpenSection} // ✅ ส่งค่าบังคับเปิดไปยัง Sidebar
           />
         </div>
       )}
@@ -48,9 +40,9 @@ function QuestionnaireContent() {
       <main className="flex-1 w-full transition-all duration-500">
         <QuestionnaireForm
           onProgressUpdate={handleProgressUpdate}
-          onPartComplete={handlePartComplete}
           onComplete={() => setShowSidebar(false)}
           initialStep={mode === "success" ? "success" : "check"}
+          onRequestOpenSidebarSection={(sec) => setForceOpenSection(sec)} // ✅ รับคำสั่งจาก Form
         />
       </main>
     </div>
@@ -59,7 +51,6 @@ function QuestionnaireContent() {
 
 export default function QuestionnairePage() {
   return (
-    // ✅ เอา Container ออกในมือถือ (px-0) เพื่อให้กล่องขาวชนขอบเครื่อง
     <div className="min-h-screen bg-[#F8F9FA] py-0 md:py-8 font-['Prompt']">
       <div className="w-full max-w-screen-2xl mx-auto px-0 md:px-4">
         <Suspense fallback={<div>Loading...</div>}>
