@@ -6,6 +6,7 @@ import Image from "next/image";
 import { assessmentData, ratingOptions } from "@/data/assessmentMock";
 import GraduationCapGif from "@/assets/GraduationCap.gif";
 import { Check, X } from "lucide-react";
+import { WarningModal } from "@/components/common"; // ✅ เรียกใช้ Modal แจ้งเตือน
 
 interface Section2Props {
   answers: Record<string, any>;
@@ -24,6 +25,7 @@ export function Section2Assessment({
 }: Section2Props) {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showWarningModal, setShowWarningModal] = useState(false); // ✅ เพิ่ม State Warning
 
   const currentCategory = assessmentData[currentCategoryIndex];
   const { theme } = currentCategory;
@@ -35,12 +37,12 @@ export function Section2Assessment({
 
   const isQuestionAnswered = useCallback(
     (qId: string) => answers[qId] !== undefined && answers[qId] !== "",
-    [answers]
+    [answers],
   );
 
   const totalQuestions = useMemo(
     () => assessmentData.reduce((acc, cat) => acc + cat.questions.length, 0),
-    []
+    [],
   );
 
   const answeredCount = useMemo(() => {
@@ -48,13 +50,14 @@ export function Section2Assessment({
     assessmentData.forEach((cat) =>
       cat.questions.forEach((q) => {
         if (isQuestionAnswered(q.id)) count++;
-      })
+      }),
     );
     return count;
   }, [answers, isQuestionAnswered]);
 
   const progressPercent =
     totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
+
   const isPartComplete = progressPercent === 100;
 
   useEffect(() => {
@@ -64,8 +67,15 @@ export function Section2Assessment({
   const handleNext = () => {
     if (currentCategoryIndex < assessmentData.length - 1) {
       setCurrentCategoryIndex((prev) => prev + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      setShowSuccessModal(true);
+      // หน้าสุดท้ายแล้ว
+      if (isPartComplete) {
+        setShowSuccessModal(true);
+      } else {
+        // กรณีปุ่ม Next (submit) เปิดใช้งานแต่ยังทำไม่เสร็จ (เผื่อไว้)
+        setShowWarningModal(true);
+      }
     }
   };
 
@@ -74,11 +84,21 @@ export function Section2Assessment({
     onSubmit();
   };
 
+  // ✅ แก้ไข Logic ปุ่มย้อนกลับ
   const handleBack = () => {
     if (currentCategoryIndex > 0) {
+      // ถ้าย้อนกลับระหว่าง Category ใน Section 2 -> ย้อนได้ปกติ
       setCurrentCategoryIndex((prev) => prev - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      onBackToSection1();
+      // ถ้าอยู่หน้าแรกของ Section 2 และจะย้อนกลับไป Section 1
+      if (isPartComplete) {
+        // ถ้าทำเสร็จแล้ว ให้ย้อนได้
+        onBackToSection1();
+      } else {
+        // ❌ ถ้ายังทำไม่เสร็จ ให้ขึ้น Warning Popup
+        setShowWarningModal(true);
+      }
     }
   };
 
@@ -243,7 +263,7 @@ export function Section2Assessment({
         })}
       </div>
 
-      {/* Footer Navigation Buttons - Stacked on Mobile */}
+      {/* Footer Navigation Buttons */}
       <div className="flex flex-col-reverse md:flex-row gap-3 md:gap-4 justify-end mt-6 md:mt-8 pt-6 border-t border-gray-100">
         <button
           onClick={handleBack}
@@ -270,7 +290,13 @@ export function Section2Assessment({
         </button>
       </div>
 
-      {/* Modal Success - Responsive Width */}
+      {/* ✅ เรียกใช้ Warning Modal */}
+      <WarningModal
+        isOpen={showWarningModal}
+        onClose={() => setShowWarningModal(false)}
+      />
+
+      {/* Modal Success */}
       {showSuccessModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 font-['Prompt'] p-4">
           <div className="relative bg-white rounded-3xl md:rounded-4xl w-full max-w-125 md:max-w-225 overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
