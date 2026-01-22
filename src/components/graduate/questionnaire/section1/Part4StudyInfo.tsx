@@ -4,7 +4,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
-import { questionPart4 } from "@/data/questionnaireMock";
+import { questionPart4, section1Structure } from "@/data/questionnaireMock"; // ✅ Import section1Structure
 import GraduationCapGif from "@/assets/GraduationCap.gif";
 
 interface Part4Props {
@@ -22,25 +22,28 @@ export function Part4StudyInfo({
   onBackPart,
   onProgressChange,
 }: Part4Props) {
+  // ✅ ดึงข้อมูล Structure ของ Part 4 (Index 3) มาใช้
+  const partInfo = section1Structure[3];
+
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
   const uniquePages = useMemo(
     () =>
       Array.from(new Set(questionPart4.map((q) => q.page))).sort(
-        (a, b) => a - b
+        (a, b) => a - b,
       ),
-    []
+    [],
   );
   const currentPageNumber = uniquePages[currentPageIndex];
   const currentQuestions = useMemo(
     () => questionPart4.filter((q) => q.page === currentPageNumber),
-    [currentPageNumber]
+    [currentPageNumber],
   );
   const isLastPage = currentPageIndex === uniquePages.length - 1;
 
   const isQuestionAnswered = useCallback(
     (q: any) => answers[q.id] !== undefined && answers[q.id] !== "",
-    [answers]
+    [answers],
   );
 
   const currentProgress = useMemo(() => {
@@ -55,17 +58,17 @@ export function Part4StudyInfo({
 
   const isPartComplete = useMemo(
     () => questionPart4.every((q) => isQuestionAnswered(q)),
-    [answers, isQuestionAnswered]
+    [answers, isQuestionAnswered],
   );
   const isCurrentPageComplete = useMemo(
     () => currentQuestions.every((q) => isQuestionAnswered(q)),
-    [currentQuestions, isQuestionAnswered]
+    [currentQuestions, isQuestionAnswered],
   );
   const displayProgress = isPartComplete ? 100 : currentProgress;
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
-  // ✅ แก้ไขให้เป็น Dynamic: ดึงข้อมูล skipToPart จากคำตอบข้อสุดท้าย
+  // ✅ Logic Dynamic: ดึงข้อมูล skipToPart จากคำตอบข้อสุดท้าย
   const handleNext = () => {
     if (currentPageIndex < uniquePages.length - 1) {
       setCurrentPageIndex((prev) => prev + 1);
@@ -80,7 +83,7 @@ export function Part4StudyInfo({
           (opt: any) =>
             typeof opt === "string"
               ? opt === answerValue
-              : opt.value === answerValue
+              : opt.value === answerValue,
         );
 
         if (selectedOption && selectedOption.skipToPart) {
@@ -88,7 +91,7 @@ export function Part4StudyInfo({
           return;
         }
       }
-      onNextPart(5); // Fallback กรณีหาค่าไม่เจอ
+      onNextPart(5); // Fallback กรณีหาค่าไม่เจอ ให้ไป Part 5
     }
   };
 
@@ -116,8 +119,9 @@ export function Part4StudyInfo({
           <span className="text-[#1890FF] text-sm font-medium">
             ส่วนที่ 1 ภาวะการมีงานทำของบัณฑิต
           </span>
+          {/* ✅ ใช้ Label จาก Mock Data แทน Text Hardcode */}
           <h1 className="text-[#1890FF] text-3xl font-bold mt-1">
-            ตอนที่ 4 การศึกษาต่อ
+            {partInfo.label}
           </h1>
         </div>
 

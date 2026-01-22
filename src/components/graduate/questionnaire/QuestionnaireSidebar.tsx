@@ -20,7 +20,10 @@ import {
   Check,
   Circle,
 } from "lucide-react";
-import { assessmentData } from "@/data/assessmentMock"; // ✅ Import Mock Data
+
+// ✅ แก้ไขตรงนี้: แยก Import ให้ถูกไฟล์
+import { assessmentData } from "@/data/assessmentMock";
+import { section1Structure } from "@/data/questionnaireMock";
 
 // ✅ Type รองรับ Dynamic Keys
 export interface ProgressData {
@@ -30,6 +33,24 @@ export interface ProgressData {
 interface SidebarProps {
   progressData: ProgressData;
   forceOpenSection?: number | null; // ✅ รับค่าเพื่อสั่งเปิด Section
+}
+
+// ✅ Helper Function เลือก Icon ตาม ID ของ Part
+function getPartIcon(id: number) {
+  switch (id) {
+    case 1:
+      return <FileText />;
+    case 2:
+      return <Briefcase />;
+    case 3:
+      return <FileSearch />;
+    case 4:
+      return <GraduationCap />;
+    case 5:
+      return <FilePenLine />;
+    default:
+      return <Circle />;
+  }
 }
 
 export function QuestionnaireSidebar({
@@ -63,7 +84,7 @@ export function QuestionnaireSidebar({
 
   // 2. Section 2 Progress (Average of Assessment Categories)
   const section2Progress = useMemo(() => {
-    if (assessmentData.length === 0) return 0;
+    if (!assessmentData || assessmentData.length === 0) return 0;
     const total = assessmentData.reduce((acc, cat) => {
       return acc + (progressData[cat.id] || 0); // ดึงค่าตาม ID ของ category (soft_skills, etc.)
     }, 0);
@@ -106,11 +127,19 @@ export function QuestionnaireSidebar({
 
       {/* --- Section 1: ภาวะการมีงานทำ --- */}
       <div
-        className={`rounded-2xl transition-all duration-300 overflow-hidden border border-transparent ${activeSection === 1 ? "shadow-lg bg-white" : "shadow-sm bg-white hover:shadow-md"}`}
+        className={`rounded-2xl transition-all duration-300 overflow-hidden border border-transparent ${
+          activeSection === 1
+            ? "shadow-lg bg-white"
+            : "shadow-sm bg-white hover:shadow-md"
+        }`}
       >
         <div
           onClick={() => toggleSection(1)}
-          className={`p-5 flex items-center justify-between cursor-pointer transition-colors duration-300 ${activeSection === 1 ? "bg-[#2B76E5] text-white" : "bg-white text-[#002D55]"}`}
+          className={`p-5 flex items-center justify-between cursor-pointer transition-colors duration-300 ${
+            activeSection === 1
+              ? "bg-[#2B76E5] text-white"
+              : "bg-white text-[#002D55]"
+          }`}
         >
           <div className="flex items-center gap-4">
             {activeSection === 1 ? (
@@ -120,7 +149,9 @@ export function QuestionnaireSidebar({
             )}
             <div className="text-left">
               <div
-                className={`text-xs ${activeSection === 1 ? "opacity-90" : "text-gray-400"}`}
+                className={`text-xs ${
+                  activeSection === 1 ? "opacity-90" : "text-gray-400"
+                }`}
               >
                 ส่วนที่ 1
               </div>
@@ -135,45 +166,35 @@ export function QuestionnaireSidebar({
 
         {activeSection === 1 && (
           <div className="py-2 animate-in slide-in-from-top-2 duration-200">
-            <SidebarItem
-              icon={<FileText />}
-              text="ตอนที่ 1 ข้อมูลทั่วไป"
-              progress={progressData.part1 || 0}
-            />
-            <SidebarItem
-              icon={<Briefcase />}
-              text="ตอนที่ 2 การสมัครงานและการทำงาน"
-              subText="(สำหรับผู้มีงานทำแล้ว)"
-              progress={progressData.part2 || 0}
-            />
-            <SidebarItem
-              icon={<FileSearch />}
-              text="ตอนที่ 3 การสมัครงานและการทำงาน"
-              subText="(สำหรับผู้ที่ยังไม่ได้ทำงาน)"
-              progress={progressData.part3 || 0}
-            />
-            <SidebarItem
-              icon={<GraduationCap />}
-              text="ตอนที่ 4 การศึกษาต่อ"
-              subText="(สำหรับผู้ศึกษาต่อ)"
-              progress={progressData.part4 || 0}
-            />
-            <SidebarItem
-              icon={<FilePenLine />}
-              text="ตอนที่ 5 ข้อเสนอแนะ"
-              progress={progressData.part5 || 0}
-            />
+            {/* ✅ ใช้ Loop render จาก section1Structure แทนการเขียน Hardcode */}
+            {section1Structure.map((part) => (
+              <SidebarItem
+                key={part.id}
+                icon={getPartIcon(part.id)}
+                text={part.label}
+                subText={part.subLabel}
+                progress={progressData[`part${part.id}`] || 0}
+              />
+            ))}
           </div>
         )}
       </div>
 
       {/* --- Section 2: การประเมินตนเอง (Dynamic List) --- */}
       <div
-        className={`rounded-2xl transition-all duration-300 overflow-hidden border border-transparent ${activeSection === 2 ? "shadow-lg bg-white" : "shadow-sm bg-white hover:shadow-md"}`}
+        className={`rounded-2xl transition-all duration-300 overflow-hidden border border-transparent ${
+          activeSection === 2
+            ? "shadow-lg bg-white"
+            : "shadow-sm bg-white hover:shadow-md"
+        }`}
       >
         <div
           onClick={() => toggleSection(2)}
-          className={`p-5 flex items-center justify-between cursor-pointer transition-colors duration-300 ${activeSection === 2 ? "bg-[#2B76E5] text-white" : "bg-white text-[#002D55]"}`}
+          className={`p-5 flex items-center justify-between cursor-pointer transition-colors duration-300 ${
+            activeSection === 2
+              ? "bg-[#2B76E5] text-white"
+              : "bg-white text-[#002D55]"
+          }`}
         >
           <div className="flex items-center gap-4">
             {activeSection === 2 ? (
@@ -183,7 +204,9 @@ export function QuestionnaireSidebar({
             )}
             <div className="text-left">
               <div
-                className={`text-xs ${activeSection === 2 ? "opacity-90" : "text-gray-400"}`}
+                className={`text-xs ${
+                  activeSection === 2 ? "opacity-90" : "text-gray-400"
+                }`}
               >
                 ส่วนที่ 2
               </div>
@@ -292,10 +315,18 @@ function SidebarItem({
   const isCompleted = progress === 100;
   return (
     <div
-      className={`flex items-start gap-3 md:gap-4 px-4 md:px-5 py-3 md:py-4 transition-colors cursor-pointer group border-l-4 ${isCompleted ? "border-[#1890FF] bg-blue-50/50" : "border-transparent hover:border-gray-200 hover:bg-gray-50"}`}
+      className={`flex items-start gap-3 md:gap-4 px-4 md:px-5 py-3 md:py-4 transition-colors cursor-pointer group border-l-4 ${
+        isCompleted
+          ? "border-[#1890FF] bg-blue-50/50"
+          : "border-transparent hover:border-gray-200 hover:bg-gray-50"
+      }`}
     >
       <div
-        className={`mt-0.5 transition-colors ${isCompleted ? "text-[#1890FF]" : "text-gray-400 group-hover:text-gray-600"}`}
+        className={`mt-0.5 transition-colors ${
+          isCompleted
+            ? "text-[#1890FF]"
+            : "text-gray-400 group-hover:text-gray-600"
+        }`}
       >
         <div className="w-5 h-5 [&>svg]:w-full [&>svg]:h-full [&>svg]:stroke-[1.5]">
           {icon}
@@ -303,7 +334,11 @@ function SidebarItem({
       </div>
       <div className="flex flex-col grow min-w-0">
         <span
-          className={`text-sm font-medium leading-tight truncate transition-colors ${isCompleted ? "text-[#18305D]" : "text-gray-500 group-hover:text-gray-700"}`}
+          className={`text-sm font-medium leading-tight truncate transition-colors ${
+            isCompleted
+              ? "text-[#18305D]"
+              : "text-gray-500 group-hover:text-gray-700"
+          }`}
         >
           {text}
         </span>

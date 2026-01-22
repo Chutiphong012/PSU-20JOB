@@ -4,7 +4,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
-import { questionPart2 } from "@/data/questionnaireMock";
+import { questionPart2, section1Structure } from "@/data/questionnaireMock"; // ✅ Import section1Structure
 import GraduationCapGif from "@/assets/GraduationCap.gif";
 
 interface Part2Props {
@@ -22,20 +22,23 @@ export function Part2WorkInfo({
   onBackPart,
   onProgressChange,
 }: Part2Props) {
+  // ✅ ดึงข้อมูล Structure ของ Part 2 (Index 1) มาใช้
+  const partInfo = section1Structure[1];
+
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
   const uniquePages = useMemo(
     () =>
       Array.from(new Set(questionPart2.map((q) => q.page))).sort(
-        (a, b) => a - b
+        (a, b) => a - b,
       ),
-    []
+    [],
   );
 
   const currentPageNumber = uniquePages[currentPageIndex];
   const currentQuestions = useMemo(
     () => questionPart2.filter((q) => q.page === currentPageNumber),
-    [currentPageNumber]
+    [currentPageNumber],
   );
   const isLastPage = currentPageIndex === uniquePages.length - 1;
 
@@ -48,14 +51,14 @@ export function Part2WorkInfo({
         const groupData = answers[q.id];
         if (groupData && typeof groupData === "object") {
           return Object.values(groupData).some(
-            (val: any) => val && val.toString().trim() !== ""
+            (val: any) => val && val.toString().trim() !== "",
           );
         }
         return false;
       }
       return answers[q.id] !== undefined && answers[q.id] !== "";
     },
-    [answers]
+    [answers],
   );
 
   const currentProgress = useMemo(() => {
@@ -70,17 +73,16 @@ export function Part2WorkInfo({
 
   const isCurrentPageComplete = useMemo(
     () => currentQuestions.every((q) => isQuestionAnswered(q)),
-    [currentQuestions, isQuestionAnswered]
+    [currentQuestions, isQuestionAnswered],
   );
   const isPartComplete = useMemo(
     () => questionPart2.every((q) => isQuestionAnswered(q)),
-    [answers, isQuestionAnswered]
+    [answers, isQuestionAnswered],
   );
   const displayProgress = isPartComplete ? 100 : currentProgress;
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
-  // ✅ แก้ไข Logic การกด Next ตรงนี้
   const handleNext = () => {
     if (currentPageIndex < uniquePages.length - 1) {
       setCurrentPageIndex((prev) => prev + 1);
@@ -93,7 +95,7 @@ export function Part2WorkInfo({
       if (question21 && answer21) {
         // หา Option ที่เลือกเพื่อดูว่าต้อง skip ไป Part ไหน
         const selectedOption = (question21.options as any[]).find(
-          (opt: any) => opt.value === answer21
+          (opt: any) => opt.value === answer21,
         );
 
         if (selectedOption && selectedOption.skipToPart) {
@@ -132,8 +134,9 @@ export function Part2WorkInfo({
           <span className="text-[#1890FF] text-sm font-medium">
             ส่วนที่ 1 ภาวะการมีงานทำของบัณฑิต
           </span>
+          {/* ✅ ใช้ Label จาก Mock Data แทน Text Hardcode */}
           <h1 className="text-[#1890FF] text-3xl font-bold mt-1">
-            ตอนที่ 2 การทำงาน
+            {partInfo.label}
           </h1>
         </div>
 

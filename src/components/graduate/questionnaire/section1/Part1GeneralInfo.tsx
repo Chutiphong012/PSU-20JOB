@@ -4,7 +4,7 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
-import { questionPart1 } from "@/data/questionnaireMock";
+import { questionPart1, section1Structure } from "@/data/questionnaireMock"; // ✅ Import section1Structure
 import GraduationCapGif from "@/assets/GraduationCap.gif";
 
 interface Part1Props {
@@ -21,19 +21,22 @@ export function Part1GeneralInfo({
   onNextPart,
   onProgressChange,
 }: Part1Props) {
+  // ✅ ดึงข้อมูล Structure ของ Part 1 (Index 0) มาใช้
+  const partInfo = section1Structure[0];
+
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
   const uniquePages = useMemo(
     () =>
       Array.from(new Set(questionPart1.map((q) => q.page))).sort(
-        (a, b) => a - b
+        (a, b) => a - b,
       ),
-    []
+    [],
   );
   const currentPageNumber = uniquePages[currentPageIndex];
   const currentQuestions = useMemo(
     () => questionPart1.filter((q) => q.page === currentPageNumber),
-    [currentPageNumber]
+    [currentPageNumber],
   );
   const isLastPage = currentPageIndex === uniquePages.length - 1;
 
@@ -43,7 +46,7 @@ export function Part1GeneralInfo({
       const { questionId, value } = question.disabledCondition;
       return answers[questionId] === value;
     },
-    [answers]
+    [answers],
   );
 
   const isQuestionAnswered = useCallback(
@@ -57,7 +60,7 @@ export function Part1GeneralInfo({
         if (groupData && typeof groupData === "object") {
           return Object.values(groupData).some(
             (val: any) =>
-              val !== undefined && val !== null && val.toString().trim() !== ""
+              val !== undefined && val !== null && val.toString().trim() !== "",
           );
         }
         return false;
@@ -68,7 +71,7 @@ export function Part1GeneralInfo({
         answers[q.id] !== null
       );
     },
-    [answers, isQuestionDisabled]
+    [answers, isQuestionDisabled],
   );
 
   const currentProgress = useMemo(() => {
@@ -83,11 +86,11 @@ export function Part1GeneralInfo({
 
   const isCurrentPageComplete = useMemo(
     () => currentQuestions.every((q) => isQuestionAnswered(q)),
-    [currentQuestions, isQuestionAnswered]
+    [currentQuestions, isQuestionAnswered],
   );
   const isPartComplete = useMemo(
     () => questionPart1.every((q) => isQuestionAnswered(q)),
-    [answers, isQuestionAnswered]
+    [answers, isQuestionAnswered],
   );
 
   const displayProgress = isPartComplete ? 100 : currentProgress;
@@ -106,7 +109,7 @@ export function Part1GeneralInfo({
         const selectedOption = (question12.options as any[]).find((opt: any) =>
           typeof opt === "string"
             ? opt === employmentAnswer
-            : opt.value === employmentAnswer
+            : opt.value === employmentAnswer,
         );
 
         if (selectedOption && selectedOption.skipToPart) {
@@ -140,8 +143,9 @@ export function Part1GeneralInfo({
           <span className="text-[#1890FF] text-xs md:text-sm font-medium">
             ส่วนที่ 1 ภาวะการมีงานทำของบัณฑิต
           </span>
+          {/* ✅ ใช้ Label จาก Mock Data แทน Text Hardcode */}
           <h1 className="text-[#1890FF] text-2xl md:text-3xl font-bold mt-1 leading-tight">
-            ตอนที่ 1 ข้อมูลทั่วไป
+            {partInfo.label}
           </h1>
         </div>
 
@@ -206,8 +210,8 @@ export function Part1GeneralInfo({
                 isDisabled
                   ? "grayscale opacity-60 pointer-events-none bg-gray-200"
                   : answered
-                  ? "bg-transparent"
-                  : "bg-gray-100 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
+                    ? "bg-transparent"
+                    : "bg-gray-100 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
               }`}
             >
               <div
@@ -215,8 +219,8 @@ export function Part1GeneralInfo({
                   isDisabled
                     ? "bg-gray-50 text-gray-400"
                     : answered
-                    ? questionBoxAnsweredBg
-                    : "bg-white"
+                      ? questionBoxAnsweredBg
+                      : "bg-white"
                 }`}
               >
                 <div className="mb-4 md:mb-6">
@@ -244,8 +248,8 @@ export function Part1GeneralInfo({
                         isDisabled
                           ? "bg-gray-200"
                           : answers[question.id]
-                          ? "bg-transparent"
-                          : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
+                            ? "bg-transparent"
+                            : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
                       }`}
                     >
                       <div className="relative rounded-[calc(0.75rem-1px)] overflow-hidden bg-white">
@@ -255,8 +259,8 @@ export function Part1GeneralInfo({
                             isDisabled
                               ? "bg-gray-100"
                               : answers[question.id]
-                              ? `${activeSolidBlue} text-white font-medium cursor-pointer`
-                              : "bg-white text-gray-700 cursor-pointer"
+                                ? `${activeSolidBlue} text-white font-medium cursor-pointer`
+                                : "bg-white text-gray-700 cursor-pointer"
                           }`}
                           value={answers[question.id] || ""}
                           onChange={(e) =>
@@ -281,8 +285,8 @@ export function Part1GeneralInfo({
                             isDisabled
                               ? "text-gray-300"
                               : answers[question.id]
-                              ? "text-white"
-                              : "text-gray-400"
+                                ? "text-white"
+                                : "text-gray-400"
                           }`}
                           size={18}
                         />
@@ -323,8 +327,8 @@ export function Part1GeneralInfo({
                               isDisabled
                                 ? "bg-gray-200"
                                 : isSelected
-                                ? "bg-transparent"
-                                : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
+                                  ? "bg-transparent"
+                                  : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
                             }`}
                           >
                             <label
@@ -332,8 +336,8 @@ export function Part1GeneralInfo({
                                 isDisabled
                                   ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                                   : isSelected
-                                  ? `${activeSolidBlue} text-white shadow-md cursor-pointer`
-                                  : "bg-white text-gray-700 hover:bg-gray-50 cursor-pointer"
+                                    ? `${activeSolidBlue} text-white shadow-md cursor-pointer`
+                                    : "bg-white text-gray-700 hover:bg-gray-50 cursor-pointer"
                               }`}
                               onClick={() =>
                                 !isDisabled && onAnswer(question.id, val)
@@ -344,8 +348,8 @@ export function Part1GeneralInfo({
                                   isDisabled
                                     ? "border-gray-300 bg-gray-50"
                                     : isSelected
-                                    ? "border-white"
-                                    : "border-gray-300"
+                                      ? "border-white"
+                                      : "border-gray-300"
                                 }`}
                               >
                                 {isSelected && !isDisabled && (
@@ -378,8 +382,8 @@ export function Part1GeneralInfo({
                             field.size === "full"
                               ? "col-span-full"
                               : field.size === "half"
-                              ? "col-span-1 sm:col-span-2 md:col-span-1 lg:col-span-3"
-                              : "col-span-1 sm:col-span-1 md:col-span-1 lg:col-span-2"
+                                ? "col-span-1 sm:col-span-2 md:col-span-1 lg:col-span-3"
+                                : "col-span-1 sm:col-span-1 md:col-span-1 lg:col-span-2"
                           }
                         >
                           {field.label && (
@@ -396,8 +400,8 @@ export function Part1GeneralInfo({
                               isDisabled
                                 ? "bg-gray-200"
                                 : isFilled
-                                ? "bg-transparent"
-                                : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
+                                  ? "bg-transparent"
+                                  : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
                             }`}
                           >
                             <div className="relative rounded-[calc(0.75rem-1px)] overflow-hidden bg-white">
@@ -408,8 +412,8 @@ export function Part1GeneralInfo({
                                   isDisabled
                                     ? "bg-gray-100"
                                     : isFilled
-                                    ? `${activeSolidBlue} text-white placeholder:text-white/60`
-                                    : "bg-white text-gray-700 placeholder:text-gray-300"
+                                      ? `${activeSolidBlue} text-white placeholder:text-white/60`
+                                      : "bg-white text-gray-700 placeholder:text-gray-300"
                                 }`}
                                 placeholder={field.placeholder}
                                 value={currentValue}

@@ -12,7 +12,7 @@ export default function HeaderWrapper() {
 
   // กำหนดหน้าเว็บที่ *ไม่ต้องการ* ให้แสดง Header
   const hiddenPaths = [
-    '/graduate/questionnaire','/graduate/instructions'
+    '/graduate/questionnaire','/graduate/instructions' ,'/employer' ,'/employer/questionnaire','/employer/instructions'
 
   ];
 

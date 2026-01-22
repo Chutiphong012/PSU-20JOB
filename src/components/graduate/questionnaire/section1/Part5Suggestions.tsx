@@ -7,6 +7,7 @@ import {
   Question,
   questionPart5,
   QuestionOption,
+  section1Structure, // ✅ Import section1Structure
 } from "@/data/questionnaireMock";
 import {
   Languages,
@@ -52,6 +53,9 @@ export function Part5Suggestions({
   onBackPart,
   onProgressChange,
 }: Part5Props) {
+  // ✅ ดึงข้อมูล Structure ของ Part 5 (Index 4) มาใช้
+  const partInfo = section1Structure[4];
+
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 2;
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -71,23 +75,23 @@ export function Part5Suggestions({
       if (Array.isArray(ans)) return ans.length > 0;
       return ans !== undefined && ans !== "";
     },
-    [answers]
+    [answers],
   );
 
   const isPartComplete = useMemo(
     () => questionPart5.every((q) => isQuestionAnswered(q)),
-    [answers, isQuestionAnswered]
+    [answers, isQuestionAnswered],
   );
 
   const isCurrentPageComplete = useMemo(
     () => currentQuestions.every((q) => isQuestionAnswered(q)),
-    [currentQuestions, isQuestionAnswered]
+    [currentQuestions, isQuestionAnswered],
   );
 
   const currentProgress = useMemo(() => {
     const totalQuestions = questionPart5.length;
     const answeredCount = questionPart5.filter((q) =>
-      isQuestionAnswered(q)
+      isQuestionAnswered(q),
     ).length;
     return Math.round((answeredCount / totalQuestions) * 100);
   }, [answers, isQuestionAnswered]);
@@ -133,7 +137,7 @@ export function Part5Suggestions({
     if (currentSelected.includes(value)) {
       onAnswer(
         questionId,
-        currentSelected.filter((item) => item !== value)
+        currentSelected.filter((item) => item !== value),
       );
     } else {
       onAnswer(questionId, [...currentSelected, value]);
@@ -148,8 +152,9 @@ export function Part5Suggestions({
           <span className="text-[#1890FF] text-xs md:text-sm font-medium">
             ส่วนที่ 1 ภาวะการมีงานทำของบัณฑิต
           </span>
+          {/* ✅ ใช้ Label จาก Mock Data แทน Text Hardcode */}
           <h1 className="text-[#1890FF] text-2xl md:text-3xl font-bold mt-1 leading-tight">
-            ตอนที่ 5 ข้อเสนอแนะ
+            {partInfo.label}
           </h1>
         </div>
 
@@ -298,7 +303,7 @@ export function Part5Suggestions({
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 mt-2">
                     {(q.options as QuestionOption[])?.map((option) => {
                       const isSelected = (answers[q.id] || []).includes(
-                        option.value
+                        option.value,
                       );
                       const IconComponent = option.icon
                         ? iconMap[option.icon]

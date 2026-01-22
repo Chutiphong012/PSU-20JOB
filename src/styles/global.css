@@ -1,16 +1,14 @@
-/* src/styles/global.css */
+/* src/styles/globals.css (หรือ global.css) */
 @import "tailwindcss";
 
 @layer base {
   html, body {
     font-family: var(--font-inter), var(--font-prompt), sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-
 @layer utilities {
+  /* เพิ่ม Animation แสงวิบวับ */
   @keyframes shimmer-ltr {
     0% {
       background-position: 200% 0;
@@ -23,5 +21,9 @@
   .animate-shimmer-ltr {
     background-size: 200% 100% !important;
     animation: shimmer-ltr 3s linear infinite;
+  }
+  
+  .animate-rock {
+    animation: rock 2s ease-in-out infinite;
   }
 }

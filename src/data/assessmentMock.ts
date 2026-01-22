@@ -17,7 +17,7 @@ export interface AssessmentCategory {
   title: string;
   subTitle: string;
   questions: AssessmentQuestion[];
-  theme: AssessmentTheme; // ✅ เก็บ Theme แยกรายหมวด
+  theme: AssessmentTheme; 
 }
 
 export const ratingOptions = [

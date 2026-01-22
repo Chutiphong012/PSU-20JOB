@@ -9,7 +9,7 @@ export default function FooterWrapper() {
 
   // กำหนดรายการ path ที่ "ไม่ต้องการ" ให้แสดง Footer
   // เช่น หน้า /graduate และหน้าลูกๆ ของมันทั้งหมด
-  const hiddenPaths = ['/graduate', '/login', '/register'];
+  const hiddenPaths = ['/graduate', '/login', '/register','/employer'];
 
   // เช็คว่า URL ปัจจุบัน ขึ้นต้นด้วยคำในรายการข้างบนหรือไม่
   const shouldHideFooter = hiddenPaths.some((path) => pathname.startsWith(path));

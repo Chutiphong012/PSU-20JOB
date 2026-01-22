@@ -4,7 +4,7 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
-import { questionPart3 } from "@/data/questionnaireMock";
+import { questionPart3, section1Structure } from "@/data/questionnaireMock"; // ✅ Import section1Structure
 import GraduationCapGif from "@/assets/GraduationCap.gif";
 
 interface Part3Props {
@@ -22,19 +22,22 @@ export function Part3SearchJob({
   onBackPart,
   onProgressChange,
 }: Part3Props) {
+  // ✅ ดึงข้อมูล Structure ของ Part 3 (Index 2) มาใช้
+  const partInfo = section1Structure[2];
+
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
   const uniquePages = useMemo(
     () =>
       Array.from(new Set(questionPart3.map((q) => q.page))).sort(
-        (a, b) => a - b
+        (a, b) => a - b,
       ),
-    []
+    [],
   );
   const currentPageNumber = uniquePages[currentPageIndex];
   const currentQuestions = useMemo(
     () => questionPart3.filter((q) => q.page === currentPageNumber),
-    [currentPageNumber]
+    [currentPageNumber],
   );
   const isLastPage = currentPageIndex === uniquePages.length - 1;
 
@@ -44,7 +47,7 @@ export function Part3SearchJob({
       const { questionId, value } = question.disabledCondition;
       return answers[questionId] === value;
     },
-    [answers]
+    [answers],
   );
 
   const isQuestionAnswered = useCallback(
@@ -61,14 +64,14 @@ export function Part3SearchJob({
           // ถ้าเป็นกลุ่ม ให้เช็คว่ามีอย่างน้อย 1 field ที่มีข้อมูล
           return Object.values(groupData).some(
             (val: any) =>
-              val !== undefined && val !== null && val.toString().trim() !== ""
+              val !== undefined && val !== null && val.toString().trim() !== "",
           );
         }
         return false;
       }
       return answers[q.id] !== undefined && answers[q.id] !== "";
     },
-    [answers, isQuestionDisabled]
+    [answers, isQuestionDisabled],
   );
 
   useEffect(() => {
@@ -91,11 +94,11 @@ export function Part3SearchJob({
 
   const isPartComplete = useMemo(
     () => questionPart3.every((q) => isQuestionAnswered(q)),
-    [answers, isQuestionAnswered]
+    [answers, isQuestionAnswered],
   );
   const isCurrentPageComplete = useMemo(
     () => currentQuestions.every((q) => isQuestionAnswered(q)),
-    [currentQuestions, isQuestionAnswered]
+    [currentQuestions, isQuestionAnswered],
   );
   const displayProgress = isPartComplete ? 100 : currentProgress;
 
@@ -113,7 +116,7 @@ export function Part3SearchJob({
 
       if (question29 && answer29) {
         const selectedOption = (question29.options as any[]).find((opt: any) =>
-          typeof opt === "string" ? opt === answer29 : opt.value === answer29
+          typeof opt === "string" ? opt === answer29 : opt.value === answer29,
         );
 
         if (selectedOption && selectedOption.skipToPart) {
@@ -150,8 +153,9 @@ export function Part3SearchJob({
           <span className="text-[#1890FF] text-sm font-medium">
             ส่วนที่ 1 ภาวะการมีงานทำของบัณฑิต
           </span>
+          {/* ✅ ใช้ Label จาก Mock Data แทน Text Hardcode */}
           <h1 className="text-[#1890FF] text-3xl font-bold mt-1">
-            ตอนที่ 3 การหางาน
+            {partInfo.label}
           </h1>
         </div>
 
@@ -214,8 +218,8 @@ export function Part3SearchJob({
                 isDisabled
                   ? "grayscale opacity-60 pointer-events-none"
                   : answered
-                  ? "bg-transparent"
-                  : "bg-gray-100 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
+                    ? "bg-transparent"
+                    : "bg-gray-100 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
               }`}
             >
               <div
@@ -223,8 +227,8 @@ export function Part3SearchJob({
                   isDisabled
                     ? "bg-gray-50"
                     : answered
-                    ? questionBoxAnsweredBg
-                    : "bg-white"
+                      ? questionBoxAnsweredBg
+                      : "bg-white"
                 }`}
               >
                 <div className="mb-6">
@@ -252,8 +256,8 @@ export function Part3SearchJob({
                         isDisabled
                           ? "bg-gray-200"
                           : answers[question.id]
-                          ? "bg-transparent"
-                          : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
+                            ? "bg-transparent"
+                            : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
                       }`}
                     >
                       <div className="relative rounded-[calc(0.75rem-1px)] bg-white overflow-hidden">
@@ -263,8 +267,8 @@ export function Part3SearchJob({
                             isDisabled
                               ? "bg-gray-100"
                               : answers[question.id]
-                              ? `${activeSolidBlue} text-white`
-                              : "text-gray-700"
+                                ? `${activeSolidBlue} text-white`
+                                : "text-gray-700"
                           }`}
                           value={answers[question.id] || ""}
                           onChange={(e) =>
@@ -289,8 +293,8 @@ export function Part3SearchJob({
                             isDisabled
                               ? "text-gray-300"
                               : answers[question.id]
-                              ? "text-white"
-                              : "text-gray-400"
+                                ? "text-white"
+                                : "text-gray-400"
                           }`}
                           size={20}
                         />
@@ -318,8 +322,8 @@ export function Part3SearchJob({
                             isDisabled
                               ? "bg-gray-200"
                               : isSelected
-                              ? "bg-transparent"
-                              : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
+                                ? "bg-transparent"
+                                : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
                           }`}
                         >
                           <label
@@ -327,8 +331,8 @@ export function Part3SearchJob({
                               isDisabled
                                 ? "bg-gray-100"
                                 : isSelected
-                                ? `${activeSolidBlue} text-white shadow-md`
-                                : "bg-white text-gray-700 hover:bg-gray-50"
+                                  ? `${activeSolidBlue} text-white shadow-md`
+                                  : "bg-white text-gray-700 hover:bg-gray-50"
                             }`}
                             onClick={() =>
                               !isDisabled && onAnswer(question.id, val)
@@ -380,8 +384,8 @@ export function Part3SearchJob({
                               isDisabled
                                 ? "bg-gray-200"
                                 : isFilled
-                                ? "bg-transparent"
-                                : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
+                                  ? "bg-transparent"
+                                  : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
                             }`}
                           >
                             <div className="relative rounded-[calc(0.75rem-1px)] bg-white overflow-hidden">
@@ -392,8 +396,8 @@ export function Part3SearchJob({
                                   isDisabled
                                     ? "bg-gray-100"
                                     : isFilled
-                                    ? `${activeSolidBlue} text-white placeholder:text-white/60`
-                                    : "bg-white text-gray-700 placeholder:text-gray-300"
+                                      ? `${activeSolidBlue} text-white placeholder:text-white/60`
+                                      : "bg-white text-gray-700 placeholder:text-gray-300"
                                 }`}
                                 placeholder={field.placeholder}
                                 value={val}
