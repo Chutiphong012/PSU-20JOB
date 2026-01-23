@@ -19,14 +19,12 @@ export function Part4Suggestions({
 }: PartProps) {
   const activeSolidBlue = "bg-[#1890FF]";
 
-  // ✅ ตรวจสอบความครบถ้วนของข้อมูลโดยใช้ ID ที่เป็น String
   const isAllFilled = employerPart4.every((q) => {
     if (!q.required) return true;
     const val = answers[q.id.toString()];
     return val !== undefined && val !== "" && val !== null;
   });
 
-  // ✅ Helper สำหรับเรนเดอร์ Input แบบต่างๆ (รองรับ Radio + อื่นๆ ในอนาคต)
   const renderInput = (q: Question) => {
     const value = answers[q.id.toString()] || "";
     const isFilled = value.trim().length > 0;
@@ -55,7 +53,6 @@ export function Part4Suggestions({
       );
     }
 
-    // กรณีเป็น Radio (เผื่ออนาคตมีตัวเลือกที่มีช่อง "อื่น ๆ")
     if (q.type === "radio") {
       return (
         <div className="space-y-3">
@@ -125,10 +122,10 @@ export function Part4Suggestions({
       <div className="flex-1 space-y-10 border border-gray-100 rounded-3xl p-6 md:p-10 bg-white shadow-sm">
         <div className="animate-in fade-in duration-500">
           <div className="mb-8 mt-4">
-            <h2 className="text-[#2994FF] font-bold text-lg md:text-xl mb-2">
+            <h2 className="text-[#2994FF] font-semibold text-lg md:text-xl mb-2">
               ตอนที่ 4 ความคิดเห็น และข้อเสนอแนะ
             </h2>
-            <p className="text-[#2B76E5] text-sm font-bold italic">
+            <p className="text-[#2B76E5] text-sm font-semibold italic">
               **กรุณากรอกข้อมูลให้ครบทุกข้อก่อนส่งแบบสอบถาม**
             </p>
           </div>
@@ -157,18 +154,17 @@ export function Part4Suggestions({
         </div>
       </div>
 
-      {/* Footer Navigation */}
       <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 sm:gap-4 mt-12 pt-8 border-t border-gray-100">
         <button
           onClick={onBackPart}
-          className="w-full sm:w-auto px-10 py-3.5 rounded-xl border border-gray-300 text-gray-600 font-medium bg-white hover:bg-gray-50 transition-all"
+          className="w-full sm:w-49 px-10 py-3.5 rounded-xl border border-gray-300 text-gray-600 font-medium bg-white hover:bg-gray-50 transition-all"
         >
           ย้อนกลับ
         </button>
         <button
           onClick={onComplete}
           disabled={!isAllFilled}
-          className={`w-full sm:w-auto group relative overflow-hidden px-12 py-3.5 rounded-xl font-bold text-white transition-all duration-300 ${
+          className={`w-full sm:w-49 group relative overflow-hidden px-12 py-3.5 rounded-xl font-semibold text-white transition-all duration-300 ${
             !isAllFilled
               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
               : "bg-[#1890FF] shadow-lg shadow-blue-200 hover:shadow-blue-300"
@@ -176,10 +172,6 @@ export function Part4Suggestions({
         >
           <span className="relative z-10 flex items-center justify-center gap-2">
             ส่งคำตอบ{" "}
-            <ChevronRight
-              size={20}
-              className={!isAllFilled ? "opacity-50" : ""}
-            />
           </span>
           {isAllFilled && (
             <span className="absolute left-1/2 bottom-0 w-100 h-100 bg-[#0060C0] rounded-full -translate-x-1/2 translate-y-1/2 scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-out z-0"></span>

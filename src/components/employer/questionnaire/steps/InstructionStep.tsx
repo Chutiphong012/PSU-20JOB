@@ -52,7 +52,7 @@ export function InstructionStep({ onNext }: InstructionStepProps) {
       <div className="bg-white w-full max-w-300 h-auto lg:h-full lg:max-h-[90vh] lg:aspect-video rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col lg:flex-row">
         
         {/* --- Left Column (Dark Blue) --- */}
-        <div className="w-full lg:w-[45%] bg-[#303F6C] relative flex flex-col p-6 lg:p-10 shrink-0 lg:rounded-br-[100px] z-10">
+        <div className="w-full lg:w-[45%] bg-[#334f8f] relative flex flex-col p-6 lg:p-10 shrink-0 lg:rounded-tr-[70px] z-10">
           
           {/* Logo */}
           <div className="relative z-20 shrink-0 lg:mb-0 flex justify-start">
@@ -110,7 +110,7 @@ export function InstructionStep({ onNext }: InstructionStepProps) {
 
           {/* Header */}
           <div className="mt-8 lg:mt-2 mb-4">
-            <h1 className="text-xl lg:text-[1.75rem] font-bold text-[#303F6C] leading-tight whitespace-pre-line">
+            <h1 className="text-xl lg:text-[1.75rem] font-semibold text-[#303F6C] leading-tight whitespace-pre-line">
               {t.title}
             </h1>
             
@@ -136,8 +136,8 @@ export function InstructionStep({ onNext }: InstructionStepProps) {
                   <FileText size={24} />
                 </div>
                 <div className="flex-1">
-                  <p className="text-[#1890FF] text-sm font-bold mb-1">{t.structureTitle}</p>
-                  <h3 className="text-gray-800 text-xl font-bold mb-2">{t.structureSubtitle}</h3>
+                  <p className="text-[#1890FF] text-sm font-semibold mb-1">{t.structureTitle}</p>
+                  <h3 className="text-gray-800 text-xl font-semibold mb-2">{t.structureSubtitle}</h3>
                   {/* Dots */}
                   <div className="flex gap-2 mb-2">
                     <span className="w-6 h-2 bg-[#1890FF] rounded-full"></span>

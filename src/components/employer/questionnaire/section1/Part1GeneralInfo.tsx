@@ -6,7 +6,7 @@ import { employerPart1, Question } from "@/data/employerMock";
 
 interface PartProps {
   answers: Record<string, any>;
-  onAnswer: (id: number | string, value: any) => void; // ✅ ปรับรองรับ string สำหรับ id_other
+  onAnswer: (id: number | string, value: any) => void;
   onNextPart: () => void;
   onScrollToTop?: () => void;
 }
@@ -135,7 +135,10 @@ export function Part1GeneralInfo({
                         : "bg-white border-gray-100 text-gray-400"
                     }`}
                   >
-                    <span className="text-lg md:text-2xl font-bold">{val}</span>
+                    {/* 1. แก้ไขเลข Rating เป็น font-semibold */}
+                    <span className="text-lg md:text-2xl font-semibold">
+                      {val}
+                    </span>
                   </button>
                   <span
                     className={`text-[10px] md:text-xs text-center ${isSelected ? "text-[#1890FF] font-medium" : "text-gray-400 font-light"}`}
@@ -177,7 +180,6 @@ export function Part1GeneralInfo({
                   <span className="text-base font-medium">{label}</span>
                 </label>
 
-                {/* ✅ ส่วนที่เพิ่ม: ช่องกรอกข้อมูลเมื่อเลือกตัวเลือกที่มี withInput */}
                 {withInput && isSelected && (
                   <div className="mt-3 ml-2 md:ml-4 pl-4 border-l-2 border-blue-200 animate-in slide-in-from-top-2 fade-in duration-300">
                     <input
@@ -214,7 +216,8 @@ export function Part1GeneralInfo({
                 (index === 0 ||
                   currentQuestions[index - 1].section !== q.section) && (
                   <div className="mb-8 mt-4">
-                    <h2 className="text-[#2994FF] font-bold text-lg md:text-xl uppercase tracking-wide">
+                    {/* 2. แก้ไขหัวข้อ Section เป็น font-semibold */}
+                    <h2 className="text-[#2994FF] font-semibold text-lg md:text-xl uppercase tracking-wide">
                       {q.section}
                     </h2>
                   </div>
@@ -241,17 +244,17 @@ export function Part1GeneralInfo({
         <button
           onClick={handleBack}
           disabled={isFirstPage}
-          className={`w-full sm:w-auto px-10 py-3.5 rounded-xl border font-medium ${isFirstPage ? "text-gray-300 border-gray-100" : "text-gray-600 border-gray-300 hover:bg-gray-50"}`}
+          className={`w-full sm:w-49 px-10 py-3.5 rounded-xl border font-medium ${isFirstPage ? "text-gray-300 border-gray-100" : "text-gray-600 border-gray-300 hover:bg-gray-50"}`}
         >
           ย้อนกลับ
         </button>
         <button
           onClick={handleNext}
           disabled={!isPageComplete}
-          className={`w-full sm:w-auto group relative overflow-hidden px-12 py-3.5 rounded-xl font-bold text-white transition-all ${!isPageComplete ? "bg-gray-200" : "bg-[#1890FF] shadow-lg shadow-blue-200"}`}
+          className={`w-full sm:w-49 group relative overflow-hidden px-12 py-3.5 rounded-xl font-semibold text-white transition-all ${!isPageComplete ? "bg-gray-200" : "bg-[#1890FF] shadow-lg shadow-blue-200"}`}
         >
           <span className="relative z-10 flex items-center justify-center gap-2">
-            ถัดไป <ChevronRight size={20} />
+            ถัดไป
           </span>
         </button>
       </div>

@@ -1,8 +1,8 @@
 // src/components/graduate/index.ts
 
-export { default as GraduateSidebar } from './GraduateSidebar';
+export { default as GraduateSidebar } from './questionnaire/steps/GraduateSidebar';
 export { default as GraduateProfileContent } from './GraduateProfileContent';
-export { default as SurveyStatusContent } from './SurveyStatusContent';
+export { default as SurveyStatusContent } from './questionnaire/steps/SurveyStatusContent';
 
 // Export Questionnaire Components
 export * from './questionnaire/QuestionnaireSidebar';

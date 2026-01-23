@@ -6,7 +6,7 @@ import { employerPart2, Question } from "@/data/employerMock";
 
 interface PartProps {
   answers: Record<string, any>;
-  onAnswer: (id: number | string, value: any) => void; // ✅ ปรับรองรับ string สำหรับ id_other
+  onAnswer: (id: number | string, value: any) => void;
   onNextPart: () => void;
   onBackPart: () => void;
   onScrollToTop?: () => void;
@@ -64,7 +64,6 @@ export function Part2Satisfaction({
     const value = answers[q.id.toString()] || "";
     const isFilled = value !== "" && value !== undefined && value !== null;
 
-    // ตรวจสอบว่าเป็นเรทติ้ง 1-5 หรือไม่
     const isRatingType =
       q.type === "radio" &&
       Array.isArray(q.options) &&
@@ -92,7 +91,10 @@ export function Part2Satisfaction({
                       : "bg-white border-gray-100 text-gray-400 hover:border-blue-200"
                   }`}
                 >
-                  <span className="text-lg md:text-2xl font-bold">{val}</span>
+                  {/* 1. แก้ไขเลข Rating เป็น font-semibold */}
+                  <span className="text-lg md:text-2xl font-semibold">
+                    {val}
+                  </span>
                 </button>
                 <span
                   className={`text-[10px] md:text-xs text-center transition-colors ${isSelected ? "text-[#1890FF] font-medium" : "text-gray-400 font-light"}`}
@@ -106,7 +108,6 @@ export function Part2Satisfaction({
       );
     }
 
-    // กรณีเป็น Radio แบบรายการปกติ (เผื่ออนาคตมีตัวเลือก "อื่น ๆ")
     if (q.type === "radio") {
       return (
         <div className="space-y-3">
@@ -169,12 +170,12 @@ export function Part2Satisfaction({
               key={q.id}
               className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-10 border-b border-gray-50 last:border-0 last:pb-0"
             >
-              {/* ส่วนหัวกลุ่มคำถาม (Section) */}
               {q.section &&
                 (index === 0 ||
                   currentQuestions[index - 1].section !== q.section) && (
                   <div className="mb-8 mt-4">
-                    <h2 className="text-[#2994FF] font-bold text-lg md:text-xl uppercase tracking-wide">
+                    {/* 2. แก้ไขหัวข้อ Section เป็น font-semibold */}
+                    <h2 className="text-[#2994FF] font-semibold text-lg md:text-xl uppercase tracking-wide">
                       {q.section}
                     </h2>
                   </div>
@@ -201,14 +202,14 @@ export function Part2Satisfaction({
       <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 sm:gap-4 mt-12 pt-8 border-t border-gray-100">
         <button
           onClick={handleBack}
-          className="w-full sm:w-auto px-10 py-3.5 rounded-xl border border-gray-300 text-gray-600 font-medium hover:bg-gray-50 transition-all bg-white"
+          className="w-full sm:w-49 px-10 py-3.5 rounded-xl border border-gray-300 text-gray-600 font-medium hover:bg-gray-50 transition-all bg-white"
         >
           ย้อนกลับ
         </button>
         <button
           onClick={handleNext}
           disabled={!isPageComplete}
-          className={`w-full sm:w-auto group relative overflow-hidden px-12 py-3.5 rounded-xl font-bold text-white transition-all duration-300 ${
+          className={`w-full sm:w-49 group relative overflow-hidden px-12 py-3.5 rounded-xl font-semibold text-white transition-all duration-300 ${
             !isPageComplete
               ? "bg-gray-200 cursor-not-allowed"
               : "bg-[#1890FF] shadow-lg shadow-blue-200 hover:shadow-blue-300"
@@ -216,10 +217,6 @@ export function Part2Satisfaction({
         >
           <span className="relative z-10 flex items-center justify-center gap-2">
             ถัดไป
-            <ChevronRight
-              size={20}
-              className={!isPageComplete ? "opacity-50" : ""}
-            />
           </span>
           {isPageComplete && (
             <span className="absolute left-1/2 bottom-0 w-100 h-100 bg-[#0060C0] rounded-full -translate-x-1/2 translate-y-1/2 scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-out z-0"></span>

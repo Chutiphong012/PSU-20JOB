@@ -39,10 +39,8 @@ export function EmployerSidebar({
   currentPart,
   totalProgress,
   progressData,
-  onPartChange,
 }: SidebarProps) {
   return (
-    // 🔥 ปรับ Layout: มือถือเป็น row (ถ้าต้องการ) หรือ col, ปรับ padding
     <div className="h-auto lg:h-full flex flex-col p-5 md:p-8 text-white font-['Prompt']">
       {/* 1. Header Section */}
       <div className="mb-4 lg:mb-10 pt-0 lg:pt-2">
@@ -51,13 +49,11 @@ export function EmployerSidebar({
             <FileText size={24} className="text-white lg:w-7 lg:h-7" />
           </div>
           <div className="pt-0 lg:pt-1">
-            <p className="text-[10px] text-blue-200 uppercase tracking-wider mb-0.5 font-semibold opacity-80">
-              แบบสำรวจ
-            </p>
-            <h2 className="text-sm lg:text-base font-bold leading-snug text-white drop-shadow-sm">
-              แบบสอบถามความพึงพอใจ
+            {/* ✅ เปลี่ยน font-bold เป็น font-semibold ที่นี่ */}
+            <h2 className="text-sm lg:text-base font-semibold leading-snug text-white drop-shadow-sm">
+              แบบสอบถามความพึงพอใจของนายจ้าง
               <br className="hidden lg:block" />
-              ของผู้ใช้บัณฑิต ม.อ.
+              หรือผู้ใช้บัณฑิต ม.อ. รุ่นปีการศึกษา 256X
             </h2>
           </div>
         </div>
@@ -78,8 +74,6 @@ export function EmployerSidebar({
       </div>
 
       {/* 2. Menu Navigation List */}
-      {/* 🔥 ซ่อนบนมือถือ (hidden) แสดงบนจอใหญ่ (lg:flex) เพื่อประหยัดที่ */}
-      {/* หรือถ้าต้องการให้แสดงบนมือถือด้วยให้ลบ 'hidden lg:flex' ออก แต่แนะนำให้ซ่อนเพราะมันจะยาวมาก */}
       <div className="hidden lg:flex flex-col gap-4">
         {structure.map((part) => {
           const percent = progressData[part.id] || 0;
@@ -89,20 +83,31 @@ export function EmployerSidebar({
           return (
             <div
               key={part.id}
-              onClick={() => onPartChange && onPartChange(part.id)}
-              className={`group relative flex items-center justify-between py-3 px-2 cursor-pointer transition-all duration-300 rounded-xl ${
-                isActive ? "bg-white/10 translate-x-1" : "hover:bg-white/5"
+              // ❌ ลบ onClick ออก เพื่อไม่ให้กดเปลี่ยนหน้าได้
+              // onClick={() => onPartChange && onPartChange(part.id)}
+              className={`group relative flex items-center justify-between py-3 px-2 transition-all duration-300 rounded-xl ${
+                // ✅ ปรับ Logic CSS:
+                // - ลบ cursor-pointer
+                // - ลบ hover:bg-white/5
+                // - คงไว้เฉพาะ Active state
+                isActive
+                  ? "bg-white/10 translate-x-1" // ถ้าเป็นหน้าปัจจุบัน ให้มีพื้นหลังและขยับ
+                  : "opacity-70" // ถ้าไม่ใช่หน้าปัจจุบัน ให้จางลงนิดหน่อย และไม่มี hover effect
               }`}
             >
               <div className="flex items-start gap-4 pr-4">
                 <div
-                  className={`mt-0.5 transition-opacity duration-300 ${isActive ? "opacity-100" : "opacity-60 group-hover:opacity-100"}`}
+                  className={`mt-0.5 transition-opacity duration-300 ${
+                    isActive ? "opacity-100" : "opacity-60" // ลบ group-hover:opacity-100 ออก
+                  }`}
                 >
                   {getPartIcon(part.id)}
                 </div>
                 <div className="flex flex-col">
                   <span
-                    className={`text-sm font-semibold leading-tight transition-colors ${isActive ? "text-white" : "text-white/70 group-hover:text-white"}`}
+                    className={`text-sm font-semibold leading-tight transition-colors ${
+                      isActive ? "text-white" : "text-white/70" // ลบ group-hover:text-white ออก
+                    }`}
                   >
                     {part.label}
                   </span>

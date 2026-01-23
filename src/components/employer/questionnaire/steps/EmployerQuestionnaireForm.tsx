@@ -28,7 +28,7 @@ export function EmployerQuestionnaireForm({ onComplete }: FormProps) {
 
   const topRef = useRef<HTMLDivElement>(null);
 
-  // ✅ รองรับทั้ง number และ string (แก้ไข Error เส้นหยักสีแดง)
+  // ✅ รองรับทั้ง number และ string
   const handleAnswer = (id: number | string, value: any) => {
     setAnswers((prev) => ({ ...prev, [id.toString()]: value }));
   };
@@ -50,7 +50,7 @@ export function EmployerQuestionnaireForm({ onComplete }: FormProps) {
       1: employerPart1,
       2: employerPart2,
       3: [employerPart3Categories, ...subQuestions],
-      4: employerPart4, // ✅ ใช้ข้อมูลจริงจาก mock (ID 121, 122, 123)
+      4: employerPart4,
     };
   }, [answers]);
 
@@ -61,12 +61,11 @@ export function EmployerQuestionnaireForm({ onComplete }: FormProps) {
 
     employerStructure.forEach((part) => {
       const questions = allPartsData[part.id] || [];
-      // ✅ กรองเอาเฉพาะข้อที่ Required มาคำนวณ Progress
       const requiredQuestions = questions.filter((q) => q.required);
       const partTotal = requiredQuestions.length;
 
       const partAnswered = requiredQuestions.filter((q) => {
-        const val = answers[q.id.toString()]; // ✅ ใช้ string key เสมอ
+        const val = answers[q.id.toString()];
         return val !== undefined && val !== "" && val !== null;
       }).length;
 
@@ -122,7 +121,8 @@ export function EmployerQuestionnaireForm({ onComplete }: FormProps) {
             <div className="flex bg-linear-to-r from-[#F0F7FF] via-[#F8FBFF] to-white/0 pr-12 sm:pr-20">
               <div className="w-1.5 bg-[#2B76E5] shrink-0"></div>
               <div className="pl-5 py-3">
-                <h1 className="text-3xl md:text-4xl font-bold text-[#2B76E5] leading-none mb-2">
+                {/* 1. แก้ไขจาก font-bold เป็น font-semibold */}
+                <h1 className="text-3xl md:text-4xl font-semibold text-[#2B76E5] leading-none mb-2">
                   ตอนที่ {currentPart}
                 </h1>
                 <p className="text-[#6BA5F2] text-lg md:text-xl font-medium leading-tight">
@@ -137,7 +137,8 @@ export function EmployerQuestionnaireForm({ onComplete }: FormProps) {
                   <div
                     className={`absolute inset-0 bg-linear-to-r ${completeGradient} animate-shimmer-ltr`}
                   />
-                  <span className="relative z-10 text-xs md:text-sm text-white font-bold">
+                  {/* 2. แก้ไขจาก font-bold เป็น font-semibold */}
+                  <span className="relative z-10 text-xs md:text-sm text-white font-semibold">
                     Complete
                   </span>
                 </div>
@@ -149,8 +150,9 @@ export function EmployerQuestionnaireForm({ onComplete }: FormProps) {
                     <div className="h-full w-full bg-white rounded-full"></div>
                   </div>
                   <div className="relative flex items-center justify-center px-4 md:px-6 h-full overflow-hidden">
+                    {/* 3. แก้ไขจาก font-bold เป็น font-semibold */}
                     <span
-                      className={`text-xs md:text-sm font-bold bg-linear-to-r ${inProgressGradient} bg-clip-text text-transparent animate-shimmer-ltr`}
+                      className={`text-xs md:text-sm font-semibold bg-linear-to-r ${inProgressGradient} bg-clip-text text-transparent animate-shimmer-ltr`}
                     >
                       In Progress
                     </span>
