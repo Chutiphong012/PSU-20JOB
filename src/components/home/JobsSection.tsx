@@ -3,23 +3,26 @@
 
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-
-const mockReports = [
-  {
-    id: '1',
-    title: 'ข้อปฏิบัติการรายงานตัว',
-    description: 'ข้อปฏิบัติการรายงานตัวเพื่อเข้ารับพระราชทานปริญญาบัตร ผ่าน Web ของนักศึกษาที่สำเร็จการศึกษา ปีการศึกษา 2567',
-    link: '/report/detail',
-  },
-  {
-    id: '2',
-    title: 'รายงานภาวะการทำงาน',
-    description: 'รายงานภาวะการทำงานของบัณฑิต สำหรับตรวจสอบข้อมูลสถิติและผลการสำรวจ',
-    link: '/report/detail',
-  },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function JobsSection() {
+  const { t } = useTranslation(['home', 'common']);
+
+  const reportsList = [
+    {
+      id: '1',
+      title: t('reports.mock_1_title'),
+      description: t('reports.mock_1_desc'),
+      link: '/report/detail',
+    },
+    {
+      id: '2',
+      title: t('reports.mock_2_title'),
+      description: t('reports.mock_2_desc'),
+      link: '/report/detail',
+    },
+  ];
+
   return (
     <section className="font-['Prompt']" id="reports">
       <div className="max-w-360 mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,7 +33,7 @@ export default function JobsSection() {
           {/* Header Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 gap-2">
             <h3 className="text-[#052A55] text-xl md:text-2xl font-semibold">
-              รายงาน
+              {t('reports.title')}
             </h3>
             
             <Link 
@@ -38,7 +41,7 @@ export default function JobsSection() {
               href="/news?category=รายงาน"
               className="text-gray-400 text-xs md:text-sm hover:text-[#18305D] transition-colors bg-white px-4 py-1 rounded-full border border-gray-200 shadow-sm hover:shadow-md self-end md:self-auto"
             >
-              ทั้งหมด
+              {t('common:view_all')}
             </Link>
           </div>
 
@@ -47,7 +50,7 @@ export default function JobsSection() {
           
           {/* Reports Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {mockReports.map((report) => (
+            {reportsList.map((report) => (
               <div 
                 key={report.id} 
                 className="bg-white rounded-3xl p-6 md:p-8 shadow-sm hover:shadow-lg transition-shadow border border-gray-100 flex flex-col h-full group"
@@ -64,7 +67,7 @@ export default function JobsSection() {
                   href={report.link} 
                   className="flex items-center gap-1 text-[#1D3557] text-sm font-medium hover:gap-2 transition-all mt-auto"
                 >
-                  อ่านเพิ่มเติม <ArrowRight size={16} />
+                  {t('common:read_more')} <ArrowRight size={16} />
                 </Link>
               </div>
             ))}

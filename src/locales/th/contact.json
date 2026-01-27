@@ -1,0 +1,36 @@
+{
+  "header": {
+    "title": "ติดต่อเรา",
+    "subtitle": "ระบบฐานข้อมูลภาวะการมีงานทำของบัณฑิต มหาวิทยาลัยสงขลานครินทร์"
+  },
+  "info": {
+    "title": "ข้อมูลการติดต่อ",
+    "address_label": "ที่อยู่",
+    "address_value": "มหาวิทยาลัยสงขลานครินทร์<br/>15 ถนนกาญจนวนิช ตำบลหาดใหญ่ อำเภอหาดใหญ่ จังหวัดสงขลา 90110",
+    "phone_label": "โทรศัพท์",
+    "email_label": "อีเมล",
+    "line_label": "ไลน์",
+    "hours_label": "เวลาทำการ",
+    "hours_value": "จันทร์ - ศุกร์ เวลา 08:30 - 16:30 น."
+  },
+  "form": {
+    "title": "ส่งข้อความถึงเรา",
+    "name_label": "ชื่อ - นามสกุล",
+    "name_placeholder": "ชื่อ - นามสกุล",
+    "email_label": "อีเมล",
+    "email_placeholder": "อีเมล",
+    "phone_label": "เบอร์โทรศัพท์",
+    "phone_placeholder": "เบอร์โทรศัพท์",
+    "subject_label": "หัวเรื่อง",
+    "subject_placeholder": "หัวเรื่อง",
+    "message_label": "ข้อความ",
+    "message_placeholder": "ข้อความ",
+    "submit_btn": "ส่งข้อความ",
+    "validation_error": "กรุณากรอกข้อมูลในช่องที่มีเครื่องหมาย * ให้ครบถ้วน"
+  },
+  "popup": {
+    "success_title": "ส่งข้อความสำเร็จ",
+    "success_desc": "ขอบคุณที่ติดต่อเรา เราจะตอบกลับโดยเร็วที่สุด",
+    "close_btn": "Close"
+  }
+}

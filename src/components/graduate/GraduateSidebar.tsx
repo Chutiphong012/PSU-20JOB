@@ -2,10 +2,11 @@
 
 'use client';
 
-import { useState } from 'react'; // 1. เพิ่ม useState
+import { useState } from 'react'; 
 import Link from 'next/link';
 import { User, Home, FileCheck, LogOut } from 'lucide-react';
 import { graduateSidebarUser } from '@/data/graduateData';
+import { useTranslation } from 'react-i18next'; // [NEW]
 
 import LogoutModal from '@/components/common/LogoutModal';
 
@@ -17,12 +18,13 @@ interface GraduateSidebarProps {
 }
 
 export default function GraduateSidebar({ user, logout, activeTab, onTabChange }: GraduateSidebarProps) {
+  const { t } = useTranslation(['graduate', 'common']); 
   // 3. สร้าง State ควบคุมการเปิด/ปิด Modal
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const displayUser = {
-    name: user?.name || graduateSidebarUser.name,
-    studentId: user?.studentId || graduateSidebarUser.studentId,
+    name: user?.name || graduateSidebarUser.name || "User Name",
+    studentId: user?.studentId || graduateSidebarUser.studentId || "Student ID",
     degree: user?.degree || graduateSidebarUser.degree 
   };
 
@@ -48,7 +50,7 @@ export default function GraduateSidebar({ user, logout, activeTab, onTabChange }
                       {displayUser.name}
                   </h3>
                   <span className="bg-[#18305D] text-white text-[10px] px-2 py-0.5 rounded-full shrink-0">
-                      {displayUser.degree || 'ปริญญาตรี'}
+                      {displayUser.degree || t('graduate:sidebar.degree_default', 'ปริญญาตรี')}
                   </span>
               </div>
               <p className="text-gray-500 text-sm truncate">
@@ -62,7 +64,7 @@ export default function GraduateSidebar({ user, logout, activeTab, onTabChange }
         {/* 2. Menu Navigation */}
         <nav className="flex flex-col gap-1 mb-4">
             <Link href="/" className="flex items-center gap-4 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl transition-colors font-medium">
-                <Home size={22} /> หน้าหลัก
+                <Home size={22} /> {t('common:nav.home', 'หน้าหลัก')}
             </Link>
             
             {/* เมนู: ข้อมูลส่วนตัว */}
@@ -74,7 +76,7 @@ export default function GraduateSidebar({ user, logout, activeTab, onTabChange }
                   : 'text-gray-500 hover:bg-gray-50 font-medium'
                 }`}
             >
-                <User size={22} /> ข้อมูลส่วนตัว
+                <User size={22} /> {t('graduate:sidebar.profile')}
             </button>
   
             {/* เมนู: สถานะการตอบแบบสอบถาม */}
@@ -86,7 +88,7 @@ export default function GraduateSidebar({ user, logout, activeTab, onTabChange }
                   : 'text-gray-500 hover:bg-gray-50 font-medium'
                 }`}
             >
-                <FileCheck size={22} /> สถานะการตอบแบบสอบถาม
+                <FileCheck size={22} /> {t('graduate:sidebar.survey_status')}
             </button>
         </nav>
   
@@ -97,7 +99,7 @@ export default function GraduateSidebar({ user, logout, activeTab, onTabChange }
           onClick={() => setIsLogoutModalOpen(true)} 
           className="flex items-center gap-4 px-4 py-2 text-gray-500 hover:text-red-500 transition-colors w-full text-left font-medium cursor-pointer"
         >
-            <LogOut size={22} /> ออกจากระบบ
+            <LogOut size={22} /> {t('common:buttons.logout')}
         </button>
   
       </aside>

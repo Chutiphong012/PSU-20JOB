@@ -3,10 +3,11 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { assessmentData, ratingOptions } from "@/data/assessmentMock";
+import { assessmentData, ratingOptions, assessmentPageContent } from "@/data/assessmentMock";
 import GraduationCapGif from "@/assets/GraduationCap.gif";
 import { Check, X } from "lucide-react";
 import { WarningModal } from "@/components/common"; // ✅ เรียกใช้ Modal แจ้งเตือน
+import { useTranslation } from "react-i18next";
 
 interface Section2Props {
   answers: Record<string, any>;
@@ -26,6 +27,7 @@ export function Section2Assessment({
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false); // ✅ เพิ่ม State Warning
+  const { t, i18n } = useTranslation("graduate");
 
   const currentCategory = assessmentData[currentCategoryIndex];
   const { theme } = currentCategory;
@@ -110,19 +112,25 @@ export function Section2Assessment({
   const inProgressGradient = "from-[#33CCCC] via-[#85EDFD] to-[#2994FF]";
   const completeGradient = "from-[#2995FD] via-[#5CE1E6] to-[#2995FD]";
 
+  // ✅ Helper for LocalizedText
+  const getLocalizedText = (obj: { th: string; en: string } | string) => {
+    if (typeof obj === "string") return t(obj); // Fallback if it's a key
+    return i18n.language === "en" ? obj.en : obj.th;
+  };
+
   return (
     <div className="flex flex-col gap-4 md:gap-6 animate-in fade-in duration-300 font-['Prompt'] relative p-1 md:p-0">
       {/* Header & Progress Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative">
         <div className="text-left">
           <span className="text-[#1890FF] text-xs md:text-sm font-medium">
-            ส่วนที่ 2 การประเมินตนเองของบัณฑิต
+            {t("questionnaire.instruction.sections.part_2")}
           </span>
           <h1 className="text-[#1890FF] text-2xl md:text-3xl font-bold mt-1 leading-tight">
-            การประเมินตนเอง
+            {getLocalizedText(assessmentPageContent.title)}
           </h1>
           <p className="text-[#1890FF] text-sm md:text-base mt-2 opacity-80 leading-relaxed">
-            ปัจจุบันคิดว่าท่านมีทักษะ/ความรู้ด้านต่าง ๆ ในระดับใด
+            {getLocalizedText(assessmentPageContent.description)}
           </p>
         </div>
         <div className="relative mt-2 md:mt-0 self-start md:self-center shrink-0">
@@ -177,9 +185,9 @@ export function Section2Assessment({
           className="text-xl md:text-3xl font-bold flex flex-wrap items-center gap-2 transition-colors duration-300"
           style={{ color: theme.main }}
         >
-          {currentCategory.title}
+          {getLocalizedText(currentCategory.title)}
           <span className="text-lg md:text-xl font-normal opacity-80 text-gray-400">
-            {currentCategory.subTitle}
+            {getLocalizedText(currentCategory.subTitle)}
           </span>
         </h2>
       </div>
@@ -211,7 +219,7 @@ export function Section2Assessment({
                     ข้อที่ {index + 1}
                   </span>
                   <h3 className="text-[#18305D] font-medium text-base md:text-xl leading-snug">
-                    {q.label}
+                    {getLocalizedText(q.label)}
                   </h3>
                 </div>
 
@@ -251,7 +259,7 @@ export function Section2Assessment({
                           className="text-[9px] md:text-xs font-medium text-center leading-tight transition-colors duration-300"
                           style={{ color: isSelected ? theme.main : "#9CA3AF" }}
                         >
-                          {opt.label}
+                          {getLocalizedText(opt.label)}
                         </span>
                       </div>
                     );

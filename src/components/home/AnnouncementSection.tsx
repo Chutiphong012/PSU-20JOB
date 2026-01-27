@@ -1,17 +1,21 @@
 // src/components/home/AnnouncementSection.tsx
 'use client';
 
+import { useTranslation, Trans } from 'react-i18next'; // [NEW]
+
 export default function AnnouncementSection() {
+  const { t } = useTranslation(['home', 'common']); // [NEW]
+
   return (
     <section className="py-10 md:py-16 font-['Prompt']">
       
       <div className="text-center mb-10 md:mb-16">
           <div className="mt-6 md:mt-10 mb-8 md:mb-12">
              <h1 className="text-[#1D3557] text-2xl md:text-4xl font-bold mb-2 md:mb-4 drop-shadow-sm leading-tight">
-               ยินดีต้อนรับสู่ ระบบฐานข้อมูล<br className="md:hidden"/> ภาวะการมีงานทำของบัณฑิต
+               {t('welcome_1')}<br className="md:hidden"/> {t('welcome_2')}
              </h1>
              <h2 className="text-[#1D3557] text-lg md:text-2xl font-semibold">
-               มหาวิทยาลัยสงขลานครินทร์
+               {t('university')}
              </h2>
           </div>
         </div>
@@ -23,7 +27,7 @@ export default function AnnouncementSection() {
           
           {/* หัวข้อ */}
           <h3 className="text-[#052A55] text-xl md:text-2xl font-semibold mb-4">
-            คำชี้แจง
+            {t('announcement.title')}
           </h3>
           
           {/* เส้นขีดคั่น */}
@@ -31,31 +35,35 @@ export default function AnnouncementSection() {
           
           {/* เนื้อหาเกริ่นนำ */}
           <p className="text-gray-600 font-light leading-relaxed mb-6 md:mb-8 text-sm md:text-base">
-            ระบบฐานข้อมูลภาวะการมีงานทำของบัณฑิตมหาวิทยาลัยสงขลานครินทร์ได้รับการพัฒนาขึ้นเพื่อติดตามและประเมินผลการมีงานทำของบัณฑิตภายหลังสำเร็จการศึกษา
+            {t('announcement.intro')}
           </p>
 
           {/* Card ข้อมูล */}
           <div className="bg-white border border-gray-200 rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden">
             <h4 className="text-[#FF4D4D] text-base md:text-lg font-bold mb-4">
-              แบบสอบถามนี้มี 2 ส่วน (ต้องตอบทุกส่วน)
+              {t('announcement.card_title')}
             </h4>
             
             <ul className="text-xs md:text-sm text-gray-500 font-light space-y-3 list-decimal list-inside leading-loose">
               <li>
-                การบันทึกข้อมูล กรุณาตอบข้อมูลให้สมบูรณ์ กรณีที่มีข้อมูลในเรื่อง ๆ นั้น ให้ใส่{' '}
-                <span className="text-[#FF4D4D] font-bold">-</span>{' '}
-                <span className="text-[#3A77CD] font-medium wrap-break-word">
-                  (อย่าเว้นไว้ เพราะระบบจะไม่สามารถบันทึก และผ่านไปยัง หน้าถัดไป)
-                </span>
+                <Trans 
+                  i18nKey="announcement.item_1" 
+                                    t={t} // Pass t explicitly if needed, usually Trans uses context t but passing safe
+                  components={{
+                    1: <span className="text-[#FF4D4D] font-bold" />,
+                    2: <span className="text-[#3A77CD] font-medium wrap-break-word" />
+                  }} 
+                />
               </li>
               <li>
-                เมื่อบันทึกข้อมูลเสร็จแล้ว กรณีที่ไม่สามารถพิมพ์ใบรับรองได้ทันที บัณฑิตสามารถเข้ามา Print{' '}
-                <br className="hidden md:block" />
-                ใบรับรองได้ในภายหลัง ให้ไปที่หัวข้อ{' '}
-                <span className="text-[#FF4D4D] font-bold">"พิมพ์ใบรายงาน"</span>{' '}
-                <span className="text-[#3A77CD] font-medium">
-                  โดยไม่ต้องบันทึกข้อมูลใหม่!!!
-                </span>
+                <Trans 
+                  i18nKey="announcement.item_2" 
+                  components={{
+                    br: <br className="hidden md:block" />,
+                    1: <span className="text-[#FF4D4D] font-bold" />,
+                    2: <span className="text-[#3A77CD] font-medium" />
+                  }} 
+                />
               </li>
             </ul>
           </div>

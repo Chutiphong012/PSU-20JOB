@@ -1,0 +1,24 @@
+{
+  "header": {
+    "back_home": "Back to Home",
+    "title": "News & Announcements"
+  },
+  "list": {
+    "total_items": "{{count}} Items",
+    "search_placeholder": "Search news...",
+    "read_more": "Read More",
+    "categories": {
+      "all": "All",
+      "announcement": "Announcement",
+      "report": "Report"
+    }
+  },
+  "detail": {
+    "back": "Back",
+    "share_label": "Share this news",
+    "loading": "Loading..."
+  },
+  "decorative": {
+    "psu_news": "PSU News"
+  }
+}

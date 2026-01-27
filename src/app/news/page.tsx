@@ -1,10 +1,11 @@
 'use client';
 
 import { Suspense } from 'react';
-
+import { useTranslation } from 'react-i18next';
 import { NewsHeader, NewsList } from "@/components/news";
 
 export default function NewsPage() {
+  const { t } = useTranslation('news');
   return (
     <div className="font-['Prompt'] bg-[#F2F2F2] min-h-screen flex flex-col">
   
@@ -12,7 +13,7 @@ export default function NewsPage() {
         <NewsHeader />
         
         {/* ต้อง Wrap ด้วย Suspense เพราะข้างในมีการใช้ useSearchParams */}
-        <Suspense fallback={<div>กำลังโหลดข้อมูล...</div>}>
+        <Suspense fallback={<div>{t('detail.loading')}</div>}>
            <NewsList />
         </Suspense>
       </main>

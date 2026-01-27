@@ -4,11 +4,16 @@
 import { GraduationCap, Edit, Printer } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { section1Structure } from "@/data/questionnaireMock";
+import { section1Structure, LocalizedText } from "@/data/questionnaireMock";
 import { assessmentData } from "@/data/assessmentMock";
+import { useTranslation, Trans } from 'react-i18next';
 
 export function InstructionContent() {
   const router = useRouter();
+  const { t, i18n } = useTranslation('graduate');
+  
+  // Helper to get text based on current language
+  const getLocalizedText = (text: LocalizedText) => text[i18n.language as 'th' | 'en'] || text.th;
 
   return (
     <div className="w-full bg-white shadow-xl rounded-b-4xl rounded-t-none overflow-hidden font-['Prompt'] flex flex-col relative border border-gray-100 min-h-[calc(100vh-2rem)]">
@@ -21,7 +26,7 @@ export function InstructionContent() {
         />
 
         <h1 className="text-white text-lg md:text-2xl font-bold leading-snug tracking-wide drop-shadow-md max-w-4xl px-4">
-          แบบสอบถามภาวะการมีงานทำของบัณฑิต ประจำปี 256X
+          {t('questionnaire.header_title')}
         </h1>
       </div>
 
@@ -31,7 +36,7 @@ export function InstructionContent() {
         <div>
           <div className="flex items-center gap-3 mb-5 border-l-[6px] border-[#1890FF] pl-4 h-8">
             <h2 className="text-[#1890FF] text-xl md:text-2xl font-bold self-center pt-1">
-              คำชี้แจง
+              {t('questionnaire.instruction.title')}
             </h2>
           </div>
 
@@ -43,15 +48,14 @@ export function InstructionContent() {
               </div>
               <div>
                 <h3 className="text-[#1D39C4] font-bold text-lg mb-1">
-                  การบันทึกข้อมูล
+                  {t('questionnaire.instruction.recording.title')}
                 </h3>
                 <p className="text-[#595959] text-sm md:text-base leading-relaxed">
-                  กรุณาตอบข้อมูลให้สมบูรณ์{" "}
+                  {t('questionnaire.instruction.recording.desc')}{" "}
                   <span className="inline-block bg-[#FFF7E6] text-[#D46B08] px-2 py-0.5 rounded border border-[#FFD591] font-medium text-xs md:text-sm mx-1">
-                    กรณีที่ไม่มีข้อมูลในเรื่องนั้น ๆ ให้ใส่เครื่องหมายลบ ( - )
+                    {t('questionnaire.instruction.recording.hl')}
                   </span>{" "}
-                  อย่าเว้นว่างไว้
-                  เพราะระบบจะไม่สามารถบันทึกและผ่านไปหน้าถัดไปได้
+                  {t('questionnaire.instruction.recording.desc_2')}
                 </p>
               </div>
             </div>
@@ -63,20 +67,20 @@ export function InstructionContent() {
               </div>
               <div>
                 <h3 className="text-[#135200] font-bold text-lg mb-1">
-                  การพิมพ์ใบรับรอง
+                  {t('questionnaire.instruction.printing.title')}
                 </h3>
                 <p className="text-[#595959] text-sm md:text-base leading-relaxed">
-                  สามารถพิมพ์หรือบันทึกหน้าจอไว้ในเครื่อง
-                  แล้วนำไปแสดง/ส่งให้เจ้าหน้าที่ ที่เกี่ยวข้องได้
-                  <span className="hidden lg:inline"> </span>
-                  และใน กรณีที่{" "}
-                  <span className="text-[#CF1322] font-bold">
-                    ไม่สามารถ
-                  </span>{" "}
-                  พิมพ์ใบรับรองได้ทันที บัณฑิตสามารถเข้ามาบันทึกได้ในภายหลัง
-                  โดยไปที่หัวข้อ{" "}
-                  <span className="font-bold text-gray-800">พิมพ์ใบรายงาน</span>{" "}
-                  โดยไม่ต้องบันทึกข้อมูลใหม่
+                   <Trans i18nKey="graduate:questionnaire.instruction.printing.desc_full">
+                    {t('questionnaire.instruction.printing.desc')}
+                    <span className="hidden lg:inline"> </span>
+                    {/* Note: logic for splitting text might be tricky with Trans, simplifying to use spans directly if needed or just Trans text interpolation */}
+                     <span className="text-[#CF1322] font-bold">
+                       {t('questionnaire.instruction.printing.hl')}
+                     </span>{" "}
+                     {t('questionnaire.instruction.printing.desc_2')}{" "}
+                    <span className="font-bold text-gray-800">{t('questionnaire.instruction.printing.menu_hl')}</span>{" "}
+                    {t('questionnaire.instruction.printing.desc_3')}
+                   </Trans>
                 </p>
               </div>
             </div>
@@ -94,10 +98,10 @@ export function InstructionContent() {
           <div className="relative flex justify-center">
             <div className="bg-white px-6 text-center">
               <span className="block text-[#1890FF] font-bold text-2xl md:text-2xl">
-                แบบสอบถามนี้มี 2 ส่วน
+                {t('questionnaire.instruction.summary.part_1')}
               </span>
               <span className="block text-[#1890FF]  text-xl mt-1 ">
-                “ ต้องตอบให้ครบทุกส่วน ”
+                {t('questionnaire.instruction.summary.part_2')}
               </span>
             </div>
           </div>
@@ -111,10 +115,10 @@ export function InstructionContent() {
               <div className="flex justify-between items-center text-white">
                 <div>
                   <div className="text-xs font-medium opacity-90 mb-1 uppercase tracking-wider">
-                    ส่วนที่ 1
+                    {t('questionnaire.instruction.sections.part_1')}
                   </div>
                   <div className="font-bold text-lg md:text-xl">
-                    ภาวะการมีงานทำของบัณฑิต
+                    {t('questionnaire.instruction.sections.part_1_title')}
                   </div>
                 </div>
                 <div className="w-10 h-10 rounded-full border-2 border-white/40 flex items-center justify-center text-xl font-bold bg-white/10">
@@ -123,13 +127,14 @@ export function InstructionContent() {
               </div>
             </div>
 
+
             <div className="relative z-10 -mt-6 ml-4 pt-9 pb-4 pr-4 pl-5 bg-white border-l-[6px] border-[#722ED1] rounded-r-2xl rounded-bl-2xl shadow-sm border-t-0   ">
               <div className="flex flex-col gap-2">
                 {section1Structure.map((part, index) => (
                   <ListItem
                     key={index}
-                    label={part.label}
-                    count={`${part.count} ข้อ`}
+                    label={getLocalizedText(part.label)}
+                    count={`${part.count} ${t('questionnaire.instruction.unit_items')}`}
                     theme="purple"
                   />
                 ))}
@@ -143,10 +148,10 @@ export function InstructionContent() {
               <div className="flex justify-between items-center text-white">
                 <div>
                   <div className="text-xs font-medium opacity-90 mb-1 uppercase tracking-wider">
-                    ส่วนที่ 2
+                    {t('questionnaire.instruction.sections.part_2')}
                   </div>
                   <div className="font-bold text-lg md:text-xl">
-                    การประเมินตนเองของบัณฑิต
+                    {t('questionnaire.instruction.sections.part_2_title')}
                   </div>
                 </div>
                 <div className="w-10 h-10 rounded-full border-2 border-white/40 flex items-center justify-center text-xl font-bold bg-white/10">
@@ -160,8 +165,8 @@ export function InstructionContent() {
                 {assessmentData.map((category, index) => (
                   <ListItem
                     key={category.id}
-                    label={`${index + 1}. ${category.title} ${category.subTitle}`}
-                    count={`${category.questions.length} ข้อ`}
+                    label={`${index + 1}. ${getLocalizedText(category.title)} ${getLocalizedText(category.subTitle)}`} // [Updated]
+                    count={`${category.questions.length} ${t('questionnaire.instruction.unit_items')}`}
                     theme="teal"
                   />
                 ))}
@@ -171,10 +176,12 @@ export function InstructionContent() {
         </div>
       </div>
 
+
+
       {/* 3. Footer Actions (ปรับปุ่มให้เล็กกระชับตามที่เคยขอ) */}
       <div className="bg-[#F9FAFB] px-6 py-8 md:px-10 border-t border-gray-200 mt-auto">
         <div className="text-center text-gray-400 text-xs mb-6 font-light">
-          ระบบจะเก็บข้อมูลของท่านไว้เป็นความลับตามนโยบายของสถาบัน
+          {t('questionnaire.privacy_note')}
         </div>
 
         <div className="flex flex-col-reverse md:flex-row gap-4 items-center w-full max-w-xl mx-auto">
@@ -182,7 +189,7 @@ export function InstructionContent() {
             onClick={() => router.back()}
             className="w-full md:flex-1 py-3 rounded-xl border border-gray-300 text-gray-500 font-bold bg-white hover:bg-gray-50 transition-all active:scale-95 shadow-sm"
           >
-            ย้อนกลับ
+            {t('questionnaire.buttons.back')}
           </button>
 
           <Link
@@ -190,7 +197,7 @@ export function InstructionContent() {
             className="w-full md:flex-1 block"
           >
             <button className="w-full py-3 rounded-xl bg-[#2F54EB] text-white font-bold text-lg hover:bg-[#1D39C4] transition-all shadow-lg shadow-blue-200/50 hover:shadow-blue-300/50 active:scale-95">
-              เริ่มทำแบบสอบถาม
+              {t('questionnaire.buttons.start')}
             </button>
           </Link>
         </div>

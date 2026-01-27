@@ -1,11 +1,13 @@
 // src/components/graduate/questionnaire/parts/Part1GeneralInfo.tsx
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
-import { ChevronDown } from "lucide-react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { ChevronDown, Languages, MessageCircle, Globe, Calculator, Laptop, Wifi, Wrench, FileSearch, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
-import { questionPart1, section1Structure } from "@/data/questionnaireMock"; // ✅ Import section1Structure
+import { questionPart1, section1Structure, LocalizedText, QuestionOption } from "@/data/questionnaireMock";
 import GraduationCapGif from "@/assets/GraduationCap.gif";
+import { useTranslation } from "react-i18next";
+
 
 interface Part1Props {
   answers: Record<string, any>;
@@ -15,16 +17,39 @@ interface Part1Props {
   onProgressChange?: (percent: number) => void;
 }
 
+const iconMap: Record<string, any> = {
+  languages: Languages,
+  "message-circle": MessageCircle,
+  globe: Globe,
+  calculator: Calculator,
+  laptop: Laptop,
+  wifi: Wifi,
+  wrench: Wrench,
+  "file-search": FileSearch,
+  "more-horizontal": MoreHorizontal,
+};
+
+const ratingEmojis = ["😭", "☹️", "😐", "😁", "🤩"];
+
 export function Part1GeneralInfo({
   answers,
   onAnswer,
   onNextPart,
   onProgressChange,
 }: Part1Props) {
+  const { t, i18n } = useTranslation("graduate");
+  
+  // Helper to get text based on current language
+  const getLocalizedText = (text: LocalizedText) => text[i18n.language as 'th' | 'en'] || text.th;
+  
   // ✅ ดึงข้อมูล Structure ของ Part 1 (Index 0) มาใช้
   const partInfo = section1Structure[0];
 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const [hoverRating, setHoverRating] = useState<{
+    qId: number;
+    val: number;
+  } | null>(null);
 
   const uniquePages = useMemo(
     () =>
@@ -95,7 +120,19 @@ export function Part1GeneralInfo({
 
   const displayProgress = isPartComplete ? 100 : currentProgress;
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const topRef = useRef<HTMLDivElement>(null);
+  const scrollToTop = () => {
+      // ใช้ setTimeout เพื่อให้แน่ใจว่า DOM ถูก Render เรียบร้อยแล้ว
+      setTimeout(() => {
+        // 1. Force Scroll ที่ Window ก่อน
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        
+        // 2. ถ้ามี Ref ให้ Scroll ไปที่ Ref
+        if (topRef.current) {
+          topRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 50);
+  };
 
   const handleNext = () => {
     if (currentPageIndex < uniquePages.length - 1) {
@@ -136,16 +173,16 @@ export function Part1GeneralInfo({
   const completeGradient = "from-[#2995FD] via-[#5CE1E6] to-[#2995FD]";
 
   return (
-    <div className="flex flex-col gap-4 md:gap-6 animate-in fade-in duration-300 font-['Prompt']">
+    <div ref={topRef} className="flex flex-col gap-4 md:gap-6 animate-in fade-in duration-300 font-['Prompt']">
       {/* Header - ปรับ Padding และ Gap สำหรับมือถือ */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 relative">
         <div className="text-left px-1 md:px-0">
           <span className="text-[#1890FF] text-xs md:text-sm font-medium">
-            ส่วนที่ 1 ภาวะการมีงานทำของบัณฑิต
+            {t('questionnaire.section_title')}
           </span>
           {/* ✅ ใช้ Label จาก Mock Data แทน Text Hardcode */}
           <h1 className="text-[#1890FF] text-2xl md:text-3xl font-bold mt-1 leading-tight">
-            {partInfo.label}
+            {getLocalizedText(partInfo.label)}
           </h1>
         </div>
 
@@ -156,7 +193,7 @@ export function Part1GeneralInfo({
                 className={`absolute inset-0 bg-linear-to-r ${completeGradient} animate-shimmer-ltr`}
               />
               <span className="relative z-10 text-xs md:text-sm text-white pt-1 font-bold">
-                Complete
+                {t('questionnaire.alerts.complete')}
               </span>
             </div>
           ) : (
@@ -171,7 +208,7 @@ export function Part1GeneralInfo({
                 <span
                   className={`text-xs md:text-sm font-bold bg-linear-to-r ${inProgressGradient} bg-clip-text text-transparent pt-1 animate-shimmer-ltr relative z-10`}
                 >
-                  In Progress
+                  {t('questionnaire.alerts.in_progress')}
                 </span>
               </div>
 
@@ -236,7 +273,7 @@ export function Part1GeneralInfo({
                       isDisabled ? "text-gray-500" : "text-[#18305D]"
                     }`}
                   >
-                    {question.label}
+                    {getLocalizedText(question.label)}
                   </h3>
                 </div>
 
@@ -268,7 +305,7 @@ export function Part1GeneralInfo({
                           }
                         >
                           <option value="" disabled className="text-gray-400">
-                            {question.placeholder}
+                            {question.placeholder ? getLocalizedText(question.placeholder) : ''}
                           </option>
                           {question.options?.map((opt: any) => (
                             <option
@@ -276,7 +313,7 @@ export function Part1GeneralInfo({
                               value={typeof opt === "string" ? opt : opt.value}
                               className="text-gray-700 bg-white"
                             >
-                              {typeof opt === "string" ? opt : opt.label}
+                              {typeof opt === "string" ? opt : getLocalizedText(opt.label)}
                             </option>
                           ))}
                         </select>
@@ -319,7 +356,7 @@ export function Part1GeneralInfo({
                                 isDisabled ? "text-gray-400" : "text-[#1890FF]"
                               }`}
                             >
-                              {header}
+                              {getLocalizedText(header)}
                             </div>
                           )}
                           <div
@@ -357,7 +394,7 @@ export function Part1GeneralInfo({
                                 )}
                               </div>
                               <span className="text-sm md:text-base font-medium leading-snug">
-                                {label}
+                                {typeof label === "string" ? label : getLocalizedText(label)}
                               </span>
                             </label>
                           </div>
@@ -392,7 +429,7 @@ export function Part1GeneralInfo({
                                 isDisabled ? "text-gray-400" : "text-[#18305D]"
                               }`}
                             >
-                              {field.label}
+                              {getLocalizedText(field.label)}
                             </label>
                           )}
                           <div
@@ -415,7 +452,7 @@ export function Part1GeneralInfo({
                                       ? `${activeSolidBlue} text-white placeholder:text-white/60`
                                       : "bg-white text-gray-700 placeholder:text-gray-300"
                                 }`}
-                                placeholder={field.placeholder}
+                                placeholder={field.placeholder ? getLocalizedText(field.placeholder) : ''}
                                 value={currentValue}
                                 onChange={(e) =>
                                   onAnswer(question.id, {
@@ -431,6 +468,169 @@ export function Part1GeneralInfo({
                     })}
                   </div>
                 )}
+        {/* --- Rating Logic --- */}
+                {question.type === "rating" && (
+                  <div className="flex flex-col items-center py-4 overflow-x-auto">
+                    <div className="flex justify-between w-full max-w-3xl min-w-75 px-2 md:px-10 gap-2">
+                      {[1, 2, 3, 4, 5].map((score, index) => {
+                        const isSelected = answers[question.id] === score;
+                        const isHovered =
+                          hoverRating?.qId === question.id &&
+                          hoverRating?.val === score;
+                        const showEmoji = isSelected || isHovered;
+
+                        return (
+                          <div
+                            key={score}
+                            className="flex flex-col items-center gap-3 w-16 lg:w-24 shrink-0"
+                          >
+                            <button
+                              type="button"
+                              onClick={() => !isDisabled && onAnswer(question.id, score)}
+                              onMouseEnter={() =>
+                                setHoverRating({ qId: question.id, val: score })
+                              }
+                              onMouseLeave={() => setHoverRating(null)}
+                              disabled={isDisabled}
+                              className={`relative w-12 h-12 md:w-16 md:h-16 rounded-full border-2 flex items-center justify-center text-2xl transition-all duration-300 ease-out ${
+                                isDisabled
+                                  ? "border-gray-300 bg-gray-50 opacity-50 cursor-not-allowed"
+                                  : isSelected
+                                    ? "border-[#1890FF] bg-blue-50 shadow-md scale-110"
+                                    : "border-gray-200 bg-white hover:border-[#1890FF] hover:shadow-md"
+                              }`}
+                            >
+                              <span
+                                className={`absolute transition-opacity duration-200 ${
+                                  showEmoji ? "opacity-100" : "opacity-0"
+                                }`}
+                              >
+                                {ratingEmojis[index]}
+                              </span>
+                              <span
+                                className={`absolute font-semibold text-gray-500 text-sm md:text-base transition-opacity duration-200 ${
+                                  showEmoji ? "opacity-0" : "opacity-100"
+                                }`}
+                              >
+                                {score}
+                              </span>
+                              {isSelected && (
+                                <div className="absolute -bottom-2 w-2 h-2 bg-[#1890FF] rounded-full" />
+                              )}
+                            </button>
+                            <span
+                              className={`text-[10px] md:text-xs text-center leading-tight transition-colors h-8 flex items-center ${
+                                isSelected
+                                  ? "text-[#1890FF] font-semibold"
+                                  : "text-gray-400"
+                              }`}
+                            >
+                              {(question.options as QuestionOption[])?.[index] ? getLocalizedText((question.options as QuestionOption[])[index].label) : ""}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* --- Checkbox Logic --- */}
+                {question.type === "checkbox" && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 mt-2">
+                    {(question.options as QuestionOption[])?.map((option) => {
+                      const isSelected = (answers[question.id] || []).includes(
+                        option.value,
+                      );
+                      const IconComponent = option.icon
+                        ? iconMap[option.icon]
+                        : null;
+
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          disabled={isDisabled}
+                          onClick={() => {
+                            if (isDisabled) return;
+                            const currentSelected: string[] = answers[question.id] || [];
+                            if (currentSelected.includes(option.value)) {
+                              onAnswer(
+                                question.id,
+                                currentSelected.filter((item) => item !== option.value),
+                              );
+                            } else {
+                              onAnswer(question.id, [...currentSelected, option.value]);
+                            }
+                          }}
+                          className={`relative flex items-center gap-3 px-4 py-4 rounded-xl border transition-all duration-200 text-left group ${
+                            isDisabled
+                              ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed"
+                              : isSelected
+                                ? "bg-[#1890FF] border-[#1890FF] text-white shadow-md"
+                                : "bg-white border-gray-200 text-gray-600 hover:border-[#1890FF] hover:bg-gray-50"
+                          }`}
+                        >
+                          <div
+                            className={`w-9 h-9 md:w-10 md:h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                              isDisabled
+                                ? "bg-gray-200 text-gray-400"
+                                : isSelected
+                                  ? "bg-white/20 text-white"
+                                  : "bg-gray-100 text-gray-500 group-hover:bg-white group-hover:text-[#1890FF]"
+                            }`}
+                          >
+                            {IconComponent ? (
+                              <IconComponent size={20} />
+                            ) : (
+                              <div className="w-5 h-5 bg-gray-300 rounded-sm" />
+                            )}
+                          </div>
+                          <span className="text-sm font-medium leading-snug">
+                            {getLocalizedText(option.label)}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* --- Textarea Logic --- */}
+                {question.type === "textarea" && (
+                  <div className="relative group mt-2 max-w-4xl">
+                    <div className={`absolute left-4 top-3.5 ${isDisabled ? "text-gray-300" : "text-gray-400"}`}>
+                      <FileSearch size={18} />
+                    </div>
+                    <div
+                      className={`rounded-xl p-px transition-all duration-200 ${
+                        isDisabled
+                           ? "bg-gray-200"
+                           : answered
+                             ? "bg-transparent"
+                             : "bg-gray-200"
+                      }`}
+                    >
+                      <div className="relative rounded-[calc(0.75rem-1px)] bg-white overflow-hidden">
+                        <textarea
+                          rows={4}
+                          disabled={isDisabled}
+                          placeholder={question.placeholder ? getLocalizedText(question.placeholder) : ''}
+                          value={answers[question.id] || ""}
+                          onChange={(e) => onAnswer(question.id, e.target.value)}
+                          className={`w-full pl-12 pr-4 py-3 outline-none transition-all resize-none text-sm md:text-base ${
+                            isDisabled
+                              ? "bg-gray-100 text-gray-400"
+                              : answered
+                                ? `${activeSolidBlue} text-white placeholder:text-white/60`
+                                : "bg-white text-gray-700 placeholder:text-gray-400"
+                          }`}
+                        />
+                      </div>
+                    </div>
+                    <div className="text-right text-[10px] md:text-xs text-gray-400 mt-2">
+                      {(answers[question.id] || "").length}/255
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           );
@@ -444,7 +644,7 @@ export function Part1GeneralInfo({
           disabled={currentPageIndex === 0}
           className="w-full sm:w-auto px-8 py-3 rounded-xl border border-gray-300 text-gray-600 font-medium hover:bg-gray-50 disabled:opacity-30 min-w-30 transition-all bg-white"
         >
-          ย้อนกลับ
+          {t('questionnaire.buttons.back')}
         </button>
         <button
           onClick={handleNext}
@@ -456,7 +656,7 @@ export function Part1GeneralInfo({
           disabled={!isCurrentPageComplete}
         >
           <span className="relative z-10 text-sm md:text-base">
-            {isLastPage ? "ถัดไป" : "ถัดไป"}
+            {isLastPage ? t('questionnaire.buttons.next') : t('questionnaire.buttons.next')}
           </span>
           {isCurrentPageComplete && (
             <div className="absolute left-1/2 bottom-0 w-[250%] pt-[250%] bg-[#0041C4] rounded-full -translate-x-1/2 translate-y-full group-hover:translate-y-[10%] transition-transform duration-500 ease-in-out z-0 pointer-events-none"></div>

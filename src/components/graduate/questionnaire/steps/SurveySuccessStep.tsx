@@ -4,8 +4,11 @@
 import Link from "next/link";
 import { Check, Download, AlertTriangle, Home } from "lucide-react";
 import { studentInfoMock } from "@/data/questionnaireMock";
+import { useTranslation, Trans } from 'react-i18next'; // [NEW]
 
 export function SurveySuccessStep() {
+  const { t } = useTranslation('graduate');
+
   return (
     /* ✅ ใช้ fixed inset-0 z-[100] เพื่อให้พื้นหลังเขียวเต็มหน้าจอ ไม่เห็นขอบขาวจาก Container เดิม */
     <div className="fixed inset-0 z-100 bg-[#E6F7F0] overflow-y-auto font-['Prompt'] animate-in fade-in duration-500">
@@ -16,10 +19,10 @@ export function SurveySuccessStep() {
             <Check className="w-10 h-10 text-white" strokeWidth={4} />
           </div>
           <h1 className="text-3xl font-bold text-[#1E4620] mb-3 text-center">
-            การตอบแบบสอบถามเสร็จสมบูรณ์ !
+            {t('questionnaire.success.title')}
           </h1>
           <p className="text-gray-600 text-center text-sm md:text-base">
-            ขอบคุณสำหรับความร่วมมือ คุณสามารถดาวน์โหลดหรือพิมพ์ใบรับรองได้
+            {t('questionnaire.success.subtitle')}
           </p>
         </div>
 
@@ -29,18 +32,18 @@ export function SurveySuccessStep() {
             {/* ฝั่งซ้าย: ข้อมูลผู้ตอบแบบสอบถาม */}
             <div className="flex-1">
               <h2 className="text-xl font-bold text-gray-800 mb-8 border-l-4 border-gray-800 pl-4">
-                ข้อมูลผู้ตอบแบบสอบถาม
+                {t('questionnaire.success.respondent_info')}
               </h2>
               <div className="space-y-6">
-                <InfoRow label="ชื่อ-สกุล" value={studentInfoMock.nameTH} />
+                <InfoRow label={t('questionnaire.info_check.labels.name_th')} value={studentInfoMock.nameTH} />
                 <InfoRow
-                  label="เลขประจำตัวนักศึกษา"
+                  label={t('questionnaire.info_check.labels.student_id')}
                   value={studentInfoMock.studentID}
                 />
-                <InfoRow label="คณะ" value={studentInfoMock.faculty} />
-                <InfoRow label="สาขา" value={studentInfoMock.department} />
-                <InfoRow label="หลักสูตร" value={studentInfoMock.curriculum} />
-                <InfoRow label="ระดับการศึกษา" value={studentInfoMock.degree} />
+                <InfoRow label={t('questionnaire.info_check.labels.faculty')} value={studentInfoMock.faculty} />
+                <InfoRow label={t('questionnaire.info_check.labels.department')} value={studentInfoMock.department} />
+                <InfoRow label={t('questionnaire.info_check.labels.curriculum')} value={studentInfoMock.curriculum} />
+                <InfoRow label={t('questionnaire.info_check.labels.degree')} value={studentInfoMock.degree} />
               </div>
             </div>
 
@@ -61,10 +64,8 @@ export function SurveySuccessStep() {
                   ))}
                 </div>
               </div>
-              <span className="text-[11px] text-gray-400 text-center leading-relaxed">
-                เอกสารประกอบการรายงานตัว
-                <br />
-                เข้ารับพระราชทานปริญญาบัตร
+              <span className="text-[11px] text-gray-400 text-center leading-relaxed whitespace-pre-line">
+                {t('questionnaire.success.cert_label')}
               </span>
             </div>
           </div>
@@ -78,11 +79,11 @@ export function SurveySuccessStep() {
               className="flex-1 py-4 px-8 rounded-xl border border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-all text-center flex items-center justify-center gap-2"
             >
               <Home size={18} />
-              กลับหน้าหลัก
+              {t('questionnaire.success.buttons.home')}
             </Link>
             <button className="flex-1 py-4 px-8 rounded-xl bg-[#2962FF] text-white font-bold hover:bg-blue-700 shadow-md shadow-blue-100 transition-all flex items-center justify-center gap-2">
               <Download size={18} />
-              ดาวน์โหลดใบรับรอง
+              {t('questionnaire.success.buttons.download')}
             </button>
           </div>
         </div>
@@ -96,17 +97,18 @@ export function SurveySuccessStep() {
             />
             <div>
               <h3 className="text-[#856404] font-bold text-base mb-1">
-                หมายเหตุ
+                {t('questionnaire.success.note_title')}
               </h3>
               <ul className="list-disc list-inside space-y-1 text-sm text-[#856404] opacity-90">
                 <li>
-                  กรุณาเก็บรักษา QR Code
-                  นี้ไว้เพื่อใช้เป็นหลักฐานในการรายงานตัวเข้ารับพระราชทานปริญญาบัตร
+                  {t('questionnaire.success.note_1')}
                 </li>
                 <li>
-                  คุณสามารถกลับมาพิมพ์ใบรับรองได้ในภายหลัง โดยไปที่หัวข้อ{" "}
-                  <strong className="underline">พิมพ์ใบรายงาน</strong>{" "}
-                  โดยไม่ต้องบันทึกข้อมูลใหม่
+                   <Trans i18nKey="graduate:questionnaire.success.note_2_full">
+                    {t('questionnaire.success.note_2')}{" "}
+                    <strong className="underline">{t('questionnaire.success.note_menu_hl')}</strong>{" "}
+                     {t('questionnaire.success.note_3')}
+                   </Trans>
                 </li>
               </ul>
             </div>

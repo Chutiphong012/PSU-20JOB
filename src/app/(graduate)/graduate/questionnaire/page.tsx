@@ -5,8 +5,8 @@ import { useState, useCallback, Suspense } from "react";
 import {
   QuestionnaireSidebar,
   ProgressData,
-} from "@/components/graduate/questionnaire/QuestionnaireSidebar";
-import { QuestionnaireForm } from "@/components/graduate/questionnaire/QuestionnaireForm";
+} from "@/components/graduate/questionnaire/steps/QuestionnaireSidebar";
+import { QuestionnaireForm } from "@/components/graduate/questionnaire/steps/QuestionnaireForm";
 import { useSearchParams } from "next/navigation";
 
 function QuestionnaireContent() {

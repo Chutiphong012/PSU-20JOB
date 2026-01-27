@@ -9,19 +9,24 @@ import { useAuth } from '@/context/AuthContext';
 import { usePathname } from 'next/navigation';
 import psuLogo from '../../assets/psu3.png';
 
-const navItems = [
-  { label: 'หน้าแรก', href: '/' },
-  { label: 'ข่าวประชาสัมพันธ์', href: '/news' },
-  { label: 'รายงาน', href: '/news?category=รายงาน' },
-  { label: 'ติดต่อเรา', href: '/contact' },
-  { label: 'Dashboard', href: '/dashboard' },
-];
+import { useTranslation } from 'react-i18next'; // [NEW]
+
+// [MOVED] navItems inside component
 
 export default function HeaderLoggedIn() {
+  const { t, i18n } = useTranslation('common'); // [NEW]
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [activeLang, setActiveLang] = useState<'TH' | 'EN'>('TH');
+  // [REMOVED] activeLang
+
+  const navItems = [
+    { label: t('nav.home'), href: '/' },
+    { label: t('nav.news'), href: '/news' },
+    { label: t('nav.reports'), href: '/news?category=รายงาน' },
+    { label: t('nav.contact'), href: '/contact' },
+    { label: t('nav.dashboard'), href: '/dashboard' },
+  ];
 
   const pathname = usePathname();
   const [activeNav, setActiveNav] = useState('/');
@@ -103,8 +108,8 @@ export default function HeaderLoggedIn() {
 
             {/* Language Toggle */}
             <div className="flex bg-gray-100 rounded-md p-1">
-              <button onClick={() => setActiveLang('TH')} className={`px-3 py-1 rounded text-xs font-bold transition-all duration-200 ${activeLang === 'TH' ? 'bg-[#2323E6] text-white shadow-sm' : 'text-[#2323E6] hover:bg-gray-200'}`}>TH</button>
-              <button onClick={() => setActiveLang('EN')} className={`px-3 py-1 rounded text-xs font-bold transition-all duration-200 ${activeLang === 'EN' ? 'bg-[#2323E6] text-white shadow-sm' : 'text-[#2323E6] hover:bg-gray-200'}`}>EN</button>
+              <button onClick={() => i18n.changeLanguage('th')} className={`px-3 py-1 rounded text-xs font-bold transition-all duration-200 ${i18n.language === 'th' ? 'bg-[#2323E6] text-white shadow-sm' : 'text-[#2323E6] hover:bg-gray-200'}`}>TH</button>
+              <button onClick={() => i18n.changeLanguage('en')} className={`px-3 py-1 rounded text-xs font-bold transition-all duration-200 ${i18n.language === 'en' ? 'bg-[#2323E6] text-white shadow-sm' : 'text-[#2323E6] hover:bg-gray-200'}`}>EN</button>
             </div>
 
             {/* Profile Dropdown */}
@@ -141,7 +146,7 @@ export default function HeaderLoggedIn() {
                             {/* เมนู 1: ข้อมูลส่วนตัว */}
                             <Link href="/graduate" onClick={() => setIsDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:text-[#2323E6] hover:bg-blue-50 transition-colors">
                                 <div className="bg-gray-100 p-1 rounded-full"><User size={16} /></div>
-                                ข้อมูลส่วนตัว
+                                {t('nav.profile', 'ข้อมูลส่วนตัว')}
                             </Link>
 
                             <div className="mx-3 my-1 border-t border-gray-100"></div>
@@ -152,7 +157,7 @@ export default function HeaderLoggedIn() {
                                 className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors text-left"
                             >
                                 <div className="bg-gray-100 p-1 rounded-full"><LogOut size={16} /></div>
-                                ออกจากระบบ
+                                {t('buttons.logout', 'ออกจากระบบ')}
                             </button>
                         </div>
                     </div>
@@ -202,17 +207,17 @@ export default function HeaderLoggedIn() {
              <div className="border-t border-gray-100 my-2"></div>
 
              <Link href="/graduate" onClick={() => setIsMenuOpen(false)} className="px-4 py-3 rounded-lg text-gray-600 hover:text-[#2323E6] hover:bg-blue-50 flex items-center gap-2 text-sm font-medium">
-                <User size={18}/> ข้อมูลส่วนตัว
+                <User size={18}/> {t('nav.profile', 'ข้อมูลส่วนตัว')}
              </Link>
 
              <button onClick={handleLogout} className="px-4 py-3 rounded-lg text-red-500 hover:bg-red-50 text-left flex items-center gap-2 w-full text-sm font-medium">
-                <LogOut size={18} /> ออกจากระบบ
+                <LogOut size={18} /> {t('buttons.logout', 'ออกจากระบบ')}
              </button>
 
              <div className="mt-4 flex justify-center">
                 <div className="flex bg-gray-100 rounded-md p-1 w-fit">
-                    <button onClick={() => setActiveLang('TH')} className={`px-6 py-2 rounded text-sm font-bold transition-all ${activeLang === 'TH' ? 'bg-[#2323E6] text-white' : 'text-gray-500'}`}>TH</button>
-                    <button onClick={() => setActiveLang('EN')} className={`px-6 py-2 rounded text-sm font-bold transition-all ${activeLang === 'EN' ? 'bg-[#2323E6] text-white' : 'text-gray-500'}`}>EN</button>
+                    <button onClick={() => i18n.changeLanguage('th')} className={`px-6 py-2 rounded text-sm font-bold transition-all ${i18n.language === 'th' ? 'bg-[#2323E6] text-white' : 'text-gray-500'}`}>TH</button>
+                    <button onClick={() => i18n.changeLanguage('en')} className={`px-6 py-2 rounded text-sm font-bold transition-all ${i18n.language === 'en' ? 'bg-[#2323E6] text-white' : 'text-gray-500'}`}>EN</button>
                 </div>
              </div>
           </div>

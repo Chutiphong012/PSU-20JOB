@@ -1,11 +1,13 @@
-// src/components/graduate/SurveyStatusContent.tsx
+// src/components/graduate/questionnaire/steps/SurveyStatusContent.tsx
 "use client";
 
 import { FileText, X, Check, Download } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslation, Trans } from "react-i18next"; // [NEW]
 
 export default function SurveyStatusContent() {
+  const { t } = useTranslation("graduate"); // [NEW]
   // สถานะการกรอก (ในระบบจริงค่านี้ควรมาจาก API)
   const [isCompleted, setIsCompleted] = useState(false); //ture,false เพื่อtest
 
@@ -14,7 +16,7 @@ export default function SurveyStatusContent() {
       <div className="flex flex-col gap-5">
         <div className="bg-[#15158A] px-8 py-5 rounded-[20px] shadow-sm flex items-center">
           <h1 className="text-white text-xl md:text-2xl font-bold">
-            สถานะการตอบแบบสอบถาม
+            {t("survey.title")}
           </h1>
         </div>
 
@@ -34,7 +36,9 @@ export default function SurveyStatusContent() {
                 )}
               </div>
               <span className="text-white text-xl font-bold tracking-wide">
-                {isCompleted ? "กรอกแบบสอบถามเสร็จสิ้น" : "ยังไม่กรอกแบบสอบถาม"}
+                {isCompleted
+                  ? t("survey.status.completed")
+                  : t("survey.status.incomplete")}
               </span>
             </div>
 
@@ -42,14 +46,14 @@ export default function SurveyStatusContent() {
               /* ส่ง mode=success เพื่อให้หน้า QuestionnaireForm ข้ามไปหน้า QR Code ทันที */
               <Link href="/graduate/questionnaire?mode=success">
                 <button className="group bg-[#2E7D32] border border-white/30 text-white px-6 py-2.5 rounded-full flex items-center gap-2 hover:bg-white hover:text-[#2E7D32] hover:scale-105 transition-all duration-300 shadow-md cursor-pointer">
-                  ดาวน์โหลดใบรับรอง
+                  {t("survey.buttons.download_cert")}
                   <Download size={20} />
                 </button>
               </Link>
             ) : (
               <Link href="/graduate/instructions">
                 <button className="group bg-white text-black px-6 py-2.5 rounded-full flex items-center gap-2 hover:bg-[#333333] hover:text-white hover:scale-105 transition-all duration-300 shadow-md border border-gray-100 cursor-pointer">
-                  เริ่มกรอกแบบสอบถาม
+                  {t("survey.buttons.start_survey")}
                   <FileText
                     size={20}
                     className="text-[#18305D] group-hover:text-white"
@@ -60,38 +64,28 @@ export default function SurveyStatusContent() {
           </div>
 
           <div className="text-center mb-6 text-gray-600">
-            <p>
-              สามารถดาวน์โหลดใบรับรอง หรือบันทึกหน้าจอไว้ในเครื่อง
-              แล้วนำไปแสดง/ส่งให้เจ้าหน้าที่ที่เกี่ยวข้อง
-            </p>
+            <p>{t("survey.instruction.desc")}</p>
           </div>
 
           <div className="bg-[#F8F9FA] rounded-xl p-8 border border-gray-200 shadow-inner leading-relaxed">
             <h3 className="text-[#18305D] font-bold text-lg mb-4 text-center border-b pb-4">
-              ข้อปฏิบัติการรายงานตัวเพื่อเข้ารับพระราชทานปริญญาบัตร ผ่าน Web
-              ของนักศึกษาที่สำเร็จการศึกษา ปีการศึกษา 2567
+              {t("survey.instruction.title")}
             </h3>
             <div className="text-sm text-gray-700 space-y-4 max-w-4xl mx-auto">
-              <p>
-                ก่อนที่บัณฑิตจะยืนยันเพื่อรายงานตัวเข้ารับพระราชทานปริญญาบัตร
-                ทางมหาวิทยาลัยขอความร่วมมือบัณฑิตทุกคนกรอกแบบสอบถามภาวะการมีงานทำของบัณฑิตให้สมบูรณ์ถูกต้องตามความเป็นจริง...
-              </p>
+              <p>{t("survey.instruction.intro")}</p>
               <div className="pl-5 space-y-2">
                 <p>
-                  1. ให้บัณฑิตเข้าไปที่เว็บไซต์{" "}
-                  <span className="text-blue-600 underline">
-                    http://www.job.psu.ac.th
-                  </span>
+                  <Trans i18nKey="graduate:survey.instruction.step_1">
+                    1. ให้บัณฑิตเข้าไปที่เว็บไซต์{" "}
+                    <span className="text-blue-600 underline">
+                      http://www.job.psu.ac.th
+                    </span>
+                  </Trans>
                 </p>
-                <p>
-                  2.
-                  ให้พิมพ์เอกสารการรายงานตัวเพื่อเข้ารับพระราชทานปริญญาบัตรจากข้อที่
-                  1
-                </p>
+                <p>{t("survey.instruction.step_2")}</p>
               </div>
               <p className="text-red-600 font-bold text-center mt-6 italic">
-                อย่าลืม!!! พิมพ์เอกสารเพื่อยืนยันการบันทึกข้อมูล
-                และนำมาเป็นเอกสารประกอบการรายงานตัว
+                {t("survey.instruction.warning")}
               </p>
             </div>
           </div>

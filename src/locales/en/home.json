@@ -1,0 +1,28 @@
+{
+    "welcome_1": "Welcome to the Graduate",
+    "welcome_2": "Employment Database System",
+    "university": "Prince of Songkla University",
+    "announcement": {
+      "title": "Guidance",
+      "intro": "The Prince of Songkla University graduate employment database system was developed to track and evaluate the employment status of graduates after graduation.",
+      "card_title": "This questionnaire has 2 parts (All parts must be answered)",
+      "item_1": "When recording data, please answer completely. If there is no information in any matter, put <1>-</1> <2>(Do not leave blank as the system will not be able to save and proceed to the next page)</2>",
+      "item_2": "After data entry is complete, if you cannot print the certificate strictly immediately, graduates can come back to Print <br/> the certificate later. Go to the topic <1>\"Print Report\"</1> <2>without recording new data!!!</2>"
+    },
+    "news": {
+        "title": "News",
+        "mock_1_title": "Graduate Potential Development Project",
+        "mock_1_desc": "Prince of Songkla University organizes a project to develop graduate potential to prepare for the labor market.",
+        "mock_2_title": "Job Search Workshop Seminar",
+        "mock_2_desc": "Open for applications for participants in the job search and career development workshop seminar.",
+        "mock_3_title": "Graduate Employment Survey Results",
+        "mock_3_desc": "Report on the employment status survey results of Prince of Songkla University graduates for the academic year 2023."
+    },
+    "reports": {
+        "title": "Reports",
+        "mock_1_title": "Reporting Guidelines",
+        "mock_1_desc": "Guidelines for reporting to receive the degree via Web for students graduating in the academic year 2024.",
+        "mock_2_title": "Employment Status Report",
+        "mock_2_desc": "Report on the employment status of graduates for checking statistics and survey results."
+    }
+}

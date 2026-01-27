@@ -1,0 +1,24 @@
+{
+  "header": {
+    "back_home": "กลับไปหน้าหลัก",
+    "title": "ข่าวประชาสัมพันธ์"
+  },
+  "list": {
+    "total_items": "{{count}} รายการ",
+    "search_placeholder": "ค้นหาข่าว...",
+    "read_more": "อ่านเพิ่มเติม",
+    "categories": {
+      "all": "ทั้งหมด",
+      "announcement": "ประกาศ",
+      "report": "รายงาน"
+    }
+  },
+  "detail": {
+    "back": "ย้อนกลับ",
+    "share_label": "แชร์ข่าวนี้",
+    "loading": "กำลังโหลดข้อมูล..."
+  },
+  "decorative": {
+    "psu_news": "ข่าวม.อ."
+  }
+}

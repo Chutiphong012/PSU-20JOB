@@ -2,9 +2,11 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next'; // [NEW]
 // ไม่จำเป็นต้องใช้ MUI แล้ว เพราะเราจะใช้ Tailwind ตาม Design ใหม่
 
 export default function Footer() {
+  const { t } = useTranslation('common'); // [NEW]
   
   // ฟังก์ชันช่วยเลื่อนหน้าจอขึ้นบนสุด (เพิ่ม smooth behavior เพื่อความนุ่มนวล)
   const scrollToTop = () => {
@@ -22,13 +24,12 @@ export default function Footer() {
           {/* คอลัมน์ 1: เกี่ยวกับเรา */}
           <div>
             <h3 className="text-xl md:text-2xl font-light mb-4 md:mb-6 text-white">
-              เกี่ยวกับเรา
+              {t('footer.about')}
             </h3>
             <div className="space-y-4 text-sm text-white/80 font-light leading-relaxed mx-auto md:mx-0 max-w-xs md:max-w-none">
-              <p className="font-medium text-white">PSU Job Portal</p>
+              <p className="font-medium text-white">{t('footer.about_desc_1')}</p>
               <p>
-                เป็นแพลตฟอร์มสำหรับติดตามภาวะการมีงานทำของบัณฑิตมหาวิทยาลัยสงขลานครินทร์ 
-                เพื่อรวบรวมข้อมูลและนำไปพัฒนาหลักสูตร
+                {t('footer.about_desc_2')}
               </p>
             </div>
           </div>
@@ -36,27 +37,27 @@ export default function Footer() {
           {/* คอลัมน์ 2: ลิงก์ด่วน */}
           <div>
             <h3 className="text-xl md:text-2xl font-light mb-4 md:mb-6 text-white">
-              ลิงก์ด่วน
+              {t('footer.quick_links')}
             </h3>
             <ul className="space-y-3 md:space-y-4 text-sm text-white/80 font-light">
               <li>
                 <Link href="/" onClick={scrollToTop} className="hover:text-white transition-colors">
-                  หน้าแรก
+                  {t('nav.home')}
                 </Link>
               </li>
               <li>
                 <Link href="#" onClick={scrollToTop} className="hover:text-white transition-colors">
-                  คำชี้แจง
+                  {t('footer.policy_alert')}
                 </Link>
               </li>
               <li>
                 <Link href="/news" onClick={scrollToTop} className="hover:text-white transition-colors">
-                  ข่าวประชาสัมพันธ์
+                  {t('nav.news')}
                 </Link>
               </li>
               <li>
                 <Link href="/contact" onClick={scrollToTop} className="hover:text-white transition-colors">
-                  ติดต่อเรา
+                  {t('nav.contact')}
                 </Link>
               </li>
             </ul>
@@ -65,12 +66,12 @@ export default function Footer() {
           {/* คอลัมน์ 3: ติดต่อเรา */}
           <div>
             <h3 className="text-xl md:text-2xl font-light mb-4 md:mb-6 text-white">
-              ติดต่อเรา
+              {t('footer.contact')}
             </h3>
             <ul className="space-y-3 md:space-y-4 text-sm text-white/80 font-light">
-              <li>สำนักงาน / งานบริหารและสารสนเทศ</li>
-              <li>โทรศัพท์ : 074-282068-9</li>
-              <li>E-Mail : psu-job@psu.ac.th</li>
+              <li>{t('footer.office')}</li>
+              <li>{t('footer.phone')} : 074-282068-9</li>
+              <li>{t('footer.email')} : psu-job@psu.ac.th</li>
               <li>
                 Facebook :{' '}
                 <a 
@@ -95,25 +96,25 @@ export default function Footer() {
           
           {/* ข้อความ Cookie */}
           <div className="text-center md:text-left max-w-md">
-            เราใช้คุกกี้เพื่อเพิ่มประสิทธิภาพและประสบการณ์ที่ดีในการใช้เว็บไซต์ ท่านสามารถศึกษารายละเอียดการใช้คุกกี้ได้ที่{' '}
+            {t('footer.cookie_text')}{' '}
             <Link href="/privacy" className="underline hover:text-white whitespace-nowrap">
-              Privacy policy
+              {t('footer.privacy_policy')}
             </Link>
           </div>
 
           {/* ปุ่มกด (Accept / Decline) */}
           <div className="flex flex-wrap justify-center gap-2">
             <button className="bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded shadow-sm transition-all backdrop-blur-sm cursor-pointer">
-              ยอมรับ
+              {t('buttons.accept')}
             </button>
             <button className="bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded shadow-sm transition-all backdrop-blur-sm cursor-pointer">
-              ไม่ยอมรับ
+              {t('buttons.decline')}
             </button>
             <Link 
               href="/privacy" 
               className="bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded shadow-sm transition-all backdrop-blur-sm inline-block cursor-pointer"
             >
-              Privacy Policy
+              {t('footer.privacy_policy')}
             </Link>
           </div>
 

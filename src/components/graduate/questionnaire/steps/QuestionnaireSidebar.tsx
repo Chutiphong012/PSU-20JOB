@@ -23,7 +23,8 @@ import {
 
 // ✅ แก้ไขตรงนี้: แยก Import ให้ถูกไฟล์
 import { assessmentData } from "@/data/assessmentMock";
-import { section1Structure } from "@/data/questionnaireMock";
+import { section1Structure, LocalizedText } from "@/data/questionnaireMock";
+import { useTranslation } from 'react-i18next';
 
 // ✅ Type รองรับ Dynamic Keys
 export interface ProgressData {
@@ -58,6 +59,10 @@ export function QuestionnaireSidebar({
   forceOpenSection,
 }: SidebarProps) {
   const [activeSection, setActiveSection] = useState<number | null>(1);
+  const { t, i18n } = useTranslation('graduate');
+  
+  // Helper to get text based on current language
+  const getLocalizedText = (text: LocalizedText) => text[i18n.language as 'th' | 'en'] || text.th;
 
   // ✅ Effect: เปิด Section ตามคำสั่งจาก Form (เช่น จบ Sec 1 -> เปิด Sec 2)
   useEffect(() => {
@@ -71,7 +76,7 @@ export function QuestionnaireSidebar({
   };
 
   // --- Calculations ---
-
+  // ... (Calculations code same as before, no text to translate)
   // 1. Section 1 Progress (Average of Part 1-5)
   const section1Progress = useMemo(() => {
     const p1 = progressData.part1 || 0;
@@ -101,7 +106,7 @@ export function QuestionnaireSidebar({
         <div className="flex items-start gap-3 mb-6 relative z-10">
           <Menu size={24} className="mt-1 shrink-0 text-white/90" />
           <div className="text-sm font-light leading-snug text-white/90">
-            แบบสอบถามภาวะการมีงานทำของบัณฑิต ประจำปี 256X
+            {t('questionnaire.header_title')}
           </div>
         </div>
         <div className="flex flex-col items-center mb-6 relative z-10">
@@ -153,9 +158,9 @@ export function QuestionnaireSidebar({
                   activeSection === 1 ? "opacity-90" : "text-gray-400"
                 }`}
               >
-                ส่วนที่ 1
+                {t('questionnaire.instruction.sections.part_1')}
               </div>
-              <div className="font-bold text-base">ภาวะการมีงานทำของบัณฑิต</div>
+              <div className="font-bold text-base">{t('questionnaire.instruction.sections.part_1_title')}</div>
             </div>
           </div>
           <ProgressRing
@@ -171,8 +176,8 @@ export function QuestionnaireSidebar({
               <SidebarItem
                 key={part.id}
                 icon={getPartIcon(part.id)}
-                text={part.label}
-                subText={part.subLabel}
+                text={getLocalizedText(part.label)}
+                subText={getLocalizedText(part.subLabel)}
                 progress={progressData[`part${part.id}`] || 0}
               />
             ))}
@@ -208,10 +213,10 @@ export function QuestionnaireSidebar({
                   activeSection === 2 ? "opacity-90" : "text-gray-400"
                 }`}
               >
-                ส่วนที่ 2
+                {t('questionnaire.instruction.sections.part_2')}
               </div>
               <div className="font-bold text-base">
-                การประเมินตนเองของบัณฑิต
+                {t('questionnaire.instruction.sections.part_2_title')}
               </div>
             </div>
           </div>
@@ -228,8 +233,8 @@ export function QuestionnaireSidebar({
               <SidebarItem
                 key={category.id}
                 icon={getCategoryIcon(category.id)}
-                text={category.title}
-                subText={category.subTitle}
+                text={getLocalizedText(category.title)} // [Updated]
+                subText={getLocalizedText(category.subTitle)} // [Updated]
                 progress={progressData[category.id] || 0} // ดึง Progress ตาม ID
               />
             ))}

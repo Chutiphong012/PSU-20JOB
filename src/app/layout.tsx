@@ -4,6 +4,7 @@ import ThemeRegistry from '@/theme/ThemeRegistry';
 import FooterWrapper from '@/components/layout/FooterWrapper';
 // 1. นำเข้า AuthProvider
 import { AuthProvider } from '@/context/AuthContext'; 
+import I18nProvider from '@/components/providers/I18nProvider';
 import HeaderWrapper from '@/components/layout/HeaderWrapper'; 
 import '@/styles/global.css';
 import { Inter, Prompt } from "next/font/google";
@@ -39,13 +40,13 @@ export default function RootLayout({
           
           {/* ✅ 2. ต้องเอา AuthProvider มาครอบเนื้อหาทั้งหมดตรงนี้ครับ */}
           <AuthProvider>
-            
-            <HeaderWrapper />
-            
-            <main style={{ minHeight: 'calc(100vh - 200px)' }}>{children}</main>
-            
-            <FooterWrapper />
-            
+            <I18nProvider>
+              <HeaderWrapper />
+              
+              <main style={{ minHeight: 'calc(100vh - 200px)' }}>{children}</main>
+              
+              <FooterWrapper />
+            </I18nProvider>
           </AuthProvider>
 
         </ThemeRegistry>

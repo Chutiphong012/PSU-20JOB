@@ -2,14 +2,15 @@
 
 'use client';
 
-import { graduateProfileData } from '@/data/graduateData';
+import { graduateProfileData } from '@/data/graduateData'; // [Restored]
+import { useTranslation } from 'react-i18next'; // [NEW]
 
 interface GraduateProfileContentProps {
   user: any;
 }
 
 export default function GraduateProfileContent({ user }: GraduateProfileContentProps) {
-  
+  const { t } = useTranslation('graduate'); // [NEW]
   const displayData = graduateProfileData;
 
   return (
@@ -19,7 +20,7 @@ export default function GraduateProfileContent({ user }: GraduateProfileContentP
          {/* 1. กล่อง Header: แยกออกมาเป็นชิ้นเดียว มุมโค้งรอบตัว */}
          <div className="bg-[#15158A] px-8 py-5 rounded-xl shadow-sm flex items-center">
              <h1 className="text-white text-xl md:text-2xl font-bold">
-                 ข้อมูลส่วนตัว
+                 {t('profile.title', 'ข้อมูลส่วนตัว')}
              </h1>
          </div>
 
@@ -34,7 +35,7 @@ export default function GraduateProfileContent({ user }: GraduateProfileContentP
                      >
                          {/* Label */}
                          <div className="w-full md:w-[35%] lg:w-[30%] text-gray-500 font-medium text-base mb-1 md:mb-0">
-                             {item.label}
+                             {t(item.label)}
                          </div>
                          
                          {/* Value */}

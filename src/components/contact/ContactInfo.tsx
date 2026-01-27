@@ -1,13 +1,15 @@
 
-
 import { MapPin, Phone, Mail, Clock, MessageSquare } from 'lucide-react';
+import { useTranslation, Trans } from 'react-i18next';
 
 export default function ContactInfo() {
+  const { t } = useTranslation('contact');
+
   return (
     <div className="lg:col-span-1 space-y-6">
       {/* กล่องข้อมูลติดต่อ */}
       <div className="bg-white rounded-4xl p-8 shadow-md border border-gray-100">
-        <h3 className="text-xl font-semibold text-[#18305D] mb-6">ข้อมูลการติดต่อ</h3>
+        <h3 className="text-xl font-semibold text-[#18305D] mb-6">{t('info.title')}</h3>
         
         <div className="space-y-6">
           {/* ที่อยู่ */}
@@ -16,10 +18,9 @@ export default function ContactInfo() {
               <MapPin size={24} />
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-500 mb-1">ที่อยู่</div>
+              <div className="text-sm font-medium text-gray-500 mb-1">{t('info.address_label')}</div>
               <div className="text-[#18305D] text-sm font-medium leading-relaxed">
-                มหาวิทยาลัยสงขลานครินทร์<br/>
-                15 ถนนกาญจนวนิช ตำบลหาดใหญ่ อำเภอหาดใหญ่ จังหวัดสงขลา 90110
+                <Trans i18nKey="info.address_value" t={t} components={{ br: <br /> }} />
               </div>
             </div>
           </div>
@@ -30,7 +31,7 @@ export default function ContactInfo() {
               <Phone size={24} />
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-500 mb-1">โทรศัพท์</div>
+              <div className="text-sm font-medium text-gray-500 mb-1">{t('info.phone_label')}</div>
               <div className="text-[#18305D] text-sm font-medium">074-286-971-3</div>
             </div>
           </div>
@@ -41,7 +42,7 @@ export default function ContactInfo() {
               <Mail size={24} />
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-500 mb-1">อีเมล</div>
+              <div className="text-sm font-medium text-gray-500 mb-1">{t('info.email_label')}</div>
               <div className="text-[#18305D] text-sm font-medium">pr@psu.ac.th</div>
             </div>
           </div>
@@ -52,7 +53,7 @@ export default function ContactInfo() {
               <MessageSquare size={24} />
             </div>
             <div>
-               <div className="text-sm font-medium text-gray-500 mb-1">ไลน์</div>
+               <div className="text-sm font-medium text-gray-500 mb-1">{t('info.line_label')}</div>
                <div className="text-[#18305D] text-sm font-medium">hmado_11</div>
             </div>
           </div>
@@ -63,8 +64,8 @@ export default function ContactInfo() {
               <Clock size={24} />
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-500 mb-1">เวลาทำการ</div>
-              <div className="text-[#18305D] text-sm font-medium">จันทร์ - ศุกร์ เวลา 08:30 - 16:30 น.</div>
+              <div className="text-sm font-medium text-gray-500 mb-1">{t('info.hours_label')}</div>
+              <div className="text-[#18305D] text-sm font-medium">{t('info.hours_value')}</div>
             </div>
           </div>
         </div>

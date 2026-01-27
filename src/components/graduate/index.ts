@@ -5,9 +5,9 @@ export { default as GraduateProfileContent } from './GraduateProfileContent';
 export { default as SurveyStatusContent } from './questionnaire/steps/SurveyStatusContent';
 
 // Export Questionnaire Components
-export * from './questionnaire/QuestionnaireSidebar';
-export * from './questionnaire/QuestionnaireForm';
-export * from './questionnaire/InstructionContent'; 
+export * from './questionnaire/steps/QuestionnaireSidebar';
+export * from './questionnaire/steps/QuestionnaireForm';
+export * from './questionnaire/steps/InstructionContent'; 
 export * from './questionnaire/steps/InfoCheckStep';
 export * from './questionnaire/section1/Part1GeneralInfo';
 export * from './questionnaire/section1/Part2WorkInfo';

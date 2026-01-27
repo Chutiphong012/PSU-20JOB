@@ -1,8 +1,11 @@
 'use client';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function LoginBanner() {
+  const { t } = useTranslation('common');
+
   return (
     <div className="w-full md:w-1/2 relative bg-gray-100 rounded-4xl overflow-hidden group min-h-75 md:min-h-full">
         {/* ปุ่มย้อนกลับ */}
@@ -11,7 +14,7 @@ export default function LoginBanner() {
                 href="/" 
                 className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-white transition-all shadow-sm"
             >
-                <ChevronLeft size={16} /> ย้อนกลับ
+                <ChevronLeft size={16} /> {t('common.back')}
             </Link>
         </div>
 

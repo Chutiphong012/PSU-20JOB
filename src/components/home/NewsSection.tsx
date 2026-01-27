@@ -3,32 +3,36 @@
 
 import Link from 'next/link';
 import { Calendar, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next'; // [NEW]
 
-const mockNews = [
-  {
-    id: '1',
-    title: 'โครงการพัฒนาศักยภาพบัณฑิตสู่ตลาดแรงงาน',
-    description: 'มหาวิทยาลัยสงขลานครินทร์จัดโครงการพัฒนาศักยภาพบัณฑิตเพื่อเตรียมความพร้อมสู่ตลาดแรงงาน',
-    publishedAt: '15 มกราคม 2567', // ปรับ format ให้เข้ากับ design
-    category: 'กิจกรรม',
-  },
-  {
-    id: '2',
-    title: 'สัมมนาเชิงปฏิบัติการด้านการหางาน',
-    description: 'เปิดรับสมัครผู้เข้าร่วมสัมมนาเชิงปฏิบัติการด้านการหางานและพัฒนาอาชีพ',
-    publishedAt: '12 มกราคม 2567',
-    category: 'อบรม',
-  },
-  {
-    id: '3',
-    title: 'ผลสำรวจภาวะการมีงานทำของบัณฑิต',
-    description: 'รายงานผลสำรวจภาวะการมีงานทำของบัณฑิต มหาวิทยาลัยสงขลานครินทร์ ประจำปี 2566',
-    publishedAt: '08 มกราคม 2567',
-    category: 'รายงาน',
-  },
-];
-
+// [REMOVED] mockNews from outside
+ 
 export default function NewsSection() {
+  const { t } = useTranslation(['home', 'common']); // [NEW]
+  
+  const newsList = [
+    {
+      id: '1',
+      title: t('news.mock_1_title'),
+      description: t('news.mock_1_desc'),
+      publishedAt: '15 มกราคม 2567', // Date might need specialized formatting library later
+      category: 'กิจกรรม',
+    },
+    {
+      id: '2',
+      title: t('news.mock_2_title'),
+      description: t('news.mock_2_desc'),
+      publishedAt: '12 มกราคม 2567',
+      category: 'อบรม',
+    },
+    {
+      id: '3',
+      title: t('news.mock_3_title'),
+      description: t('news.mock_3_desc'),
+      publishedAt: '08 มกราคม 2567',
+      category: 'รายงาน',
+    },
+  ];
   return (
     <section id="news" className="py-10 md:py-16 font-['Prompt']">
       <div className="max-w-360 mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,14 +41,14 @@ export default function NewsSection() {
           {/* Header Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 gap-2">
             <h3 className="text-[#052A55] text-xl md:text-2xl font-semibold">
-              ข่าวประชาสัมพันธ์
+              {t('news.title')}
             </h3>
             
             <Link 
               href="/news?category=ประกาศ" 
               className="text-gray-400 text-xs md:text-sm hover:text-[#18305D] transition-colors bg-white px-4 py-1 rounded-full border border-gray-200 shadow-sm hover:shadow-md self-end md:self-auto"
             >
-              ทั้งหมด
+              {t('common:view_all')}
             </Link>
           </div>
 
@@ -53,7 +57,7 @@ export default function NewsSection() {
 
           {/* News Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockNews.map((news) => (
+            {newsList.map((news) => (
               <div 
                 key={news.id} 
                 className="bg-white rounded-3xl p-6 shadow-sm hover:shadow-lg transition-shadow border border-gray-100 flex flex-col h-full group"
@@ -79,7 +83,7 @@ export default function NewsSection() {
                   href="/news/detail" 
                   className="flex items-center gap-2 text-[#18305D] text-sm font-medium hover:gap-3 transition-all mt-auto"
                 >
-                  อ่านเพิ่มเติม <ArrowRight size={18} />
+                  {t('common:read_more')} <ArrowRight size={18} />
                 </Link>
               </div>
             ))}

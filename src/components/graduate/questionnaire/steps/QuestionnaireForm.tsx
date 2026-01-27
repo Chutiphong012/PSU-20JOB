@@ -1,7 +1,7 @@
 // src/components/graduate/questionnaire/QuestionnaireForm.tsx
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { InfoCheckStep } from "@/components/graduate/questionnaire/steps/InfoCheckStep";
 import { SurveySuccessStep } from "@/components/graduate/questionnaire/steps/SurveySuccessStep";
 
@@ -56,7 +56,6 @@ export function QuestionnaireForm({
     }
 
     setCurrentPart(nextPartIndex);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleBackPart = () => {
@@ -70,7 +69,6 @@ export function QuestionnaireForm({
           onRequestOpenSidebarSection?.(1);
         }
         setCurrentPart(prevPart);
-        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     } else {
       if (currentPart > 1) setCurrentPart(currentPart - 1);
@@ -79,7 +77,6 @@ export function QuestionnaireForm({
 
   const handleFinalSubmit = () => {
     setStep("success");
-    window.scrollTo({ top: 0, behavior: "smooth" });
     if (onComplete) {
       onComplete();
     }
@@ -124,8 +121,29 @@ export function QuestionnaireForm({
     }
   }, [answers, currentPart, onProgressUpdate]);
 
+  // ✅ Ref เพื่อ Scroll ขึ้นบนสุดเมื่อเปลี่ยน Part หรือ Step
+  const formTopRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // ใช้ setTimeout เพื่อให้แน่ใจว่า DOM ถูก Render เรียบร้อยแล้ว
+    const timer = setTimeout(() => {
+      // 1. Force Scroll ที่ Window ก่อน
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      
+      // 2. ถ้ามี Ref และ Window Scroll ไม่ทำงาน (เช่น อยู่ใน Container แยก) ให้ใช้ scrollIntoView
+      if (formTopRef.current) {
+         formTopRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 50); // Delay เล็กน้อย
+
+    return () => clearTimeout(timer);
+  }, [currentPart, step]);
+
   return (
-    <div className="w-full grow bg-white rounded-none md:rounded-3xl shadow-sm border border-gray-100 p-4 md:p-8 h-fit min-h-150 font-['Prompt']">
+    <div 
+      ref={formTopRef} 
+      className="w-full grow bg-white rounded-none md:rounded-3xl shadow-sm border border-gray-100 p-4 md:p-8 h-fit min-h-150 font-['Prompt'] scroll-mt-24"
+    >
       {step === "check" && <InfoCheckStep onNext={() => setStep("form")} />}
 
       {step === "form" && (

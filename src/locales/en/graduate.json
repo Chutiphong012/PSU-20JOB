@@ -1,0 +1,130 @@
+{
+  "profile": {
+    "title": "Profile",
+    "labels": {
+       "name_th": "Name (Thai)",
+       "name_en": "Name (English)",
+       "citizen_id": "Citizen ID",
+       "student_id": "Student ID",
+       "campus": "Campus",
+       "faculty": "Faculty",
+       "department": "Department",
+       "major": "Major",
+       "curriculum": "Curriculum",
+       "dob": "Date of Birth",
+       "nationality": "Nationality",
+       "address": "Address"
+    }
+  },
+  "sidebar": {
+    "home": "Home",
+    "profile": "Profile",
+    "survey_status": "Survey Status",
+    "logout": "Log Out",
+    "degree_default": "Bachelor"
+  },
+  "survey": {
+    "title": "Questionnaire Status",
+    "status": {
+      "completed": "Survey Completed",
+      "incomplete": "Survey Incomplete"
+    },
+    "buttons": {
+      "download_cert": "Download Certificate",
+      "start_survey": "Start Survey"
+    },
+    "instruction": {
+      "desc": "You can download the certificate or save the screenshot to show/submit to the relevant officers.",
+      "title": "Reporting procedures for the graduation ceremony via Web for graduates of the academic year 2024",
+      "intro": "Before confirming to report for the graduation ceremony, the university requests cooperation from all graduates to complete the employment status questionnaire completely and truthfully...",
+      "step_1": "1. Graduates access the website",
+      "step_2": "2. Print the reporting document for the graduation ceremony from step 1",
+      "warning": "Do not forget!!! Print the document to confirm data recording and bring it as a supporting document for reporting."
+    }
+  },
+  "questionnaire": {
+    "header_title": "Graduate Employment Status Questionnaire 202X",
+    "section_title": "Section 1: Graduate Employment Status",
+    "alerts": {
+        "save_success": "Saved {{part}} successfully!",
+        "save_success_section_1": "Section 1 Saved Successfully!",
+        "complete": "Complete",
+        "in_progress": "In Progress"
+    },
+    "instruction": {
+      "title": "Instructions",
+      "recording": {
+         "title": "Data Recording",
+         "desc": "Please answer completely.",
+         "hl": "If there is no information, please insert a dash ( - )",
+         "desc_2": "Do not leave blank, as the system will not save and proceed to the next page."
+      },
+      "printing": {
+        "title": "Printing Certificate",
+        "desc": "You can print or save the screenshot to show/submit to the relevant officers. In case you",
+        "hl": "cannot",
+        "desc_2": "print the certificate immediately, you can come back to print it later at",
+        "menu_hl": "Print Report",
+        "desc_3": "without recording new data."
+      },
+      "summary": {
+        "part_1": "This questionnaire has 2 parts",
+        "part_2": "“ Must answer all parts ”"
+      },
+      "sections": {
+        "part_1": "Section 1",
+        "part_1_title": "Employment Status",
+        "part_2": "Section 2",
+        "part_2_title": "Self-Assessment"
+      },
+      "unit_items": "Items"
+    },
+    "buttons": {
+      "back": "Back",
+      "next": "Next",
+      "save": "Save",
+      "save_section_1": "Save Section 1",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "next_part": "Next Part",
+      "start_part_2": "Continue to Part 2",
+      "start": "Start Survey",
+      "contact_admin": "Incorrect Data, Contact Admin",
+      "confirm_start": "Correct Data, Start Survey",
+      "download": "Download Certificate",
+      "home": "Back to Home",
+      "continue_section_2": "Continue to Section 2"
+    },
+    "privacy_note": "The system will keep your information confidential according to the institute's policy.",
+    "info_check": {
+        "title_main": "Part 1 Employment Status",
+        "title_sub": "Section 1 General Information",
+        "warning_title": "Please check the correctness of the information",
+        "warning_desc": "This information is retrieved from the system database. If incorrect, please contact the responsible department to correct it.",
+        "labels": {
+            "institute": "Institute",
+            "degree": "Degree",
+            "faculty": "Faculty",
+            "department": "Department",
+            "major": "Major",
+            "curriculum": "Curriculum",
+            "name_th": "Name (Thai)",
+            "surname": "Surname",
+            "name_en": "(English)",
+            "citizen_id": "Citizen ID",
+            "student_id": "Student ID"
+        }
+    },
+    "success": {
+        "title": "Questionnaire Completed!",
+        "subtitle": "Thank you for your cooperation. You can download or print the certificate.",
+        "respondent_info": "Respondent Information",
+        "cert_label": "Document for Reporting\nto Graduation Ceremony",
+        "note_title": "Note",
+        "note_1": "Please keep this QR Code as evidence for reporting to the graduation ceremony.",
+        "note_2": "You can come back to print the certificate later at",
+        "note_menu_hl": "Print Report",
+        "note_3": "without recording new data."
+    }
+  }
+}

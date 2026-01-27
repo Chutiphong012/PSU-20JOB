@@ -4,17 +4,20 @@
 
 import { AlertTriangle } from "lucide-react";
 import { studentInfoMock } from "@/data/questionnaireMock";
+import { useTranslation } from 'react-i18next'; // [NEW]
 
 export function InfoCheckStep({ onNext }: { onNext: () => void }) {
+  const { t } = useTranslation('graduate');
+
   return (
     <div className="flex flex-col gap-6 font-['Prompt'] animate-in fade-in duration-300">
       {/* Header */}
       <div>
         <span className="text-[#1890FF] text-sm font-medium">
-          ส่วนที่ 1 ภาวะการมีงานทำของบัณฑิต
+          {t('questionnaire.info_check.title_main')}
         </span>
         <h1 className="text-[#18305D] text-3xl font-bold mt-2">
-          ตอนที่ 1 ข้อมูลทั่วไป
+          {t('questionnaire.info_check.title_sub')}
         </h1>
       </div>
 
@@ -23,11 +26,10 @@ export function InfoCheckStep({ onNext }: { onNext: () => void }) {
         <AlertTriangle className="text-[#FAAD14] shrink-0 mt-0.5" size={24} />
         <div>
           <h3 className="text-[#D46B08] font-bold text-base">
-            โปรดตรวจสอบความถูกต้องของข้อมูล
+            {t('questionnaire.info_check.warning_title')}
           </h3>
           <p className="text-[#D46B08] text-sm opacity-90">
-            ข้อมูลส่วนนี้ดึงมาจากฐานข้อมูลของระบบ หากข้อมูลไม่ถูกต้อง
-            กรุณาติดต่อหน่วยงานที่รับผิดชอบเพื่อดำเนินการแก้ไข
+             {t('questionnaire.info_check.warning_desc')}
           </p>
         </div>
       </div>
@@ -39,13 +41,13 @@ export function InfoCheckStep({ onNext }: { onNext: () => void }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12 text-sm md:text-base relative z-10">
           {/* Row 1 */}
           <div className="grid grid-cols-[100px_1fr] gap-4">
-            <span className="text-gray-500">1. ชื่อสถาบัน</span>
+            <span className="text-gray-500">{t('questionnaire.info_check.labels.institute')}</span>
             <span className="text-[#18305D] font-medium">
               {studentInfoMock.institute}
             </span>
           </div>
           <div className="grid grid-cols-[100px_1fr] gap-4">
-            <span className="text-gray-500">ระดับการศึกษา</span>
+            <span className="text-gray-500">{t('questionnaire.info_check.labels.degree')}</span>
             <span className="text-[#18305D] font-medium">
               {studentInfoMock.degree}
             </span>
@@ -53,13 +55,13 @@ export function InfoCheckStep({ onNext }: { onNext: () => void }) {
 
           {/* Row 2 */}
           <div className="grid grid-cols-[100px_1fr] gap-4">
-            <span className="text-gray-500">คณะ</span>
+            <span className="text-gray-500">{t('questionnaire.info_check.labels.faculty')}</span>
             <span className="text-[#18305D] font-medium">
               {studentInfoMock.faculty}
             </span>
           </div>
           <div className="grid grid-cols-[100px_1fr] gap-4">
-            <span className="text-gray-500">ภาควิชา</span>
+            <span className="text-gray-500">{t('questionnaire.info_check.labels.department')}</span>
             <span className="text-[#18305D] font-medium">
               {studentInfoMock.department}
             </span>
@@ -67,13 +69,13 @@ export function InfoCheckStep({ onNext }: { onNext: () => void }) {
 
           {/* Row 3 */}
           <div className="grid grid-cols-[100px_1fr] gap-4">
-            <span className="text-gray-500">สาขาวิชา</span>
+            <span className="text-gray-500">{t('questionnaire.info_check.labels.major')}</span>
             <span className="text-[#18305D] font-medium">
               {studentInfoMock.major}
             </span>
           </div>
           <div className="grid grid-cols-[100px_1fr] gap-4">
-            <span className="text-gray-500">หลักสูตร</span>
+            <span className="text-gray-500">{t('questionnaire.info_check.labels.curriculum')}</span>
             <span className="text-[#18305D] font-medium">
               {studentInfoMock.curriculum}
             </span>
@@ -83,13 +85,13 @@ export function InfoCheckStep({ onNext }: { onNext: () => void }) {
 
           {/* Row 4 */}
           <div className="grid grid-cols-[100px_1fr] gap-4">
-            <span className="text-gray-500">2. ชื่อ (ไทย)</span>
+            <span className="text-gray-500">2. {t('questionnaire.info_check.labels.name_th')}</span>
             <span className="text-[#18305D] font-medium">
               {studentInfoMock.nameTH}
             </span>
           </div>
           <div className="grid grid-cols-[100px_1fr] gap-4">
-            <span className="text-gray-500">นามสกุล</span>
+            <span className="text-gray-500">{t('questionnaire.info_check.labels.surname')}</span>
             <span className="text-[#18305D] font-medium">
               {studentInfoMock.nameTH.split(" ")[2] || "xxxxxxx"}
             </span>
@@ -97,7 +99,7 @@ export function InfoCheckStep({ onNext }: { onNext: () => void }) {
 
           {/* Row 5 */}
           <div className="grid grid-cols-[100px_1fr] gap-4">
-            <span className="text-gray-500">(อังกฤษ)</span>
+            <span className="text-gray-500">{t('questionnaire.info_check.labels.name_en')}</span>
             <span className="text-[#18305D] font-medium">
               {studentInfoMock.nameEN}
             </span>
@@ -114,13 +116,13 @@ export function InfoCheckStep({ onNext }: { onNext: () => void }) {
 
           {/* Row 6 */}
           <div className="grid grid-cols-[140px_1fr] gap-4 md:col-span-1">
-            <span className="text-gray-500">3. เลขที่บัตรประชาชน</span>
+            <span className="text-gray-500">3. {t('questionnaire.info_check.labels.citizen_id')}</span>
             <span className="text-[#18305D] font-medium tracking-wide">
               {studentInfoMock.nationalID}
             </span>
           </div>
           <div className="grid grid-cols-[100px_1fr] gap-4 md:col-span-1">
-            <span className="text-gray-500">รหัสนักศึกษา</span>
+            <span className="text-gray-500">{t('questionnaire.info_check.labels.student_id')}</span>
             <span className="text-[#18305D] font-medium">
               {studentInfoMock.studentID}
             </span>
@@ -131,13 +133,13 @@ export function InfoCheckStep({ onNext }: { onNext: () => void }) {
       {/* Actions Buttons */}
       <div className="flex flex-col-reverse md:flex-row gap-4 justify-end mt-4">
         <button className="px-6 py-3 rounded-xl border border-gray-300 text-gray-500 font-medium hover:bg-gray-50 transition-colors w-full md:w-auto">
-          ข้อมูลไม่ถูกต้อง ติดต่อแอดมิน
+          {t('questionnaire.buttons.contact_admin')}
         </button>
         <button
           onClick={onNext}
           className="px-6 py-3 rounded-xl bg-[#2F80ED] text-white font-bold hover:bg-[#256ac2] transition-colors shadow-lg shadow-blue-200 w-full md:w-auto"
         >
-          ข้อมูลถูกต้อง เริ่มทำแบบสอบถาม
+          {t('questionnaire.buttons.confirm_start')}
         </button>
       </div>
     </div>

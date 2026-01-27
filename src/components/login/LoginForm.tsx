@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import GraduateLogin from './GraduateLogin';
 import AdminLogin from './AdminLogin';
+import { useTranslation } from 'react-i18next';
 
 export default function LoginForm() {
+  const { t } = useTranslation('auth'); // [NEW] Namespace
   const [activeTab, setActiveTab] = useState<'graduate' | 'admin'>('graduate');
 
   return (
@@ -19,7 +21,7 @@ export default function LoginForm() {
                     : 'text-gray-400 hover:text-gray-600'
                 }`}
             >
-                เข้าสู่ระบบบัณฑิต
+                {t('tab_graduate')}
                 {activeTab === 'graduate' && (
                     <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#18305D] rounded-t-full"></div>
                 )}
@@ -32,7 +34,7 @@ export default function LoginForm() {
                     : 'text-gray-400 hover:text-gray-600'
                 }`}
             >
-                ผู้ดูแลระบบ
+                {t('tab_admin')}
                 {activeTab === 'admin' && (
                     <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#18305D] rounded-t-full"></div>
                 )}

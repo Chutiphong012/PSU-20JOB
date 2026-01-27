@@ -1,0 +1,36 @@
+{
+  "header": {
+    "title": "Contact Us",
+    "subtitle": "Graduate Employment Database System, Prince of Songkla University"
+  },
+  "info": {
+    "title": "Contact Information",
+    "address_label": "Address",
+    "address_value": "Prince of Songkla University<br/>15 Karnjanavanich Rd., Hat Yai, Songkhla 90110",
+    "phone_label": "Phone",
+    "email_label": "Email",
+    "line_label": "Line ID",
+    "hours_label": "Business Hours",
+    "hours_value": "Mon - Fri, 08:30 - 16:30"
+  },
+  "form": {
+    "title": "Send us a message",
+    "name_label": "Name - Surname",
+    "name_placeholder": "Name - Surname",
+    "email_label": "Email",
+    "email_placeholder": "Email",
+    "phone_label": "Phone Number",
+    "phone_placeholder": "Phone Number",
+    "subject_label": "Subject",
+    "subject_placeholder": "Subject",
+    "message_label": "Message",
+    "message_placeholder": "Message",
+    "submit_btn": "Send Message",
+    "validation_error": "Please fill in all required fields marked with *"
+  },
+  "popup": {
+    "success_title": "Message Sent Successfully",
+    "success_desc": "Thank you for contacting us. We will get back to you as soon as possible.",
+    "close_btn": "Close"
+  }
+}

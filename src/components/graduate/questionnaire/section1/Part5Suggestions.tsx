@@ -1,14 +1,17 @@
 // src/components/graduate/questionnaire/parts/Part5Suggestions.tsx
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import {
   Question,
   questionPart5,
   QuestionOption,
-  section1Structure, // ✅ Import section1Structure
+  section1Structure,
+  LocalizedText,
 } from "@/data/questionnaireMock";
+import { useTranslation } from "react-i18next";
+
 import {
   Languages,
   MessageCircle,
@@ -20,6 +23,7 @@ import {
   FileSearch,
   MoreHorizontal,
   Check,
+  ChevronDown,
 } from "lucide-react";
 
 import GraduationCapGif from "@/assets/GraduationCap.gif";
@@ -53,6 +57,25 @@ export function Part5Suggestions({
   onBackPart,
   onProgressChange,
 }: Part5Props) {
+  const topRef = useRef<HTMLDivElement>(null);
+
+  const scrollToTop = () => {
+      // ใช้ setTimeout เพื่อให้แน่ใจว่า DOM ถูก Render เรียบร้อยแล้ว
+      setTimeout(() => {
+        // 1. Force Scroll ที่ Window ก่อน
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        
+        // 2. ถ้ามี Ref ให้ Scroll ไปที่ Ref
+        if (topRef.current) {
+          topRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 50);
+  };
+  const { t, i18n } = useTranslation("graduate");
+  
+  // Helper to get text based on current language
+  const getLocalizedText = (text: LocalizedText) => text[i18n.language as 'th' | 'en'] || text.th;
+  
   // ✅ ดึงข้อมูล Structure ของ Part 5 (Index 4) มาใช้
   const partInfo = section1Structure[4];
 
@@ -112,7 +135,7 @@ export function Part5Suggestions({
 
     if (currentPage < totalPages) {
       setCurrentPage((prev) => prev + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      scrollToTop();
     } else {
       setShowSuccessModal(true);
     }
@@ -126,7 +149,7 @@ export function Part5Suggestions({
   const handleBack = () => {
     if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      scrollToTop();
     } else {
       onBackPart();
     }
@@ -145,16 +168,16 @@ export function Part5Suggestions({
   };
 
   return (
-    <div className="flex flex-col gap-4 md:gap-6 animate-in fade-in duration-300 font-['Prompt'] relative w-full overflow-hidden">
+    <div ref={topRef} className="flex flex-col gap-4 md:gap-6 animate-in fade-in duration-300 font-['Prompt'] relative w-full overflow-hidden">
       {/* --- Header Section --- */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative px-4 md:px-0">
         <div className="text-left">
           <span className="text-[#1890FF] text-xs md:text-sm font-medium">
-            ส่วนที่ 1 ภาวะการมีงานทำของบัณฑิต
+            {t('questionnaire.section_title')}
           </span>
           {/* ✅ ใช้ Label จาก Mock Data แทน Text Hardcode */}
           <h1 className="text-[#1890FF] text-2xl md:text-3xl font-bold mt-1 leading-tight">
-            {partInfo.label}
+            {getLocalizedText(partInfo.label)}
           </h1>
         </div>
 
@@ -165,7 +188,7 @@ export function Part5Suggestions({
                 className={`absolute inset-0 bg-linear-to-r ${completeGradient} animate-shimmer-ltr`}
               />
               <span className="relative z-10 text-xs md:text-sm text-white pt-1 font-bold">
-                Complete
+                {t('questionnaire.alerts.complete')}
               </span>
             </div>
           ) : (
@@ -179,7 +202,7 @@ export function Part5Suggestions({
                 <span
                   className={`text-xs md:text-sm font-bold bg-linear-to-r ${inProgressGradient} bg-clip-text text-transparent pt-1 animate-shimmer-ltr relative z-10`}
                 >
-                  In Progress
+                  {t('questionnaire.alerts.in_progress')}
                 </span>
               </div>
               <div className="absolute -top-4 md:-top-5 left-1/2 -translate-x-1/2 bg-white px-1 z-20">
@@ -210,7 +233,11 @@ export function Part5Suggestions({
       {/* --- Questions List --- */}
       <div className="flex flex-col gap-6 md:gap-8 w-full">
         {currentQuestions.map((q) => {
+          const question = q;
           const answered = isQuestionAnswered(q);
+          const isDisabled = (question as any).disabledCondition 
+            ? answers[(question as any).disabledCondition.questionId] === (question as any).disabledCondition.value 
+            : false;
 
           return (
             <div
@@ -231,9 +258,178 @@ export function Part5Suggestions({
                     ข้อที่ {q.id}
                   </span>
                   <h3 className="text-[#18305D] font-medium text-base md:text-xl leading-snug max-w-4xl">
-                    {q.label}
+                    {getLocalizedText(q.label)}
                   </h3>
                 </div>
+
+                {/* --- Dropdown Logic --- */}
+                {question.type === "dropdown" && (
+                  <div className="relative max-w-full md:max-w-2xl">
+                    <div
+                      className={`rounded-xl p-px transition-all duration-200 ${
+                        isDisabled
+                          ? "bg-gray-200"
+                          : answers[question.id]
+                            ? "bg-transparent"
+                            : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
+                      }`}
+                    >
+                      <div className="relative rounded-[calc(0.75rem-1px)] bg-white overflow-hidden">
+                        <select
+                          disabled={isDisabled}
+                          className={`w-full px-4 py-3 border-none outline-none appearance-none cursor-pointer ${
+                            isDisabled
+                              ? "bg-gray-100"
+                              : answers[question.id]
+                                ? "bg-[#2F80ED] text-white"
+                                : "text-gray-700"
+                          }`}
+                          value={answers[question.id] || ""}
+                          onChange={(e) =>
+                            onAnswer(question.id, e.target.value)
+                          }
+                        >
+                          <option value="" disabled className="text-gray-400">
+                            {question.placeholder ? getLocalizedText(question.placeholder) : ''}
+                          </option>
+                          {question.options?.map((opt: any) => (
+                            <option
+                              key={typeof opt === "string" ? opt : opt.value}
+                              value={typeof opt === "string" ? opt : opt.value}
+                              className="text-gray-700 bg-white"
+                            >
+                              {typeof opt === "string" ? opt : getLocalizedText(opt.label)}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown
+                          className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none ${
+                            isDisabled
+                              ? "text-gray-300"
+                              : answers[question.id]
+                                ? "text-white"
+                                : "text-gray-400"
+                          }`}
+                          size={20}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* --- Radio Logic --- */}
+                {question.type === "radio" && (
+                  <div
+                    className={`grid gap-4 ${
+                      question.options && question.options.length > 3
+                        ? "grid-cols-1"
+                        : "grid-cols-1 md:grid-cols-2"
+                    }`}
+                  >
+                    {question.options?.map((opt: any, idx: number) => {
+                      const label = typeof opt === "string" ? opt : opt.label;
+                      const val = typeof opt === "string" ? opt : opt.value;
+                      const isSelected = answers[question.id] === val;
+                      return (
+                        <div
+                          key={idx}
+                          className={`rounded-xl p-px transition-all duration-200 ${
+                            isDisabled
+                              ? "bg-gray-200"
+                              : isSelected
+                                ? "bg-transparent"
+                                : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
+                          }`}
+                        >
+                          <label
+                            className={`flex items-start md:items-center gap-4 p-4 cursor-pointer transition-all rounded-[calc(0.75rem-1px)] h-full ${
+                              isDisabled
+                                ? "bg-gray-100"
+                                : isSelected
+                                  ? "bg-[#2F80ED] text-white shadow-md"
+                                  : "bg-white text-gray-700 hover:bg-gray-50"
+                            }`}
+                            onClick={() =>
+                              !isDisabled && onAnswer(question.id, val)
+                            }
+                          >
+                            <div
+                              className={`mt-1 md:mt-0 w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                                isSelected ? "border-white" : "border-gray-300"
+                              }`}
+                            >
+                              {isSelected && (
+                                <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
+                              )}
+                            </div>
+                            <span className="text-sm md:text-base font-medium leading-snug">
+                              {typeof label === "object" ? getLocalizedText(label) : String(label)}
+                            </span>
+                          </label>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* --- Address Group Logic --- */}
+                {(question.type === "address_group" ||
+                  (question.subFields && question.subFields.length > 0)) && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+                    {question.subFields?.map((field: any, idx: number) => {
+                      const groupData = answers[question.id] || {};
+                      const val = groupData[field.name] || "";
+                      const isFilled = val.toString().trim() !== "";
+                      return (
+                        <div
+                          key={idx}
+                          className={
+                            field.size === "full"
+                              ? "col-span-full"
+                              : "col-span-1"
+                          }
+                        >
+                          {field.label && (
+                            <label className="block text-sm font-medium mb-2 text-[#18305D]">
+                              {getLocalizedText(field.label)}
+                            </label>
+                          )}
+                          <div
+                            className={`rounded-xl p-px transition-all duration-200 ${
+                              isDisabled
+                                ? "bg-gray-200"
+                                : isFilled
+                                  ? "bg-transparent"
+                                  : "bg-gray-200 hover:bg-linear-to-r hover:from-[#267FD8] hover:to-[#2994FF]"
+                            }`}
+                          >
+                            <div className="relative rounded-[calc(0.75rem-1px)] bg-white overflow-hidden">
+                              <input
+                                type="text"
+                                disabled={isDisabled}
+                                className={`w-full px-4 py-3 border-none outline-none transition-all ${
+                                  isDisabled
+                                    ? "bg-gray-100"
+                                    : isFilled
+                                      ? "bg-[#2F80ED] text-white placeholder:text-white/60"
+                                      : "bg-white text-gray-700 placeholder:text-gray-300"
+                                }`}
+                                placeholder={field.placeholder ? getLocalizedText(field.placeholder) : ''}
+                                value={val}
+                                onChange={(e) =>
+                                  onAnswer(question.id, {
+                                    ...groupData,
+                                    [field.name]: e.target.value,
+                                  })
+                                }
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
 
                 {/* --- Rating Logic --- */}
                 {q.type === "rating" && (
@@ -289,7 +485,7 @@ export function Part5Suggestions({
                                   : "text-gray-400"
                               }`}
                             >
-                              {(q.options as string[])?.[index]}
+                              {(q.options as QuestionOption[])?.[index] ? getLocalizedText((q.options as QuestionOption[])[index].label) : ""}
                             </span>
                           </div>
                         );
@@ -334,7 +530,7 @@ export function Part5Suggestions({
                             )}
                           </div>
                           <span className="text-sm font-medium leading-snug">
-                            {option.label}
+                            {getLocalizedText(option.label)}
                           </span>
                         </button>
                       );
@@ -356,7 +552,7 @@ export function Part5Suggestions({
                       <div className="relative rounded-[calc(0.75rem-1px)] bg-white overflow-hidden">
                         <textarea
                           rows={4}
-                          placeholder={q.placeholder}
+                          placeholder={q.placeholder ? getLocalizedText(q.placeholder) : ''}
                           value={answers[q.id] || ""}
                           onChange={(e) => onAnswer(q.id, e.target.value)}
                           className={`w-full pl-12 pr-4 py-3 outline-none transition-all resize-none text-sm md:text-base ${
@@ -384,7 +580,7 @@ export function Part5Suggestions({
           onClick={handleBack}
           className="w-full sm:w-auto px-10 py-3 rounded-xl border border-gray-300 text-gray-600 font-medium hover:bg-gray-50 bg-white transition-all"
         >
-          ย้อนกลับ
+          {t('questionnaire.buttons.back')}
         </button>
         <button
           onClick={handleNext}
@@ -396,7 +592,7 @@ export function Part5Suggestions({
           }`}
         >
           <span className="relative z-10">
-            {currentPage === totalPages ? "บันทึกข้อมูลส่วนที่ 1" : "ถัดไป"}
+            {currentPage === totalPages ? t('questionnaire.buttons.save_section_1') : t('questionnaire.buttons.next')}
           </span>
           {isCurrentPageComplete && (
             <div className="absolute left-1/2 bottom-0 w-[250%] pt-[250%] bg-[#0041C4] rounded-full -translate-x-1/2 translate-y-full group-hover:translate-y-[10%] transition-transform duration-500 ease-in-out z-0 pointer-events-none"></div>
@@ -415,17 +611,16 @@ export function Part5Suggestions({
               />
             </div>
             <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3 text-center leading-tight">
-              บันทึกข้อมูลตอนที่ 1 สำเร็จ !
+              {t('questionnaire.alerts.save_success_section_1')}
             </h3>
             <p className="text-gray-500 mb-8 text-base md:text-lg text-center">
-              ทำแบบสอบถามต่อใน{" "}
-              <span className="text-[#1890FF] font-bold">ส่วนที่ 2</span>
+              {t('questionnaire.buttons.continue_section_2')}
             </p>
             <button
               onClick={handleConfirmNext}
               className="w-full py-4 bg-[#1890FF] text-white rounded-2xl font-bold text-lg shadow-lg shadow-blue-100 hover:bg-blue-600 transition-all transform active:scale-95"
             >
-              ทำส่วนถัดไป
+              {t('questionnaire.buttons.next_part')}
             </button>
           </div>
         </div>

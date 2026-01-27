@@ -1,0 +1,34 @@
+{
+  "common": {
+    "view_all": "View All",
+    "read_more": "Read More",
+    "back": "Back"
+  },
+  "nav": {
+    "home": "Home",
+    "news": "News",
+    "reports": "Reports",
+    "contact": "Contact Us",
+    "dashboard": "Dashboard",
+    "profile": "Profile"
+  },
+  "buttons": {
+    "sign_in": "Sign In",
+    "logout": "Sign Out",
+    "accept": "Accept",
+    "decline": "Decline"
+  },
+  "footer": {
+    "about": "About Us",
+    "about_desc_1": "PSU Job Portal",
+    "about_desc_2": "is a platform for tracking the employment status of Prince of Songkla University graduates to collect data and develop the curriculum.",
+    "quick_links": "Quick Links",
+    "contact": "Contact Us",
+    "office": "Office / Administration and Information Technology",
+    "phone": "Tel",
+    "email": "Email",
+    "cookie_text": "We use cookies to improve the efficiency and experience of using the website. You can study the details of cookie usage at",
+    "privacy_policy": "Privacy Policy",
+    "policy_alert": "Guidance"
+  }
+}

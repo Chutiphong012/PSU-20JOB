@@ -8,17 +8,23 @@ import { Menu, X, GraduationCap } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import psuLogo from '../../assets/psu3.png'; 
 
-const navItems = [
-  { label: 'หน้าแรก', href: '/' },
-  { label: 'ข่าวประชาสัมพันธ์', href: '/#news' },
-  { label: 'รายงาน', href: '/#reports' },
-  { label: 'ติดต่อเรา', href: '/contact' },
-  { label: 'Dashboard', href: '/dashboard' },
-];
+import { useTranslation } from 'react-i18next'; // [NEW]
+
+// [MOVED] navItems definition moved inside component to use t() function
+
 
 export default function Header() {
+  const { t, i18n } = useTranslation('common'); // [NEW]
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeLang, setActiveLang] = useState<'TH' | 'EN'>('TH');
+  // [REMOVED] activeLang state, using i18n.language instead
+  
+  const navItems = [
+    { label: t('nav.home'), href: '/' },
+    { label: t('nav.news'), href: '/#news' },
+    { label: t('nav.reports'), href: '/#reports' },
+    { label: t('nav.contact'), href: '/contact' },
+    { label: t('nav.dashboard'), href: '/dashboard' },
+  ];
   
   const pathname = usePathname();
   const [activeNav, setActiveNav] = useState('/');
@@ -114,17 +120,17 @@ export default function Header() {
             {/* Language Toggle */}
             <div className="flex bg-gray-100 rounded-md p-1">
               <button 
-                onClick={() => setActiveLang('TH')}
+                onClick={() => i18n.changeLanguage('th')}
                 className={`px-3 py-1 rounded text-xs font-bold transition-all duration-200 ${
-                  activeLang === 'TH' ? 'bg-[#2323E6] text-white shadow-sm' : 'text-[#2323E6] hover:bg-gray-200'
+                  i18n.language === 'th' ? 'bg-[#2323E6] text-white shadow-sm' : 'text-[#2323E6] hover:bg-gray-200'
                 }`}
               >
                 TH
               </button>
               <button 
-                onClick={() => setActiveLang('EN')}
+                onClick={() => i18n.changeLanguage('en')}
                 className={`px-3 py-1 rounded text-xs font-bold transition-all duration-200 ${
-                  activeLang === 'EN' ? 'bg-[#2323E6] text-white shadow-sm' : 'text-[#2323E6] hover:bg-gray-200'
+                  i18n.language === 'en' ? 'bg-[#2323E6] text-white shadow-sm' : 'text-[#2323E6] hover:bg-gray-200'
                 }`}
               >
                 EN
@@ -137,7 +143,7 @@ export default function Header() {
               className="flex items-center gap-2 border border-[#2323E6] text-[#2323E6] px-5 py-2 rounded-lg hover:bg-[#2323E6] hover:text-white transition-all duration-300 font-medium text-sm whitespace-nowrap"
             >
               <GraduationCap size={18} />
-              Sign In
+              {t('buttons.sign_in')}
             </Link>
           </div>
 
@@ -149,7 +155,7 @@ export default function Header() {
               className="border border-[#2323E6] text-[#2323E6] px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg text-[10px] sm:text-xs font-medium flex items-center gap-1 hover:bg-blue-50 transition-colors"
             >
               <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4" />
-              Sign In
+              {t('buttons.sign_in')}
             </Link>
 
             {/* Hamburger Button */}
@@ -190,24 +196,24 @@ export default function Header() {
           </div>
           
           <div className="border-t border-gray-100 p-4 bg-gray-50 flex justify-center">
-             <div className="flex bg-white rounded-md p-1 w-fit shadow-sm border border-gray-100">
-              <button 
-                onClick={() => setActiveLang('TH')}
-                className={`px-6 py-2 rounded text-sm font-bold transition-all ${
-                  activeLang === 'TH' ? 'bg-[#2323E6] text-white' : 'text-gray-500'
-                }`}
-              >
-                TH
-              </button>
-              <button 
-                onClick={() => setActiveLang('EN')}
-                className={`px-6 py-2 rounded text-sm font-bold transition-all ${
-                  activeLang === 'EN' ? 'bg-[#2323E6] text-white' : 'text-gray-500'
-                }`}
-              >
-                EN
-              </button>
-            </div>
+              <div className="flex bg-white rounded-md p-1 w-fit shadow-sm border border-gray-100">
+                <button 
+                  onClick={() => i18n.changeLanguage('th')}
+                  className={`px-6 py-2 rounded text-sm font-bold transition-all ${
+                    i18n.language === 'th' ? 'bg-[#2323E6] text-white' : 'text-gray-500'
+                  }`}
+                >
+                  TH
+                </button>
+                <button 
+                  onClick={() => i18n.changeLanguage('en')}
+                  className={`px-6 py-2 rounded text-sm font-bold transition-all ${
+                    i18n.language === 'en' ? 'bg-[#2323E6] text-white' : 'text-gray-500'
+                  }`}
+                >
+                  EN
+                </button>
+              </div>
           </div>
         </div>
       )}
