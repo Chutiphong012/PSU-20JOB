@@ -83,22 +83,16 @@ export function EmployerSidebar({
           return (
             <div
               key={part.id}
-              // ❌ ลบ onClick ออก เพื่อไม่ให้กดเปลี่ยนหน้าได้
-              // onClick={() => onPartChange && onPartChange(part.id)}
               className={`group relative flex items-center justify-between py-3 px-2 transition-all duration-300 rounded-xl ${
-                // ✅ ปรับ Logic CSS:
-                // - ลบ cursor-pointer
-                // - ลบ hover:bg-white/5
-                // - คงไว้เฉพาะ Active state
                 isActive
-                  ? "bg-white/10 translate-x-1" // ถ้าเป็นหน้าปัจจุบัน ให้มีพื้นหลังและขยับ
-                  : "opacity-70" // ถ้าไม่ใช่หน้าปัจจุบัน ให้จางลงนิดหน่อย และไม่มี hover effect
+                  ? "bg-white/10 translate-x-1" 
+                  : "opacity-70" 
               }`}
             >
               <div className="flex items-start gap-4 pr-4">
                 <div
                   className={`mt-0.5 transition-opacity duration-300 ${
-                    isActive ? "opacity-100" : "opacity-60" // ลบ group-hover:opacity-100 ออก
+                    isActive ? "opacity-100" : "opacity-60" 
                   }`}
                 >
                   {getPartIcon(part.id)}
