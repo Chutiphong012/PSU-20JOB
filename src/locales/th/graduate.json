@@ -77,12 +77,14 @@
         "part_2": "ส่วนที่ 2",
         "part_2_title": "การประเมินตนเองของบัณฑิต"
       },
-      "unit_items": "ข้อ"
+      "unit_items": "รายการ",
+      "question_prefix": "ข้อที่"
     },
     "buttons": {
       "back": "ย้อนกลับ",
       "next": "ถัดไป",
       "save": "บันทึก",
+      "submit": "ส่งแบบสอบถาม",
       "save_section_1": "บันทึก ส่วนที่ 1",
       "cancel": "ยกเลิก",
       "confirm": "ยืนยัน",

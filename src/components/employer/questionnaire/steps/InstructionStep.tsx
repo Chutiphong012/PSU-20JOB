@@ -6,6 +6,8 @@ import { FileText, Phone, Mail } from "lucide-react";
 
 // ✅ Import ข้อมูลจาก mock
 import { employerStructure } from "@/data/employerMock";
+import { useTranslation } from 'react-i18next';
+import { getLocalizedText } from "@/utils/i18nHelper";
 
 // ✅ Import Assets
 import PsuLogo from "@/assets/psu4.png";
@@ -16,12 +18,13 @@ interface InstructionStepProps {
 }
 
 export function InstructionStep({ onNext }: InstructionStepProps) {
-  const [lang, setLang] = useState<"th" | "en">("th");
-
-  // ✅ เพิ่ม State สำหรับคุมการเลื่อนของ Step
+  const { t, i18n } = useTranslation('employer');
+  const lang = i18n.language as 'th' | 'en';
+  
+  // ✅ เพิ่ม State สำหรับคุมการเลื่อนของ Step (ยังคงเดิม)
   const [activeStep, setActiveStep] = useState(0);
 
-  // ✅ Effect สำหรับการ Auto Slide ทุกๆ 3 วินาที
+  // ✅ Effect สำหรับการ Auto Slide ทุกๆ 3 วินาที (ยังคงเดิม)
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveStep((prev) => (prev + 1) % employerStructure.length);
@@ -29,34 +32,9 @@ export function InstructionStep({ onNext }: InstructionStepProps) {
     return () => clearInterval(timer);
   }, []);
 
-  const content = {
-    th: {
-      title:
-        "แบบสอบถามความพึงพอใจของนายจ้าง\nหรือผู้ใช้บัณฑิต มหาวิทยาลัยสงขลานครินทร์",
-      year: "รุ่นปีการศึกษา 256X",
-      structureTitle: "โครงสร้างแบบสอบถาม",
-      structureSubtitle: `ทั้งหมด ${employerStructure.length} ตอน`,
-      quote: "ขอขอบคุณที่ท่านสละเวลาให้ข้อคิดเห็นตามความเป็นจริง",
-      btnStart: "เริ่มทำแบบสอบถาม",
-      contactLabel: "ช่องทางติดต่อเรา",
-      email: "psu-job@psu.ac.th",
-      phone: "074-282068-9",
-    },
-    en: {
-      title:
-        "Questionnaire on Satisfaction of\nEmployers or Users of Graduates of PSU",
-      year: "202X",
-      structureTitle: "Questionnaire Structure",
-      structureSubtitle: `The questionnaire consists of ${employerStructure.length} sections.`,
-      quote: "Thank you for taking the time to provide your honest feedback.",
-      btnStart: "Start the Questionnaire",
-      contactLabel: "Contact us",
-      email: "psu-job@psu.ac.th",
-      phone: "074-282068-9",
-    },
+  const changeLanguage = (l: string) => {
+    i18n.changeLanguage(l);
   };
-
-  const t = content[lang];
 
   return (
     <div className="min-h-screen w-full bg-[#F4F9FF] flex items-center justify-center p-4 font-['Prompt']">
@@ -92,7 +70,7 @@ export function InstructionStep({ onNext }: InstructionStepProps) {
               {(["th", "en"] as const).map((l) => (
                 <button
                   key={l}
-                  onClick={() => setLang(l)}
+                  onClick={() => changeLanguage(l)}
                   className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${
                     lang === l
                       ? "bg-white text-[#303F6C] shadow-sm"
@@ -107,12 +85,12 @@ export function InstructionStep({ onNext }: InstructionStepProps) {
 
           <div className="mt-8 lg:mt-2 mb-4">
             <h1 className="text-xl lg:text-[1.75rem] font-semibold text-[#303F6C] leading-tight whitespace-pre-line">
-              {t.title}
+              {t('instruction.title')}
             </h1>
             <div className="flex items-center gap-2 mt-2">
               <div className="w-1 h-6 bg-[#1890FF] rounded-full"></div>
               <span className="text-[#1890FF] text-lg font-semibold">
-                {t.year}
+                {t('instruction.year')}
               </span>
             </div>
           </div>
@@ -125,10 +103,10 @@ export function InstructionStep({ onNext }: InstructionStepProps) {
                 </div>
                 <div className="flex-1">
                   <p className="text-[#1890FF] text-sm font-semibold mb-1">
-                    {t.structureTitle}
+                    {t('instruction.structure_title')}
                   </p>
                   <h3 className="text-gray-800 text-xl font-semibold mb-2">
-                    {t.structureSubtitle}
+                    {t('instruction.structure_subtitle', { count: employerStructure.length })}
                   </h3>
 
                   <div className="flex gap-2 mb-3">
@@ -148,7 +126,7 @@ export function InstructionStep({ onNext }: InstructionStepProps) {
                     {" "}
                     {/* ล็อกความสูงไว้เพื่อให้ UI ไม่กระโดด */}
                     <p className="text-gray-500 text-sm animate-in fade-in slide-in-from-right-2 duration-500">
-                      {employerStructure[activeStep].subLabel}
+                      {getLocalizedText(employerStructure[activeStep].subLabel, lang)}
                     </p>
                   </div>
                 </div>
@@ -157,7 +135,7 @@ export function InstructionStep({ onNext }: InstructionStepProps) {
               <div className="flex items-center gap-4 mb-8">
                 <div className="h-px flex-1 bg-blue-200"></div>
                 <p className="text-center text-gray-500 italic text-xs lg:text-sm shrink-0 px-2 font-medium">
-                  “ {t.quote} ”
+                  “ {t('instruction.quote')} ”
                 </p>
                 <div className="h-px flex-1 bg-blue-200"></div>
               </div>
@@ -167,7 +145,7 @@ export function InstructionStep({ onNext }: InstructionStepProps) {
                   onClick={onNext}
                   className="w-3/4 max-w-sm bg-[#1890FF] hover:bg-[#1580E3] text-white text-lg font-bold py-4 rounded-2xl shadow-xl shadow-blue-200 transition-all transform active:scale-[0.98]"
                 >
-                  {t.btnStart}
+                  {t('instruction.start_button')}
                 </button>
               </div>
             </div>
@@ -176,26 +154,26 @@ export function InstructionStep({ onNext }: InstructionStepProps) {
           {/* Footer ... (เหมือนเดิม) */}
           <div className="pt-2 mt-6 lg:mt-4">
             <p className="text-gray-400 text-[10px] lg:text-xs mb-3 font-medium">
-              {t.contactLabel}
+              {t('instruction.contact_label')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <a
-                href={`mailto:${t.email}`}
+                href="mailto:psu-job@psu.ac.th"
                 className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 text-gray-600 text-xs lg:text-sm hover:border-[#1890FF] hover:text-[#1890FF] bg-white transition-all group"
               >
                 <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-gray-500 group-hover:bg-blue-50 group-hover:text-[#1890FF] transition-colors">
                   <Mail size={16} />
                 </div>
-                <span className="truncate font-medium">{t.email}</span>
+                <span className="truncate font-medium">psu-job@psu.ac.th</span>
               </a>
               <a
-                href={`tel:${t.phone}`}
+                href="tel:074-282068-9"
                 className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 text-gray-600 text-xs lg:text-sm hover:border-[#1890FF] hover:text-[#1890FF] bg-white transition-all group"
               >
                 <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-gray-500 group-hover:bg-blue-50 group-hover:text-[#1890FF] transition-colors">
                   <Phone size={16} />
                 </div>
-                <span className="truncate font-medium">{t.phone}</span>
+                <span className="truncate font-medium">074-282068-9</span>
               </a>
             </div>
           </div>

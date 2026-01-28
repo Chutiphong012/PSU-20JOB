@@ -4,10 +4,12 @@
 
 import { AlertTriangle } from "lucide-react";
 import { studentInfoMock } from "@/data/questionnaireMock";
-import { useTranslation } from 'react-i18next'; // [NEW]
+import { useTranslation } from 'react-i18next';
+import { getLocalizedText } from "@/utils/i18nHelper";
 
 export function InfoCheckStep({ onNext }: { onNext: () => void }) {
-  const { t } = useTranslation('graduate');
+  const { t, i18n } = useTranslation('graduate');
+  const lang = i18n.language;
 
   return (
     <div className="flex flex-col gap-6 font-['Prompt'] animate-in fade-in duration-300">
@@ -43,13 +45,13 @@ export function InfoCheckStep({ onNext }: { onNext: () => void }) {
           <div className="grid grid-cols-[100px_1fr] gap-4">
             <span className="text-gray-500">{t('questionnaire.info_check.labels.institute')}</span>
             <span className="text-[#18305D] font-medium">
-              {studentInfoMock.institute}
+              {getLocalizedText(studentInfoMock.institute, lang)}
             </span>
           </div>
           <div className="grid grid-cols-[100px_1fr] gap-4">
             <span className="text-gray-500">{t('questionnaire.info_check.labels.degree')}</span>
             <span className="text-[#18305D] font-medium">
-              {studentInfoMock.degree}
+              {getLocalizedText(studentInfoMock.degree, lang)}
             </span>
           </div>
 
@@ -57,13 +59,13 @@ export function InfoCheckStep({ onNext }: { onNext: () => void }) {
           <div className="grid grid-cols-[100px_1fr] gap-4">
             <span className="text-gray-500">{t('questionnaire.info_check.labels.faculty')}</span>
             <span className="text-[#18305D] font-medium">
-              {studentInfoMock.faculty}
+              {getLocalizedText(studentInfoMock.faculty, lang)}
             </span>
           </div>
           <div className="grid grid-cols-[100px_1fr] gap-4">
             <span className="text-gray-500">{t('questionnaire.info_check.labels.department')}</span>
             <span className="text-[#18305D] font-medium">
-              {studentInfoMock.department}
+              {getLocalizedText(studentInfoMock.department, lang)}
             </span>
           </div>
 
@@ -71,13 +73,13 @@ export function InfoCheckStep({ onNext }: { onNext: () => void }) {
           <div className="grid grid-cols-[100px_1fr] gap-4">
             <span className="text-gray-500">{t('questionnaire.info_check.labels.major')}</span>
             <span className="text-[#18305D] font-medium">
-              {studentInfoMock.major}
+              {getLocalizedText(studentInfoMock.major, lang)}
             </span>
           </div>
           <div className="grid grid-cols-[100px_1fr] gap-4">
             <span className="text-gray-500">{t('questionnaire.info_check.labels.curriculum')}</span>
             <span className="text-[#18305D] font-medium">
-              {studentInfoMock.curriculum}
+              {getLocalizedText(studentInfoMock.curriculum, lang)}
             </span>
           </div>
 
@@ -87,13 +89,13 @@ export function InfoCheckStep({ onNext }: { onNext: () => void }) {
           <div className="grid grid-cols-[100px_1fr] gap-4">
             <span className="text-gray-500">2. {t('questionnaire.info_check.labels.name_th')}</span>
             <span className="text-[#18305D] font-medium">
-              {studentInfoMock.nameTH}
+              {studentInfoMock.name.th}
             </span>
           </div>
           <div className="grid grid-cols-[100px_1fr] gap-4">
             <span className="text-gray-500">{t('questionnaire.info_check.labels.surname')}</span>
             <span className="text-[#18305D] font-medium">
-              {studentInfoMock.nameTH.split(" ")[2] || "xxxxxxx"}
+              {studentInfoMock.name.th.split(" ")[2] || "xxxxxxx"}
             </span>
           </div>
 
@@ -101,13 +103,13 @@ export function InfoCheckStep({ onNext }: { onNext: () => void }) {
           <div className="grid grid-cols-[100px_1fr] gap-4">
             <span className="text-gray-500">{t('questionnaire.info_check.labels.name_en')}</span>
             <span className="text-[#18305D] font-medium">
-              {studentInfoMock.nameEN}
+              {studentInfoMock.name.en}
             </span>
           </div>
           <div className="grid grid-cols-[100px_1fr] gap-4">
             <span className="text-gray-500"></span>
             <span className="text-[#18305D] font-medium">
-              {studentInfoMock.nameEN.split(" ").slice(2).join(" ") ||
+              {studentInfoMock.name.en.split(" ").slice(2).join(" ") ||
                 "xxxxxxx"}
             </span>
           </div>

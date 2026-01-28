@@ -11,13 +11,13 @@ import { useQuestionnaire } from "@/hooks/useQuestionnaire";
 import GraduationCapGif from "@/assets/GraduationCap.gif";
 
 // Fields
-import { QuestionField } from "@/components/ui/fields/QuestionField";
-import { SelectField } from "@/components/ui/fields/SelectField";
-import { RadioField } from "@/components/ui/fields/RadioField";
-import { RatingField } from "@/components/ui/fields/RatingField";
-import { CheckboxField } from "@/components/ui/fields/CheckboxField";
-import { TextareaField } from "@/components/ui/fields/TextareaField";
-import { AddressGroupField } from "@/components/ui/fields/AddressGroupField";
+import { QuestionField } from "@/components/ui/graduate-fields/QuestionField";
+import { SelectField } from "@/components/ui/graduate-fields/SelectField";
+import { RadioField } from "@/components/ui/graduate-fields/RadioField";
+import { RatingField } from "@/components/ui/graduate-fields/RatingField";
+import { CheckboxField } from "@/components/ui/graduate-fields/CheckboxField";
+import { TextareaField } from "@/components/ui/graduate-fields/TextareaField";
+import { AddressGroupField } from "@/components/ui/graduate-fields/AddressGroupField";
 
 interface QuestionnaireRendererProps {
   partInfo: SectionStructure;

@@ -2,6 +2,8 @@
 
 import { useState, useMemo, useRef } from "react";
 import Image from "next/image";
+import { useTranslation } from "react-i18next"; // ✅ Import useTranslation
+import { getLocalizedText } from "@/utils/i18nHelper"; // ✅ Import getLocalizedText
 import { EmployerSidebar } from "./EmployerSidebar";
 import {
   employerStructure,
@@ -23,6 +25,9 @@ interface FormProps {
 }
 
 export function EmployerQuestionnaireForm({ onComplete }: FormProps) {
+  const { t, i18n } = useTranslation('employer'); // ✅ Init i18n
+  const lang = i18n.language; // ✅ Get current language
+
   const [currentPart, setCurrentPart] = useState(1);
   const [answers, setAnswers] = useState<Record<string, any>>({});
 
@@ -123,10 +128,10 @@ export function EmployerQuestionnaireForm({ onComplete }: FormProps) {
               <div className="pl-5 py-3">
                 {/* 1. แก้ไขจาก font-bold เป็น font-semibold */}
                 <h1 className="text-3xl md:text-4xl font-semibold text-[#2B76E5] leading-none mb-2">
-                  ตอนที่ {currentPart}
+                  {t('form.part_prefix')} {currentPart}
                 </h1>
                 <p className="text-[#6BA5F2] text-lg md:text-xl font-medium leading-tight">
-                  {employerStructure[currentPart - 1]?.subLabel}
+                  {getLocalizedText(employerStructure[currentPart - 1]?.subLabel, lang)}
                 </p>
               </div>
             </div>
@@ -139,7 +144,7 @@ export function EmployerQuestionnaireForm({ onComplete }: FormProps) {
                   />
                   {/* 2. แก้ไขจาก font-bold เป็น font-semibold */}
                   <span className="relative z-10 text-xs md:text-sm text-white font-semibold">
-                    Complete
+                    {t('form.status_complete')}
                   </span>
                 </div>
               ) : (
@@ -154,7 +159,7 @@ export function EmployerQuestionnaireForm({ onComplete }: FormProps) {
                     <span
                       className={`text-xs md:text-sm font-semibold bg-linear-to-r ${inProgressGradient} bg-clip-text text-transparent animate-shimmer-ltr`}
                     >
-                      In Progress
+                      {t('form.status_in_progress')}
                     </span>
                   </div>
                   <div className="absolute -top-4 md:-top-5 left-1/2 -translate-x-1/2 bg-white px-1 z-20 rounded-full">

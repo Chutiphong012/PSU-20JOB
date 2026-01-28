@@ -23,7 +23,7 @@ export function QuestionField({
   error,
   questionNumber,
 }: QuestionFieldProps) {
-  const { i18n } = useTranslation("graduate");
+  const { t, i18n } = useTranslation("graduate");
   const lang = i18n.language;
 
   // Common Styles
@@ -55,7 +55,7 @@ export function QuestionField({
               isDisabled ? "text-gray-400" : "text-[#1890FF]"
             }`}
           >
-            ข้อที่ {questionNumber || question.id}
+            {t('questionnaire.instruction.question_prefix')} {questionNumber || question.id}
           </span>
           <h3
             className={`font-medium text-base md:text-xl leading-snug max-w-4xl ${

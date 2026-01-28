@@ -44,8 +44,17 @@ export function SelectField({
                 ? `${activeSolidBlue} text-white font-medium`
                 : "text-gray-700 bg-white"
             }`}
-            value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
+             // ✅ Fix: Check if value is "other:..." -> bind select to "other"
+            value={(typeof value === 'string' && value.startsWith('other:')) ? 'other' : (value || "")}
+            onChange={(e) => {
+                const val = e.target.value;
+                if (val === 'other') {
+                    // Start with just "other" if newly selected
+                    onChange('other');
+                } else {
+                    onChange(val);
+                }
+            }}
           >
             <option value="" disabled className="text-gray-400">
               {question.placeholder ? getLocalizedText(question.placeholder, lang) : ""}
@@ -76,6 +85,30 @@ export function SelectField({
           />
         </div>
       </div>
+       {/* ✅ Input Field for "Other" in Select */}
+      {(value === 'other' || (typeof value === 'string' && value.startsWith('other:'))) && (
+        <div className="mt-3 flex items-center gap-4 animate-in slide-in-from-top-2">
+            <span className="text-sm font-medium text-gray-700 shrink-0">
+                {lang === 'th' ? 'ระบุ :' : 'Specify :'}
+            </span>
+            <input
+            type="text"
+            autoFocus
+            disabled={isDisabled}
+            placeholder={lang === 'th' ? 'โปรดระบุ...' : 'Please specify...'}
+            className={`w-full px-4 py-3 rounded-xl border outline-none transition-all duration-200 ${
+                isDisabled 
+                ? "bg-gray-100 border-gray-200 text-gray-500"
+                : "bg-white border-gray-300 focus:border-[#2F80ED] focus:ring-2 focus:ring-[#2F80ED]/20"
+            }`}
+            value={typeof value === 'string' && value.startsWith('other:') ? value.substring(6) : ''}
+            onChange={(e) => {
+                const newVal = e.target.value;
+                onChange(`other:${newVal}`);
+            }}
+            />
+        </div>
+      )}
     </div>
   );
 }

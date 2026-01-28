@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 
 import { assessmentStructure } from "@/data/assessmentMock";
-import { section1Structure, LocalizedText } from "@/data/questionnaireMock";
+import { section1Structure, LocalizedText, studentInfoMock } from "@/data/questionnaireMock";
 import { useTranslation } from 'react-i18next';
 
 export interface ProgressData {
@@ -78,7 +78,6 @@ export function QuestionnaireSidebar({
   };
 
   // --- Calculations ---
-  // ... (Calculations code same as before, no text to translate)
   // 1. Section 1 Progress (Average of Part 1-5)
   const section1Progress = useMemo(() => {
     // Check if progress is 100 for all parts to ensure completion
@@ -122,7 +121,9 @@ export function QuestionnaireSidebar({
           <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-3 shadow-md">
             <User size={60} className="text-[#002D55]" />
           </div>
-          <h3 className="font-bold text-xl tracking-wide">ชื่อ นามสกุล</h3>
+          <h3 className="font-bold text-xl tracking-wide text-center px-4">
+            {getLocalizedText(studentInfoMock.name)}
+          </h3>
         </div>
 
         {/* Overall Progress */}
@@ -180,17 +181,26 @@ export function QuestionnaireSidebar({
 
         {activeSection === 1 && (
           <div className="py-2 animate-in slide-in-from-top-2 duration-200">
-            {section1Structure.map((part) => (
-              <SidebarItem
-                key={part.id}
-                icon={getPartIcon(part.id)}
-                text={getLocalizedText(part.label)}
-                subText={getLocalizedText(part.subLabel)}
-                progress={progressData[`part${part.id}`] || 0}
-                isActive={currentPart === part.id} // ✅ Highlight Active
-                onClick={() => onNavigate?.(part.id)} // ✅ Click to Navigate
-              />
-            ))}
+            {section1Structure.map((part, index) => {
+              // Check if locked: Enabled only if previous part is completed
+              // Part 1 is always unlocked. Part N requires Part N-1 to be 100%.
+              const previousPartId = index > 0 ? section1Structure[index - 1].id : null;
+              const isLocked =
+                index > 0 && (progressData[`part${previousPartId}`] || 0) < 100;
+
+              return (
+                <SidebarItem
+                  key={part.id}
+                  icon={getPartIcon(part.id)}
+                  text={getLocalizedText(part.label)}
+                  subText={getLocalizedText(part.subLabel)}
+                  progress={progressData[`part${part.id}`] || 0}
+                  isActive={currentPart === part.id} // ✅ Highlight Active
+                  onClick={() => onNavigate?.(part.id)} // ✅ Click to Navigate
+                  isLocked={isLocked}
+                />
+              );
+            })}
           </div>
         )}
       </div>
@@ -239,16 +249,30 @@ export function QuestionnaireSidebar({
         {activeSection === 2 && (
           <div className="py-2 animate-in slide-in-from-top-2 duration-200">
             {/* ✅ Loop render ตาม Mock Data */}
-            {assessmentStructure.map((category) => (
-              <SidebarItem
-                key={category.id}
-                icon={getCategoryIcon(category.id as string)}
-                text={getLocalizedText(category.label)} // [Updated]
-                subText={getLocalizedText(category.subLabel)} // [Updated]
-                progress={progressData[category.id] || 0} // ดึง Progress ตาม ID
-                isActive={activeSection === 2} // Highlight section
-              />
-            ))}
+            {assessmentStructure.map((category, index) => {
+              // Check if locked
+              let isLocked = false;
+              if (index === 0) {
+                // First part of Sec 2 requires Sec 1 to be done
+                isLocked = section1Progress < 100;
+              } else {
+                // Subsequent parts require previous part to be done
+                const prevId = assessmentStructure[index - 1].id;
+                isLocked = (progressData[prevId] || 0) < 100;
+              }
+
+              return (
+                <SidebarItem
+                  key={category.id}
+                  icon={getCategoryIcon(category.id as string)}
+                  text={getLocalizedText(category.label)} // [Updated]
+                  subText={getLocalizedText(category.subLabel)} // [Updated]
+                  progress={progressData[category.id] || 0} // ดึง Progress ตาม ID
+                  isActive={activeSection === 2} // Highlight section
+                  isLocked={isLocked}
+                />
+              );
+            })}
           </div>
         )}
       </div>
@@ -324,6 +348,7 @@ function SidebarItem({
   progress,
   isActive,
   onClick,
+  isLocked,
 }: {
   icon: any;
   text: string;
@@ -331,16 +356,23 @@ function SidebarItem({
   progress: number;
   isActive?: boolean;
   onClick?: () => void;
+  isLocked?: boolean;
 }) {
   const isCompleted = progress === 100;
   return (
     <div
-      onClick={onClick} // ✅ Handle Click
-      className={`flex items-start gap-3 md:gap-4 px-4 md:px-5 py-3 md:py-4 transition-colors cursor-pointer group border-l-4 ${
-        isActive 
+      onClick={isLocked ? undefined : onClick} // ✅ Handle Click (Disabled if locked)
+      className={`flex items-start gap-3 md:gap-4 px-4 md:px-5 py-3 md:py-4 transition-colors group border-l-4 ${
+        isLocked
+          ? "cursor-not-allowed opacity-50 bg-gray-50 border-transparent"
+          : "cursor-pointer"
+      } ${
+        isActive
           ? "border-[#1890FF] bg-blue-50" // ✅ Active Style
           : isCompleted
           ? "border-transparent bg-blue-50/30"
+          : isLocked
+          ? ""
           : "border-transparent hover:border-gray-200 hover:bg-gray-50"
       }`}
     >

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import PSULogo from "@/assets/psu4.png";
 import TickIcon from "@/assets/tick.png";
+import { useTranslation } from "react-i18next";
 
 interface SurveySuccessStepProps {
   onBackToInstruction: () => void;
@@ -11,6 +12,8 @@ interface SurveySuccessStepProps {
 export function SurveySuccessStep({
   onBackToInstruction,
 }: SurveySuccessStepProps) {
+  const { t } = useTranslation('employer');
+
   const handleClose = () => {
     onBackToInstruction();
   };
@@ -70,13 +73,12 @@ export function SurveySuccessStep({
 
           {/* หัวข้อ */}
           <h1 className="text-lg md:text-3xl font-bold text-[#0066cc] mb-3">
-            บันทึกข้อมูลการประเมินเสร็จสิ้น!
+            {t('success.title')}
           </h1>
 
           {/* ข้อความรอง */}
           <p className="text-gray-600 text-sm md:text-lg mb-6 leading-relaxed">
-            มหาวิทยาลัยสงขลานครินทร์ <br className="block md:hidden" />{" "}
-            ขอขอบคุณท่านสำหรับความร่วมมือ
+            {t('success.thank_you')}
           </p>
 
           {/* เส้นแบ่ง */}
@@ -85,13 +87,13 @@ export function SurveySuccessStep({
           {/* ข้อมูลติดต่อ */}
           <div className="mb-6 md:mb-8 w-full">
             <p className="text-gray-500 text-xs md:text-base mb-2">
-              หากมีข้อสงสัยหรือติดต่อขอทราบข้อมูลเพิ่มเติม กรุณาติดต่อ
+              {t('success.contact_intro')}
             </p>
             <p className="text-gray-800 font-semibold text-sm md:text-lg mb-1">
-              กองนโยบาย ยุทธศาสตร์ และแผน
+              {t('success.department')}
             </p>
             <p className="text-gray-500 text-xs md:text-base mb-3">
-              สำนักงานอธิการบดี มหาวิทยาลัยสงขลานครินทร์
+              {t('success.office')}
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-2">
@@ -128,7 +130,7 @@ export function SurveySuccessStep({
             "
           >
             <span className="block transition-transform duration-300 group-hover:scale-110 group-hover:drop-shadow-md">
-              ปิดหน้าต่าง
+              {t('success.close_button')}
             </span>
           </button>
         </div>
@@ -136,3 +138,4 @@ export function SurveySuccessStep({
     </div>
   );
 }
+

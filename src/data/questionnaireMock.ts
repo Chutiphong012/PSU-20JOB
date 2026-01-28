@@ -36,14 +36,13 @@ export interface SectionStructure {
 }
 
 export const studentInfoMock = {
-  institute: "มหาวิทยาลัยสงขลานครินทร์ วิทยาเขตหาดใหญ่",
-  faculty: "วิทยาศาสตร์",
-  department: "วิทยาการคอมพิวเตอร์",
-  degree: "ปริญญาตรี",
-  major: "เทคโนโลยีสารสนเทศ",
-  curriculum: "วิทยาศาสตรบัณฑิต",
-  nameTH: "นายภูณทัศน์ แซ่ไล่",
-  nameEN: "MR. PUNATHAT SAELAIO",
+  institute: { th: "มหาวิทยาลัยสงขลานครินทร์ วิทยาเขตหาดใหญ่", en: "Prince of Songkla University, Hat Yai Campus" },
+  faculty: { th: "วิทยาศาสตร์", en: "Science" },
+  department: { th: "วิทยาการคอมพิวเตอร์", en: "Computer Science" },
+  degree: { th: "ปริญญาตรี", en: "Bachelor's Degree" },
+  major: { th: "เทคโนโลยีสารสนเทศ", en: "Information Technology" },
+  curriculum: { th: "วิทยาศาสตรบัณฑิต", en: "Bachelor of Science" },
+  name: { th: "นายภูณทัศน์ แซ่ไล่", en: "MR. PUNATHAT SAELAIO" },
   studentID: "6310210xxx",
   nationalID: "1 9098 00xxx xx x",
 };

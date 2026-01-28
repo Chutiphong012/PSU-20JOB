@@ -1,8 +1,11 @@
+// src/components/graduate/questionnaire/section2/Section2Assessment.tsx
 "use client";
 
 import { useState, useCallback } from "react";
-import { assessmentStructure, questionsAssessment } from "@/data/assessmentMock";
+import { assessmentStructure, questionsAssessment, assessmentPageContent } from "@/data/assessmentMock";
 import { QuestionnaireRenderer } from "../QuestionnaireRenderer";
+import { useTranslation } from "react-i18next";
+import { getLocalizedText } from "@/utils/i18nHelper";
 
 interface Section2Props {
   answers: Record<string, any>;
@@ -17,6 +20,9 @@ export function Section2Assessment({
   onBackToSection1,
   onSubmit,
 }: Section2Props) {
+  const { t, i18n } = useTranslation('graduate');
+  const lang = i18n.language;
+  
   // Use local state to track which "Category" (Page) we are on (0-indexed)
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
 
@@ -58,8 +64,8 @@ export function Section2Assessment({
       }}
       onBack={handleBack}
       onAnswerChange={(id, val) => onAnswer(String(id), val)}
-      saveButtonLabel={currentCategoryIndex === assessmentStructure.length - 1 ? "ส่งแบบสอบถาม" : "ถัดไป"}
-      preTitle="ส่วนที่ 2 การประเมินตนเองของบัณฑิต"
+      saveButtonLabel={currentCategoryIndex === assessmentStructure.length - 1 ? t("questionnaire.buttons.submit") : t("questionnaire.buttons.next")}
+      preTitle={`${t("questionnaire.instruction.sections.part_2")} ${getLocalizedText(assessmentPageContent.title, lang)}`}
     />
   );
 }

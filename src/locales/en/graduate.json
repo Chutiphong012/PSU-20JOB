@@ -77,12 +77,14 @@
         "part_2": "Section 2",
         "part_2_title": "Self-Assessment"
       },
-      "unit_items": "Items"
+      "unit_items": "Items",
+      "question_prefix": "Question"
     },
     "buttons": {
       "back": "Back",
       "next": "Next",
       "save": "Save",
+      "submit": "Submit Questionnaire",
       "save_section_1": "Save Section 1",
       "cancel": "Cancel",
       "confirm": "Confirm",

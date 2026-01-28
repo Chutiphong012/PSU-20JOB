@@ -34,12 +34,20 @@ function getPartIcon(id: number) {
   }
 }
 
+import { useTranslation } from "react-i18next";
+import { getLocalizedText } from "@/utils/i18nHelper";
+
+// ... imports remain the same ...
+
 export function EmployerSidebar({
   structure,
   currentPart,
   totalProgress,
   progressData,
 }: SidebarProps) {
+  const { t, i18n } = useTranslation('employer');
+  const lang = i18n.language;
+
   return (
     <div className="h-auto lg:h-full flex flex-col p-5 md:p-8 text-white font-['Prompt']">
       {/* 1. Header Section */}
@@ -50,10 +58,8 @@ export function EmployerSidebar({
           </div>
           <div className="pt-0 lg:pt-1">
             {/* ✅ เปลี่ยน font-bold เป็น font-semibold ที่นี่ */}
-            <h2 className="text-sm lg:text-base font-semibold leading-snug text-white drop-shadow-sm">
-              แบบสอบถามความพึงพอใจของนายจ้าง
-              <br className="hidden lg:block" />
-              หรือผู้ใช้บัณฑิต ม.อ. รุ่นปีการศึกษา 256X
+            <h2 className="text-sm lg:text-base font-semibold leading-snug text-white drop-shadow-sm whitespace-pre-line">
+              {t('instruction.title')}
             </h2>
           </div>
         </div>
@@ -61,7 +67,7 @@ export function EmployerSidebar({
         {/* Overall Progress Bar */}
         <div className="space-y-2">
           <div className="flex justify-between items-end text-xs font-medium mb-1.5 px-1">
-            <span className="text-white/80">ความคืบหน้า</span>
+            <span className="text-white/80">{t('form.progress_label')}</span>
             <span className="text-white">{totalProgress}%</span>
           </div>
           <div className="w-full bg-black/20 h-1.5 lg:h-2 rounded-full overflow-hidden backdrop-blur-sm">
@@ -103,10 +109,10 @@ export function EmployerSidebar({
                       isActive ? "text-white" : "text-white/70" // ลบ group-hover:text-white ออก
                     }`}
                   >
-                    {part.label}
+                    {getLocalizedText(part.label, lang)}
                   </span>
                   <span className="text-[10px] text-blue-200/70 mt-1 font-light leading-relaxed max-w-35 truncate">
-                    {part.subLabel}
+                    {getLocalizedText(part.subLabel, lang)}
                   </span>
                 </div>
               </div>

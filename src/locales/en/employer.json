@@ -1,0 +1,34 @@
+{
+  "instruction": {
+    "title": "Questionnaire on Satisfaction of\nEmployers or Users of Graduates of PSU",
+    "year": "Academic Year 202X",
+    "structure_title": "Questionnaire Structure",
+    "structure_subtitle": "Total {{count}} Sections",
+    "quote": "Thank you for taking the time to provide your honest feedback.",
+    "start_button": "Start Questionnaire",
+    "contact_label": "Contact Us"
+  },
+  "form": {
+    "part_prefix": "Part",
+    "status_complete": "Complete",
+    "status_in_progress": "In Progress",
+    "progress_label": "Progress",
+    "buttons": {
+      "back": "Back",
+      "next": "Next",
+      "submit": "Submit"
+    },
+    "question_prefix": "Question",
+    "other_placeholder": "Please specify details",
+    "select_placeholder": "Select an answer",
+    "rating_labels": ["Lowest", "Low", "Medium", "High", "Highest"]
+  },
+  "success": {
+    "title": "Assessment data saved successfully!",
+    "thank_you": "Prince of Songkla University thanks you for your cooperation.",
+    "contact_intro": "If you have any questions or need more information, please contact",
+    "department": "Division of Policy, Strategy and Planning",
+    "office": "Office of the President, Prince of Songkla University",
+    "close_button": "Close"
+  }
+}

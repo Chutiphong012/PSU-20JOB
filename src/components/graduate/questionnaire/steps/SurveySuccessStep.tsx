@@ -4,10 +4,12 @@
 import Link from "next/link";
 import { Check, Download, AlertTriangle, Home } from "lucide-react";
 import { studentInfoMock } from "@/data/questionnaireMock";
-import { useTranslation, Trans } from 'react-i18next'; // [NEW]
+import { useTranslation, Trans } from 'react-i18next';
+import { getLocalizedText } from "@/utils/i18nHelper";
 
 export function SurveySuccessStep() {
-  const { t } = useTranslation('graduate');
+  const { t, i18n } = useTranslation('graduate');
+  const lang = i18n.language;
 
   return (
     /* ✅ ใช้ fixed inset-0 z-[100] เพื่อให้พื้นหลังเขียวเต็มหน้าจอ ไม่เห็นขอบขาวจาก Container เดิม */
@@ -35,15 +37,15 @@ export function SurveySuccessStep() {
                 {t('questionnaire.success.respondent_info')}
               </h2>
               <div className="space-y-6">
-                <InfoRow label={t('questionnaire.info_check.labels.name_th')} value={studentInfoMock.nameTH} />
+                <InfoRow label={t('questionnaire.info_check.labels.name_th')} value={getLocalizedText(studentInfoMock.name, lang)} />
                 <InfoRow
                   label={t('questionnaire.info_check.labels.student_id')}
                   value={studentInfoMock.studentID}
                 />
-                <InfoRow label={t('questionnaire.info_check.labels.faculty')} value={studentInfoMock.faculty} />
-                <InfoRow label={t('questionnaire.info_check.labels.department')} value={studentInfoMock.department} />
-                <InfoRow label={t('questionnaire.info_check.labels.curriculum')} value={studentInfoMock.curriculum} />
-                <InfoRow label={t('questionnaire.info_check.labels.degree')} value={studentInfoMock.degree} />
+                <InfoRow label={t('questionnaire.info_check.labels.faculty')} value={getLocalizedText(studentInfoMock.faculty, lang)} />
+                <InfoRow label={t('questionnaire.info_check.labels.department')} value={getLocalizedText(studentInfoMock.department, lang)} />
+                <InfoRow label={t('questionnaire.info_check.labels.curriculum')} value={getLocalizedText(studentInfoMock.curriculum, lang)} />
+                <InfoRow label={t('questionnaire.info_check.labels.degree')} value={getLocalizedText(studentInfoMock.degree, lang)} />
               </div>
             </div>
 
@@ -79,11 +81,11 @@ export function SurveySuccessStep() {
               className="flex-1 py-4 px-8 rounded-xl border border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-all text-center flex items-center justify-center gap-2"
             >
               <Home size={18} />
-              {t('questionnaire.success.buttons.home')}
+              {t('questionnaire.buttons.home')}
             </Link>
             <button className="flex-1 py-4 px-8 rounded-xl bg-[#2962FF] text-white font-bold hover:bg-blue-700 shadow-md shadow-blue-100 transition-all flex items-center justify-center gap-2">
               <Download size={18} />
-              {t('questionnaire.success.buttons.download')}
+              {t('questionnaire.buttons.download')}
             </button>
           </div>
         </div>
