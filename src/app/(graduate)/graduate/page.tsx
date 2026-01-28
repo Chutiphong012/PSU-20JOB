@@ -5,8 +5,7 @@
 import { useState } from "react"; // 1. Import useState
 import { useAuth } from "@/context/AuthContext";
 // Import Component ทั้งหมด (รวม SurveyStatusContent ด้วย)
-import { GraduateSidebar, GraduateProfileContent } from "@/components/graduate";
-import SurveyStatusContent from "@/components/graduate/questionnaire/steps/SurveyStatusContent"; // ตรวจสอบ path import ให้ถูกต้องตามโปรเจกต์คุณ
+import { GraduateSidebar, GraduateProfileContent, SurveyStatusContent } from "@/components/graduate";
 
 export default function GraduateProfilePage() {
   const { user, logout } = useAuth();
@@ -15,9 +14,9 @@ export default function GraduateProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
 
   return (
-    <div className="font-['Prompt'] bg-[#F8F9FA] min-h-screen py-8">
-      <div className="container mx-auto px-4 max-w-7xl">
-        <div className="flex flex-col lg:flex-row gap-8">
+    <div className="font-['Prompt'] bg-[#F8F9FA] min-h-screen py-4 lg:py-8">
+      <div className="container mx-auto px-4 w-full max-w-[95%]">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           {/* 3. ส่ง State ไปให้ Sidebar ควบคุม */}
           <GraduateSidebar
             user={user}

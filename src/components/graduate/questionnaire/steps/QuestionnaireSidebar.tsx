@@ -61,6 +61,7 @@ export function QuestionnaireSidebar({
   onNavigate,
 }: SidebarProps) {
   const [activeSection, setActiveSection] = useState<number | null>(1);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // [NEW State]
   const { t, i18n } = useTranslation('graduate');
   
   // Helper to get text based on current language
@@ -108,173 +109,208 @@ export function QuestionnaireSidebar({
   const overallProgress = Math.round((section1Progress + section2Progress) / 2);
 
   return (
-    <aside className="w-full lg:w-[320px] shrink-0 flex flex-col gap-2 font-['Prompt']">
-      {/* --- Profile Card --- */}
-      <div className="bg-[#003870] rounded-2xl p-6 text-white relative overflow-hidden shadow-lg">
-        <div className="flex items-start gap-3 mb-6 relative z-10">
-          <Menu size={24} className="mt-1 shrink-0 text-white/90" />
-          <div className="text-sm font-light leading-snug text-white/90">
-            {t('questionnaire.header_title')}
+    <aside className="w-full lg:w-[400px] shrink-0 flex flex-col gap-2 font-['Prompt'] transition-all">
+      
+      {/* Mobile Toggle Header */}
+      <div 
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="flex lg:hidden bg-white rounded-xl p-4 items-center justify-between shadow-sm cursor-pointer animate-in fade-in zoom-in duration-300"
+      >
+          <div className="flex items-center gap-3">
+               {/* Progress Circle Mini */}
+               <div className="relative w-10 h-10 flex items-center justify-center shrink-0">
+                  <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                    <path className="text-gray-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="4" />
+                    <path className="text-[#1890FF]" strokeDasharray={`${overallProgress}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="4" />
+                  </svg>
+                  <span className="absolute text-[10px] font-bold text-[#18305D]">{overallProgress}%</span>
+               </div>
+               
+               <div className="flex flex-col">
+                  <div className="text-[#18305D] font-bold text-sm leading-tight">{t('questionnaire.header_title')}</div>
+                  <div className="text-gray-400 text-xs font-light">
+                      {isMobileMenuOpen ? t('common:action.collapse_menu', 'ซ่อนเมนู') : t('common:action.expand_menu', 'แสดงเมนูแบบสอบถาม')}
+                  </div>
+               </div>
           </div>
-        </div>
-        <div className="flex flex-col items-center mb-6 relative z-10">
-          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-3 shadow-md">
-            <User size={60} className="text-[#002D55]" />
-          </div>
-          <h3 className="font-bold text-xl tracking-wide text-center px-4">
-            {getLocalizedText(studentInfoMock.name)}
-          </h3>
-        </div>
-
-        {/* Overall Progress */}
-        <div className="space-y-2 relative z-10">
-          <div className="w-full bg-white/20 h-2.5 rounded-full overflow-hidden">
-            <div
-              className="bg-white/90 h-full rounded-full shadow-sm transition-all duration-500 ease-out"
-              style={{ width: `${overallProgress}%` }}
-            ></div>
-          </div>
-          <div className="text-center text-xs text-gray-300 font-light tracking-wider">
-            Completed: {overallProgress}%
-          </div>
-        </div>
+          <button className="text-gray-400">
+             {isMobileMenuOpen ? <ChevronUp size={24}/> : <ChevronDown size={24}/>}
+          </button>
       </div>
 
-      {/* --- Section 1: ภาวะการมีงานทำ --- */}
-      <div
-        className={`rounded-2xl transition-all duration-300 overflow-hidden border border-transparent ${
-          activeSection === 1
-            ? "shadow-lg bg-white"
-            : "shadow-sm bg-white hover:shadow-md"
-        }`}
-      >
+      {/* Collapsible Content Container */}
+      <div className={`${isMobileMenuOpen ? 'flex' : 'hidden'} lg:flex flex-col gap-2 animate-in slide-in-from-top-4 duration-300 lg:animate-none`}>
+        
+        {/* --- Profile Card --- */}
+        <div className="bg-[#003870] rounded-2xl p-6 text-white relative overflow-hidden shadow-lg">
+          <div className="mb-6 relative z-10 w-full">
+            <div className="text-sm font-light leading-snug text-white/90 text-center w-full">
+              {t('questionnaire.header_title')}
+            </div>
+          </div>
+          <div className="flex flex-row items-center justify-center gap-4 mb-8 relative z-10 w-full px-4">
+            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
+              <User size={24} className="text-[#002D55]" />
+            </div>
+            <h3 className="font-bold text-lg tracking-wide text-left text-white leading-tight">
+              {getLocalizedText(studentInfoMock.name)}
+            </h3>
+          </div>
+
+          {/* Overall Progress */}
+          <div className="space-y-2 relative z-10">
+            <div className="w-full bg-white/20 h-2.5 rounded-full overflow-hidden">
+              <div
+                className="bg-white/90 h-full rounded-full shadow-sm transition-all duration-500 ease-out"
+                style={{ width: `${overallProgress}%` }}
+              ></div>
+            </div>
+            <div className="text-center text-xs text-gray-300 font-light tracking-wider">
+              Completed: {overallProgress}%
+            </div>
+          </div>
+        </div>
+
+        {/* --- Section 1: ภาวะการมีงานทำ --- */}
         <div
-          onClick={() => toggleSection(1)}
-          className={`p-5 flex items-center justify-between cursor-pointer transition-colors duration-300 ${
+          className={`rounded-2xl transition-all duration-300 overflow-hidden border border-transparent ${
             activeSection === 1
-              ? "bg-[#2B76E5] text-white"
-              : "bg-white text-[#002D55]"
+              ? "shadow-lg bg-white"
+              : "shadow-sm bg-white hover:shadow-md"
           }`}
         >
-          <div className="flex items-center gap-4">
-            {activeSection === 1 ? (
-              <ChevronUp size={20} />
-            ) : (
-              <ChevronDown size={20} className="text-gray-400" />
-            )}
-            <div className="text-left">
-              <div
-                className={`text-xs ${
-                  activeSection === 1 ? "opacity-90" : "text-gray-400"
-                }`}
-              >
-                {t('questionnaire.instruction.sections.part_1')}
+          <div
+            onClick={() => toggleSection(1)}
+            className={`p-5 flex items-center justify-between cursor-pointer transition-colors duration-300 ${
+              activeSection === 1
+                ? "bg-[#2B76E5] text-white"
+                : "bg-white text-[#002D55]"
+            }`}
+          >
+            <div className="flex items-center gap-4">
+              {activeSection === 1 ? (
+                <ChevronUp size={20} />
+              ) : (
+                <ChevronDown size={20} className="text-gray-400" />
+              )}
+              <div className="text-left">
+                <div
+                  className={`text-xs ${
+                    activeSection === 1 ? "opacity-90" : "text-gray-400"
+                  }`}
+                >
+                  {t('questionnaire.instruction.sections.part_1')}
+                </div>
+                <div className="font-bold text-base">{t('questionnaire.instruction.sections.part_1_title')}</div>
               </div>
-              <div className="font-bold text-base">{t('questionnaire.instruction.sections.part_1_title')}</div>
             </div>
+            <ProgressRing
+              percent={section1Progress}
+              active={activeSection === 1}
+            />
           </div>
-          <ProgressRing
-            percent={section1Progress}
-            active={activeSection === 1}
-          />
+
+          {activeSection === 1 && (
+            <div className="py-2 animate-in slide-in-from-top-2 duration-200">
+              {section1Structure.map((part, index) => {
+                // Check if locked: Enabled only if previous part is completed
+                // Part 1 is always unlocked. Part N requires Part N-1 to be 100%.
+                const previousPartId = index > 0 ? section1Structure[index - 1].id : null;
+                const isLocked =
+                  index > 0 && (progressData[`part${previousPartId}`] || 0) < 100;
+
+                return (
+                  <SidebarItem
+                    key={part.id}
+                    icon={getPartIcon(part.id)}
+                    text={getLocalizedText(part.label)}
+                    subText={getLocalizedText(part.subLabel)}
+                    progress={progressData[`part${part.id}`] || 0}
+                    isActive={currentPart === part.id} // ✅ Highlight Active
+                    onClick={() => {
+                        onNavigate?.(part.id);
+                        // Optional: Close mobile menu after clicking items on mobile
+                        if (window.innerWidth < 1024) setIsMobileMenuOpen(false);
+                    }} 
+                    isLocked={isLocked}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
 
-        {activeSection === 1 && (
-          <div className="py-2 animate-in slide-in-from-top-2 duration-200">
-            {section1Structure.map((part, index) => {
-              // Check if locked: Enabled only if previous part is completed
-              // Part 1 is always unlocked. Part N requires Part N-1 to be 100%.
-              const previousPartId = index > 0 ? section1Structure[index - 1].id : null;
-              const isLocked =
-                index > 0 && (progressData[`part${previousPartId}`] || 0) < 100;
-
-              return (
-                <SidebarItem
-                  key={part.id}
-                  icon={getPartIcon(part.id)}
-                  text={getLocalizedText(part.label)}
-                  subText={getLocalizedText(part.subLabel)}
-                  progress={progressData[`part${part.id}`] || 0}
-                  isActive={currentPart === part.id} // ✅ Highlight Active
-                  onClick={() => onNavigate?.(part.id)} // ✅ Click to Navigate
-                  isLocked={isLocked}
-                />
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* --- Section 2: การประเมินตนเอง (Dynamic List) --- */}
-      <div
-        className={`rounded-2xl transition-all duration-300 overflow-hidden border border-transparent ${
-          activeSection === 2
-            ? "shadow-lg bg-white"
-            : "shadow-sm bg-white hover:shadow-md"
-        }`}
-      >
+        {/* --- Section 2: การประเมินตนเอง (Dynamic List) --- */}
         <div
-          onClick={() => toggleSection(2)}
-          className={`p-5 flex items-center justify-between cursor-pointer transition-colors duration-300 ${
+          className={`rounded-2xl transition-all duration-300 overflow-hidden border border-transparent ${
             activeSection === 2
-              ? "bg-[#2B76E5] text-white"
-              : "bg-white text-[#002D55]"
+              ? "shadow-lg bg-white"
+              : "shadow-sm bg-white hover:shadow-md"
           }`}
         >
-          <div className="flex items-center gap-4">
-            {activeSection === 2 ? (
-              <ChevronUp size={20} />
-            ) : (
-              <ChevronDown size={20} className="text-gray-400" />
-            )}
-            <div className="text-left">
-              <div
-                className={`text-xs ${
-                  activeSection === 2 ? "opacity-90" : "text-gray-400"
-                }`}
-              >
-                {t('questionnaire.instruction.sections.part_2')}
-              </div>
-              <div className="font-bold text-base">
-                {t('questionnaire.instruction.sections.part_2_title')}
+          <div
+            onClick={() => toggleSection(2)}
+            className={`p-5 flex items-center justify-between cursor-pointer transition-colors duration-300 ${
+              activeSection === 2
+                ? "bg-[#2B76E5] text-white"
+                : "bg-white text-[#002D55]"
+            }`}
+          >
+            <div className="flex items-center gap-4">
+              {activeSection === 2 ? (
+                <ChevronUp size={20} />
+              ) : (
+                <ChevronDown size={20} className="text-gray-400" />
+              )}
+              <div className="text-left">
+                <div
+                  className={`text-xs ${
+                    activeSection === 2 ? "opacity-90" : "text-gray-400"
+                  }`}
+                >
+                  {t('questionnaire.instruction.sections.part_2')}
+                </div>
+                <div className="font-bold text-base">
+                  {t('questionnaire.instruction.sections.part_2_title')}
+                </div>
               </div>
             </div>
+            <ProgressRing
+              percent={section2Progress}
+              active={activeSection === 2}
+            />
           </div>
-          <ProgressRing
-            percent={section2Progress}
-            active={activeSection === 2}
-          />
+
+          {activeSection === 2 && (
+            <div className="py-2 animate-in slide-in-from-top-2 duration-200">
+              {/* ✅ Loop render ตาม Mock Data */}
+              {assessmentStructure.map((category, index) => {
+                // Check if locked
+                let isLocked = false;
+                if (index === 0) {
+                  // First part of Sec 2 requires Sec 1 to be done
+                  isLocked = section1Progress < 100;
+                } else {
+                  // Subsequent parts require previous part to be done
+                  const prevId = assessmentStructure[index - 1].id;
+                  isLocked = (progressData[prevId] || 0) < 100;
+                }
+
+                return (
+                  <SidebarItem
+                    key={category.id}
+                    icon={getCategoryIcon(category.id as string)}
+                    text={getLocalizedText(category.label)} // [Updated]
+                    subText={getLocalizedText(category.subLabel)} // [Updated]
+                    progress={progressData[category.id] || 0} // ดึง Progress ตาม ID
+                    isActive={activeSection === 2} // Highlight section
+                    isLocked={isLocked}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
-
-        {activeSection === 2 && (
-          <div className="py-2 animate-in slide-in-from-top-2 duration-200">
-            {/* ✅ Loop render ตาม Mock Data */}
-            {assessmentStructure.map((category, index) => {
-              // Check if locked
-              let isLocked = false;
-              if (index === 0) {
-                // First part of Sec 2 requires Sec 1 to be done
-                isLocked = section1Progress < 100;
-              } else {
-                // Subsequent parts require previous part to be done
-                const prevId = assessmentStructure[index - 1].id;
-                isLocked = (progressData[prevId] || 0) < 100;
-              }
-
-              return (
-                <SidebarItem
-                  key={category.id}
-                  icon={getCategoryIcon(category.id as string)}
-                  text={getLocalizedText(category.label)} // [Updated]
-                  subText={getLocalizedText(category.subLabel)} // [Updated]
-                  progress={progressData[category.id] || 0} // ดึง Progress ตาม ID
-                  isActive={activeSection === 2} // Highlight section
-                  isLocked={isLocked}
-                />
-              );
-            })}
-          </div>
-        )}
       </div>
     </aside>
   );

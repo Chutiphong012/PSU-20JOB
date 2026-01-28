@@ -4,7 +4,7 @@
 
 import { useState } from 'react'; // 1. เพิ่ม useState
 import Link from 'next/link';
-import { User, Home, FileCheck, LogOut } from 'lucide-react';
+import { User, Home, FileCheck, LogOut, Menu, ChevronDown, ChevronUp } from 'lucide-react';
 import { graduateSidebarUser } from '@/data/graduateData';
 import { useTranslation } from 'react-i18next'; // [NEW]
 
@@ -19,8 +19,9 @@ interface GraduateSidebarProps {
 
 export default function GraduateSidebar({ user, logout, activeTab, onTabChange }: GraduateSidebarProps) {
   const { t } = useTranslation(['graduate', 'common']); // [NEW]
-  // 3. สร้าง State ควบคุมการเปิด/ปิด Modal
+  // 3. สร้าง State ควบคุมการเปิด/ปิด Modal และ Mobile Menu
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const displayUser = {
     name: user?.name || graduateSidebarUser.name,
@@ -36,71 +37,94 @@ export default function GraduateSidebar({ user, logout, activeTab, onTabChange }
 
   return (
     <>
-      <aside className="w-full lg:w-80 shrink-0  p-6 h-fit ">
+      <aside className="w-full lg:w-[400px] shrink-0 p-4 lg:p-6 h-fit bg-white lg:bg-transparent rounded-2xl lg:rounded-none shadow-sm lg:shadow-none transition-all">
         
-        {/* 1. Profile Section */}
-        <div className="flex items-center gap-4 mb-6">
-           <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center shrink-0">
-              <User size={36} className="text-white" />
-           </div>
-           
-           <div className="flex flex-col overflow-hidden">
-              <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-[#18305D] font-bold text-lg leading-tight whitespace-nowrap truncate">
-                      {displayUser.name}
-                  </h3>
-                  <span className="bg-[#18305D] text-white text-[10px] px-2 py-0.5 rounded-full shrink-0">
-                      {displayUser.degree || t('graduate:sidebar.degree_default')}
-                  </span>
-              </div>
-              <p className="text-gray-500 text-sm truncate">
-                  {displayUser.studentId}
-              </p>
-           </div>
-        </div>
-  
-        <hr className="border-gray-200 mb-4" />
-  
-        {/* 2. Menu Navigation */}
-        <nav className="flex flex-col gap-1 mb-4">
-            <Link href="/" className="flex items-center gap-4 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl transition-colors font-medium">
-                <Home size={22} /> {t('graduate:sidebar.home')}
-            </Link>
-            
-            {/* เมนู: ข้อมูลส่วนตัว */}
-            <button 
-              onClick={() => onTabChange('profile')}
-              className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-colors w-full text-left cursor-pointer
-                ${activeTab === 'profile' 
-                  ? 'bg-[#E6F0FF] text-[#18305D] font-bold' 
-                  : 'text-gray-500 hover:bg-gray-50 font-medium'
-                }`}
-            >
-                <User size={22} /> {t('graduate:sidebar.profile')}
-            </button>
-  
-            {/* เมนู: สถานะการตอบแบบสอบถาม */}
-            <button 
-              onClick={() => onTabChange('survey')}
-              className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-colors w-full text-left cursor-pointer
-                ${activeTab === 'survey' 
-                  ? 'bg-[#E6F0FF] text-[#18305D] font-bold' 
-                  : 'text-gray-500 hover:bg-gray-50 font-medium'
-                }`}
-            >
-                <FileCheck size={22} /> {t('graduate:sidebar.survey_status')}
-            </button>
-        </nav>
-  
-        <hr className="border-gray-200 mb-4" />
-  
-        {/* 3. Logout Section (แก้ไข onClick ให้เปิด Modal) */}
-        <button 
-          onClick={() => setIsLogoutModalOpen(true)} 
-          className="flex items-center gap-4 px-4 py-2 text-gray-500 hover:text-red-500 transition-colors w-full text-left font-medium cursor-pointer"
+        {/* Mobile Header Toggle */}
+        <div 
+            className="flex lg:hidden items-center justify-between cursor-pointer"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-            <LogOut size={22} /> {t('graduate:sidebar.logout')}
-        </button>
+             <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center shrink-0">
+                    <User size={20} className="text-white" />
+                </div>
+                <div className="flex flex-col">
+                    <span className="text-[#18305D] font-bold text-sm leading-tight line-clamp-1">{displayUser.name}</span>
+                    <span className="text-gray-500 text-xs">{displayUser.studentId}</span>
+                </div>
+             </div>
+             <button className="text-gray-500 p-1">
+                 {isMobileMenuOpen ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+             </button>
+        </div>
+
+        {/* Collapsible Content */}
+        <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} lg:block mt-6 lg:mt-0 animate-in slide-in-from-top-2 duration-200 lg:animate-none`}>
+            
+            {/* 1. Profile Section (Desktop Only - or redundant on mobile inside toggle? Let's keep consistent layout but hide on mobile header redundancy if needed. For now show full detail when expanded) */}
+            <div className="hidden lg:flex items-center gap-4 mb-6">
+               <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center shrink-0">
+                  <User size={36} className="text-white" />
+               </div>
+               
+               <div className="flex flex-col overflow-hidden">
+                  <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-[#18305D] font-bold text-lg leading-tight whitespace-nowrap truncate">
+                          {displayUser.name}
+                      </h3>
+                      <span className="bg-[#18305D] text-white text-[10px] px-2 py-0.5 rounded-full shrink-0">
+                          {displayUser.degree || t('graduate:sidebar.degree_default')}
+                      </span>
+                  </div>
+                  <p className="text-gray-500 text-sm truncate">
+                      {displayUser.studentId}
+                  </p>
+               </div>
+            </div>
+      
+            <hr className="border-gray-200 mb-4 hidden lg:block" />
+      
+            {/* 2. Menu Navigation */}
+            <nav className="flex flex-col gap-1 mb-4">
+                <Link href="/" className="flex items-center gap-4 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl transition-colors font-medium">
+                    <Home size={22} /> {t('graduate:sidebar.home')}
+                </Link>
+                
+                {/* เมนู: ข้อมูลส่วนตัว */}
+                <button 
+                  onClick={() => onTabChange('profile')}
+                  className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-colors w-full text-left cursor-pointer
+                    ${activeTab === 'profile' 
+                      ? 'bg-[#E6F0FF] text-[#18305D] font-bold' 
+                      : 'text-gray-500 hover:bg-gray-50 font-medium'
+                    }`}
+                >
+                    <User size={22} /> {t('graduate:sidebar.profile')}
+                </button>
+      
+                {/* เมนู: สถานะการตอบแบบสอบถาม */}
+                <button 
+                  onClick={() => onTabChange('survey')}
+                  className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-colors w-full text-left cursor-pointer
+                    ${activeTab === 'survey' 
+                      ? 'bg-[#E6F0FF] text-[#18305D] font-bold' 
+                      : 'text-gray-500 hover:bg-gray-50 font-medium'
+                    }`}
+                >
+                    <FileCheck size={22} /> {t('graduate:sidebar.survey_status')}
+                </button>
+            </nav>
+      
+            <hr className="border-gray-200 mb-4" />
+      
+            {/* 3. Logout Section (แก้ไข onClick ให้เปิด Modal) */}
+            <button 
+              onClick={() => setIsLogoutModalOpen(true)} 
+              className="flex items-center gap-4 px-4 py-2 text-gray-500 hover:text-red-500 transition-colors w-full text-left font-medium cursor-pointer"
+            >
+                <LogOut size={22} /> {t('graduate:sidebar.logout')}
+            </button>
+        </div>
   
       </aside>
 
