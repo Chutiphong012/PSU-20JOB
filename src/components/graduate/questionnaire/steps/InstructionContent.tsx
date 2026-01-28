@@ -5,7 +5,7 @@ import { GraduationCap, Edit, Printer } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { section1Structure, LocalizedText } from "@/data/questionnaireMock";
-import { assessmentData } from "@/data/assessmentMock";
+import { assessmentStructure } from "@/data/assessmentMock";
 import { useTranslation, Trans } from 'react-i18next';
 
 export function InstructionContent() {
@@ -162,11 +162,11 @@ export function InstructionContent() {
 
             <div className="relative z-10 -mt-6 ml-4 pt-9 pb-4 pr-4 pl-5 bg-white border-l-[6px] border-[#006D75] rounded-r-2xl rounded-bl-2xl shadow-sm border-t-0 ">
               <div className="flex flex-col gap-2">
-                {assessmentData.map((category, index) => (
+                {assessmentStructure.map((category, index) => (
                   <ListItem
                     key={category.id}
-                    label={`${index + 1}. ${getLocalizedText(category.title)} ${getLocalizedText(category.subTitle)}`} // [Updated]
-                    count={`${category.questions.length} ${t('questionnaire.instruction.unit_items')}`}
+                    label={`${index + 1}. ${getLocalizedText(category.label)} ${getLocalizedText(category.subLabel)}`}
+                    count={`5 ${t('questionnaire.instruction.unit_items')}`} // Fixed count for standard assessment
                     theme="teal"
                   />
                 ))}

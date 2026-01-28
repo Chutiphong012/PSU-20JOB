@@ -28,21 +28,11 @@ export interface SubField {
   type?: "text" | "dropdown";
 }
 
-export interface Question {
-  id: number;
-  label: LocalizedText; // Changed to LocalizedText
-  type:
-    | "dropdown"
-    | "radio"
-    | "address_group"
-    | "rating"
-    | "checkbox"
-    | "textarea";
-  page: number;
-  disabledCondition?: Condition;
-  placeholder?: LocalizedText; // Changed to LocalizedText
-  options?: QuestionOption[]; // Note: We will standardize to object array
-  subFields?: SubField[];
+export interface SectionStructure {
+  id: number | string; // ✅ Modified
+  label: LocalizedText;
+  subLabel: LocalizedText;
+  count: number;
 }
 
 export const studentInfoMock = {
@@ -57,6 +47,28 @@ export const studentInfoMock = {
   studentID: "6310210xxx",
   nationalID: "1 9098 00xxx xx x",
 };
+
+export interface Question {
+  id: number | string; // ✅ Modified: number | string
+  label: LocalizedText; // Changed to LocalizedText
+  type:
+    | "dropdown"
+    | "radio"
+    | "address_group"
+    | "rating"
+    | "checkbox"
+    | "textarea";
+  page: number;
+  disabledCondition?: Condition;
+  placeholder?: LocalizedText; // Changed to LocalizedText
+  options?: QuestionOption[]; // Note: We will standardize to object array
+  subFields?: SubField[];
+  // ✅ New Field: Header (แสดงหัวข้อหมวดหมู่เหนือคำถาม)
+  header?: LocalizedText;
+  condition?: Condition; // Show/Hide Logic
+  colSpan?: 1 | 2; // For Grid Layout (1 = half, 2 = full)
+  required?: boolean;
+}
 
 export const section1Structure = [
     {

@@ -21,22 +21,22 @@ import {
   Circle,
 } from "lucide-react";
 
-// ✅ แก้ไขตรงนี้: แยก Import ให้ถูกไฟล์
-import { assessmentData } from "@/data/assessmentMock";
+import { assessmentStructure } from "@/data/assessmentMock";
 import { section1Structure, LocalizedText } from "@/data/questionnaireMock";
 import { useTranslation } from 'react-i18next';
 
-// ✅ Type รองรับ Dynamic Keys
 export interface ProgressData {
   [key: string]: number;
 }
 
 interface SidebarProps {
   progressData: ProgressData;
-  forceOpenSection?: number | null; // ✅ รับค่าเพื่อสั่งเปิด Section
+  forceOpenSection?: number | null;
+  currentPart?: number;
+  onNavigate?: (partId: number) => void;
 }
 
-// ✅ Helper Function เลือก Icon ตาม ID ของ Part
+// Helper Function to select Icon based on Part ID
 function getPartIcon(id: number) {
   switch (id) {
     case 1:
@@ -57,6 +57,8 @@ function getPartIcon(id: number) {
 export function QuestionnaireSidebar({
   progressData,
   forceOpenSection,
+  currentPart,
+  onNavigate,
 }: SidebarProps) {
   const [activeSection, setActiveSection] = useState<number | null>(1);
   const { t, i18n } = useTranslation('graduate');
@@ -64,7 +66,7 @@ export function QuestionnaireSidebar({
   // Helper to get text based on current language
   const getLocalizedText = (text: LocalizedText) => text[i18n.language as 'th' | 'en'] || text.th;
 
-  // ✅ Effect: เปิด Section ตามคำสั่งจาก Form (เช่น จบ Sec 1 -> เปิด Sec 2)
+  // Effect: Open Section based on command (e.g. finish Sec 1 -> Open Sec 2)
   useEffect(() => {
     if (forceOpenSection) {
       setActiveSection(forceOpenSection);
@@ -79,21 +81,28 @@ export function QuestionnaireSidebar({
   // ... (Calculations code same as before, no text to translate)
   // 1. Section 1 Progress (Average of Part 1-5)
   const section1Progress = useMemo(() => {
-    const p1 = progressData.part1 || 0;
-    const p2 = progressData.part2 || 0;
-    const p3 = progressData.part3 || 0;
-    const p4 = progressData.part4 || 0;
-    const p5 = progressData.part5 || 0;
-    return Math.round((p1 + p2 + p3 + p4 + p5) / 5);
+    // Check if progress is 100 for all parts to ensure completion
+    const p1 = progressData['part1'] || 0;
+    const p2 = progressData['part2'] || 0;
+    const p3 = progressData['part3'] || 0;
+    const p4 = progressData['part4'] || 0;
+    const p5 = progressData['part5'] || 0;
+    
+    // Note: If some parts are skipped, logic handles them as 100% in QuestionnaireForm
+    const total = p1 + p2 + p3 + p4 + p5;
+    return Math.round(total / 5);
   }, [progressData]);
 
   // 2. Section 2 Progress (Average of Assessment Categories)
   const section2Progress = useMemo(() => {
-    if (!assessmentData || assessmentData.length === 0) return 0;
-    const total = assessmentData.reduce((acc, cat) => {
-      return acc + (progressData[cat.id] || 0); // ดึงค่าตาม ID ของ category (soft_skills, etc.)
+    if (!assessmentStructure || assessmentStructure.length === 0) return 0;
+    
+    const total = assessmentStructure.reduce((acc, cat) => {
+      // ✅ Key in progressData matches cat.id (e.g. 'soft_skills')
+      return acc + (progressData[cat.id] || 0); 
     }, 0);
-    return Math.round(total / assessmentData.length);
+    
+    return Math.round(total / assessmentStructure.length);
   }, [progressData]);
 
   // 3. Overall Progress
@@ -171,7 +180,6 @@ export function QuestionnaireSidebar({
 
         {activeSection === 1 && (
           <div className="py-2 animate-in slide-in-from-top-2 duration-200">
-            {/* ✅ ใช้ Loop render จาก section1Structure แทนการเขียน Hardcode */}
             {section1Structure.map((part) => (
               <SidebarItem
                 key={part.id}
@@ -179,6 +187,8 @@ export function QuestionnaireSidebar({
                 text={getLocalizedText(part.label)}
                 subText={getLocalizedText(part.subLabel)}
                 progress={progressData[`part${part.id}`] || 0}
+                isActive={currentPart === part.id} // ✅ Highlight Active
+                onClick={() => onNavigate?.(part.id)} // ✅ Click to Navigate
               />
             ))}
           </div>
@@ -229,13 +239,14 @@ export function QuestionnaireSidebar({
         {activeSection === 2 && (
           <div className="py-2 animate-in slide-in-from-top-2 duration-200">
             {/* ✅ Loop render ตาม Mock Data */}
-            {assessmentData.map((category) => (
+            {assessmentStructure.map((category) => (
               <SidebarItem
                 key={category.id}
-                icon={getCategoryIcon(category.id)}
-                text={getLocalizedText(category.title)} // [Updated]
-                subText={getLocalizedText(category.subTitle)} // [Updated]
+                icon={getCategoryIcon(category.id as string)}
+                text={getLocalizedText(category.label)} // [Updated]
+                subText={getLocalizedText(category.subLabel)} // [Updated]
                 progress={progressData[category.id] || 0} // ดึง Progress ตาม ID
+                isActive={activeSection === 2} // Highlight section
               />
             ))}
           </div>
@@ -311,24 +322,31 @@ function SidebarItem({
   text,
   subText,
   progress,
+  isActive,
+  onClick,
 }: {
   icon: any;
   text: string;
   subText?: string;
   progress: number;
+  isActive?: boolean;
+  onClick?: () => void;
 }) {
   const isCompleted = progress === 100;
   return (
     <div
+      onClick={onClick} // ✅ Handle Click
       className={`flex items-start gap-3 md:gap-4 px-4 md:px-5 py-3 md:py-4 transition-colors cursor-pointer group border-l-4 ${
-        isCompleted
-          ? "border-[#1890FF] bg-blue-50/50"
+        isActive 
+          ? "border-[#1890FF] bg-blue-50" // ✅ Active Style
+          : isCompleted
+          ? "border-transparent bg-blue-50/30"
           : "border-transparent hover:border-gray-200 hover:bg-gray-50"
       }`}
     >
       <div
         className={`mt-0.5 transition-colors ${
-          isCompleted
+          isActive || isCompleted
             ? "text-[#1890FF]"
             : "text-gray-400 group-hover:text-gray-600"
         }`}

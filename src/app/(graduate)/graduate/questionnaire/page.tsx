@@ -16,7 +16,8 @@ function QuestionnaireContent() {
 
   const [progressData, setProgressData] = useState<ProgressData>({});
 
-  // ✅ State สำหรับควบคุมการเปิด Sidebar
+  // ✅ State สำหรับควบคุมการเปิด Sidebar และ Active Part
+  const [currentPart, setCurrentPart] = useState(1);
   const [forceOpenSection, setForceOpenSection] = useState<number | null>(1);
 
   const handleProgressUpdate = useCallback((key: string, percent: number) => {
@@ -32,7 +33,9 @@ function QuestionnaireContent() {
         <div className="hidden lg:block w-fit shrink-0 transition-all duration-500">
           <QuestionnaireSidebar
             progressData={progressData}
-            forceOpenSection={forceOpenSection} // ✅ ส่งค่าบังคับเปิดไปยัง Sidebar
+            forceOpenSection={forceOpenSection}
+            currentPart={currentPart} // ✅ ส่ง Part ปัจจุบันไป Highlight
+            onNavigate={(partId) => setCurrentPart(partId)} // ✅ รับคำสั่งเปลี่ยนหน้าจาก Sidebar
           />
         </div>
       )}
@@ -42,7 +45,11 @@ function QuestionnaireContent() {
           onProgressUpdate={handleProgressUpdate}
           onComplete={() => setShowSidebar(false)}
           initialStep={mode === "success" ? "success" : "check"}
-          onRequestOpenSidebarSection={(sec) => setForceOpenSection(sec)} // ✅ รับคำสั่งจาก Form
+          onRequestOpenSidebarSection={(sec) => setForceOpenSection(sec)}
+          
+          // ✅ Control Props: ส่ง state และฟังก์ชันควบคุมไปที่ Form
+          externalCurrentPart={currentPart} 
+          onPartChange={(part) => setCurrentPart(part)}
         />
       </main>
     </div>

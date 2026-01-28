@@ -11,15 +11,16 @@ import { Part3SearchJob } from "@/components/graduate/questionnaire/section1/Par
 import { Part4StudyInfo } from "@/components/graduate/questionnaire/section1/Part4StudyInfo";
 import { Part5Suggestions } from "@/components/graduate/questionnaire/section1/Part5Suggestions";
 import { Section2Assessment } from "@/components/graduate/questionnaire/section2/Section2Assessment";
-import { assessmentData } from "@/data/assessmentMock"; // ✅ Import Mock Data
+import { assessmentStructure, questionsAssessment } from "@/data/assessmentMock";
 
 interface FormProps {
   onProgressUpdate?: (key: string, percent: number) => void;
   onPartComplete?: (partId: number) => void;
   onComplete?: () => void;
   initialStep?: "check" | "form" | "success";
-  // ✅ เพิ่ม Callback สั่งเปิด Sidebar Section
   onRequestOpenSidebarSection?: (section: number) => void;
+  externalCurrentPart?: number;
+  onPartChange?: (part: number) => void;
 }
 
 export function QuestionnaireForm({
@@ -27,22 +28,35 @@ export function QuestionnaireForm({
   onPartComplete,
   onComplete,
   initialStep = "check",
-  onRequestOpenSidebarSection, // ✅ รับ Prop มาใช้
+  onRequestOpenSidebarSection,
+  externalCurrentPart,
+  onPartChange,
 }: FormProps) {
   const [step, setStep] = useState<"check" | "form" | "success">(initialStep);
   const [currentPart, setCurrentPart] = useState(1);
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [partHistory, setPartHistory] = useState<number[]>([]);
 
+  // Sync External State -> Internal State
+  useEffect(() => {
+    if (externalCurrentPart !== undefined && externalCurrentPart !== currentPart) {
+        setCurrentPart(externalCurrentPart);
+    }
+  }, [externalCurrentPart]);
+
+  const changePart = (newPart: number) => {
+      setCurrentPart(newPart);
+      onPartChange?.(newPart);
+  };
+
   const handleAnswerChange = (questionId: number | string, value: any) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
   };
 
   const handleNextPart = (nextPartIndex: number) => {
-    // ✅ 1. Logic จัดการ Skip Part: ถ้าข้าม Part ไหน ให้ Part นั้น Progress 100%
+    // Skip Logic: If skipping parts, mark them as 100% progress
     if (nextPartIndex > currentPart + 1) {
       for (let i = currentPart + 1; i < nextPartIndex; i++) {
-        // ส่ง update ว่า part ที่ถูกข้าม (เช่น part 3) เสร็จสมบูรณ์แล้ว
         onProgressUpdate?.(`part${i}`, 100);
       }
     }
@@ -50,12 +64,11 @@ export function QuestionnaireForm({
     setPartHistory((prev) => [...prev, currentPart]);
     if (onPartComplete) onPartComplete(currentPart);
 
-    // ✅ 2. Logic สั่งเปิด Sidebar Section 2: ถ้าจบ Part 5 แล้วไป Part 6
     if (currentPart === 5 && nextPartIndex === 6) {
       onRequestOpenSidebarSection?.(2);
     }
 
-    setCurrentPart(nextPartIndex);
+    changePart(nextPartIndex);
   };
 
   const handleBackPart = () => {
@@ -64,14 +77,14 @@ export function QuestionnaireForm({
       const prevPart = newHistory.pop();
       setPartHistory(newHistory);
       if (prevPart) {
-        // ✅ Logic ย้อนกลับ: ถ้ากลับไป Part 5 ให้เปิด Sidebar Section 1 คืน
+        // Back Logic: If going back from Part 6 (Sec 2) to Part 5, reopen Sidebar Section 1
         if (currentPart === 6 && prevPart === 5) {
           onRequestOpenSidebarSection?.(1);
         }
-        setCurrentPart(prevPart);
+        changePart(prevPart);
       }
     } else {
-      if (currentPart > 1) setCurrentPart(currentPart - 1);
+      if (currentPart > 1) changePart(currentPart - 1);
     }
   };
 
@@ -82,7 +95,7 @@ export function QuestionnaireForm({
     }
   };
 
-  // ✅ Wrapper Functions
+  // Wrapper Functions
   const handlePart1Progress = useCallback(
     (p: number) => onProgressUpdate?.("part1", p),
     [onProgressUpdate],
@@ -104,24 +117,30 @@ export function QuestionnaireForm({
     [onProgressUpdate],
   );
 
-  // ✅ 3. Effect คำนวณ Progress Section 2 แยกตาม Category
+  // 3. Effect: Calculate Section 2 Progress by Category
   useEffect(() => {
     if (currentPart === 6) {
-      assessmentData.forEach((category) => {
-        const totalQ = category.questions.length;
-        const answeredQ = category.questions.filter(
-          (q) => answers[q.id] !== undefined && answers[q.id] !== "",
+      assessmentStructure.forEach((category, index) => {
+        const page = index + 1;
+        const categoryQuestions = questionsAssessment.filter((q) => q.page === page);
+        const totalQ = categoryQuestions.length;
+        const answeredQ = categoryQuestions.filter(
+          (q) => {
+             // Check if answer exists and is not empty (loose check for string/number)
+             const val = answers[q.id as string]; 
+             return val !== undefined && val !== "" && val !== null;
+          }
         ).length;
         const percent =
           totalQ === 0 ? 0 : Math.round((answeredQ / totalQ) * 100);
 
         // ส่งค่า update ตาม id ของ category (เช่น soft_skills)
-        onProgressUpdate?.(category.id, percent);
+        onProgressUpdate?.(category.id as string, percent);
       });
     }
   }, [answers, currentPart, onProgressUpdate]);
 
-  // ✅ Ref เพื่อ Scroll ขึ้นบนสุดเมื่อเปลี่ยน Part หรือ Step
+  // Ref to scroll to top when Part or Step changes
   const formTopRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
